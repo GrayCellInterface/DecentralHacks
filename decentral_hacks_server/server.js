@@ -28,7 +28,7 @@ mongoose.connect(
 
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error"));
-db.once("open", function () {});
+db.once("open", function () { });
 
 app.use(cors());
 app.use(express.json());
@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", router.route);
 app.use("/api/accounts", accountsRouter.route);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, function () {
 	console.log("Server Running on PORT " + PORT);
 });

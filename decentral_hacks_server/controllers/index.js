@@ -11,31 +11,27 @@ const sendOtp = async (req, res, next) => {
 	const name = req.body.name;
 	const password = req.body.password;
 
-	if (!email || !name || !password) {
-		res.status(400).send("Please Fill all fields");
-	} else {
-		User.findOne({ email: email }, async function (err, data) {
-			//send mail
-			if (!data) {
-				//generate otp
-				const otp = Math.floor(100000 + Math.random() * 900000);
-				console.log(otp);
-				const ttl = 5 * 60 * 1000;
-				const expires = Date.now() + ttl;
-				const data = `${email}.${name}.${password}.${otp}.${expires}`;
-				const hash = crypto
-					.createHmac("sha256", process.env.emailKey)
-					.update(data)
-					.digest("hex");
-				const fullHash = `${hash}.${expires}`;
-				console.log(fullHash);
-				await sendMail(email, name, otp);
-				res.status(200).send({ expires, hash: fullHash });
-			} else {
-				res.status(400).send("Email is already used by another account");
-			}
-		});
-	}
+	User.findOne({ email: email }, async function (err, data) {
+		//send mail
+		if (!data) {
+			//generate otp
+			const otp = Math.floor(100000 + Math.random() * 900000);
+			console.log(otp);
+			const ttl = 5 * 60 * 1000;
+			const expires = Date.now() + ttl;
+			const data = `${email}.${name}.${password}.${otp}.${expires}`;
+			const hash = crypto
+				.createHmac("sha256", process.env.emailKey)
+				.update(data)
+				.digest("hex");
+			const fullHash = `${hash}.${expires}`;
+			console.log(fullHash);
+			// await sendMail(email, name, otp);
+			res.status(200).send({ msg: "Registered", expires, hash: fullHash, name, email, password, otp });
+		} else {
+			res.send({ msg: "User already exists. Try a different email." });
+		}
+	});
 };
 
 // **********************Mail**********************
@@ -82,7 +78,7 @@ const registerUser = async (req, res, next) => {
 	let now = Date.now();
 
 	if (now > parseInt(expires)) {
-		return res.status(504).send({ msg: "Timeout Please Try Again" });
+		return res.send({ msg: "OTP Timeout" });
 	}
 
 	const data = `${email}.${name}.${password}.${otp}.${expires}`;
@@ -107,9 +103,9 @@ const registerUser = async (req, res, next) => {
 			else console.log("Successfully registered");
 		});
 
-		res.status(200).send("You are registered, You can login now.");
+		res.status(200).send({ msg: "Verified Success" });
 	} else {
-		res.status(400).send("OTP did not match");
+		res.send({ msg: "Invalid OTP" });
 	}
 };
 
@@ -121,12 +117,13 @@ const loginUser = async (req, res, next) => {
 			if (data.password === req.body.password) {
 				// req.session.userId = data.uid;
 				// console.log(req.session.userId);
-				res.status(200).send({ email: data.email, walletId: data.walletId });
+
+				res.status(200).send({ msg: "Logged In", email: req.body.email, walletId: data.walletId });
 			} else {
-				res.status(400).send("Password is Incorrect");
+				res.send({ msg: "Incorrect Password" });
 			}
 		} else {
-			res.status(400).send("This Email Is not registered!");
+			res.send({ msg: "Invalid Email" });
 		}
 	});
 };
