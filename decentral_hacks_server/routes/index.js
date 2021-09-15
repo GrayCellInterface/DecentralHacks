@@ -3,8 +3,8 @@ const {
 	sendOtp,
 	registerUser,
 	loginUser,
-	userProfile,
-	userLogout,
+	// userProfile,
+	// userLogout,
 } = require("../controllers/index");
 
 const router = express.Router();

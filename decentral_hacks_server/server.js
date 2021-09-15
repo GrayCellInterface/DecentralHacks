@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const env = require("dotenv").config();
 const router = require("./routes/index");
+const accountsRouter = require("./routes/accounts");
 
 const app = express();
 
@@ -50,7 +51,8 @@ app.get("/", (req, res) => {
 });
 
 // Base Routes
-app.use("/api", router.route);
+app.use("/api/auth", router.route);
+app.use("/api/accounts", accountsRouter.route);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, function () {

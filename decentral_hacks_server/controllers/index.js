@@ -3,6 +3,8 @@ const { v4: uuidv4 } = require("uuid");
 const sgMail = require("@sendgrid/mail");
 const crypto = require("crypto");
 
+const { createWallet } = require("./accounts");
+
 // *************************Register*************************
 const sendOtp = async (req, res, next) => {
 	const email = req.body.email;
@@ -86,11 +88,14 @@ const registerUser = async (req, res, next) => {
 		.digest("hex");
 
 	if (newCalculatedHash === hashValue) {
+		const walletId = await createWallet();
+		console.log(walletId);
 		var newPerson = new User({
 			uid: uuidv4(),
 			email: email,
 			name: name,
 			password: password,
+			walletId: walletId,
 		});
 
 		newPerson.save(function (err, Person) {
@@ -112,7 +117,8 @@ const loginUser = async (req, res, next) => {
 			if (data.password === req.body.password) {
 				// req.session.userId = data.uid;
 				// console.log(req.session.userId);
-				res.status(200).send({ msg: "Logged In", email: req.body.email });
+
+				res.status(200).send({ msg: "Logged In", email: req.body.email, walletId: data.walletId });
 			} else {
 				res.send({ msg: "Incorrect Password" });
 			}
