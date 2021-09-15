@@ -1,9 +1,8 @@
-// import axios from 'axios';
+import axios from 'axios';
 import React, { useState, useEffect } from "react";
+import { sha256 } from 'js-sha256';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import Login from "./Login/Login";
-
-// var CryptoJS = require("crypto-js");
 
 const Navigation = () => {
 
@@ -12,13 +11,12 @@ const Navigation = () => {
         'emailError': 'Invalid Email - Please use format abc@example.com', //Below Email in Register
         'passwordError': 'Password should be atleast 8 characters long', //Below Password in Register
         'matchError': 'Passwords do not match', //Below Confirm Password in Register
-        'authEmailError': 'This email does not exist', //Below Email Input in Login
-        'authPasswordError': 'Wrong Password', //Below Password Input in Login
-        'existingError': 'Email already exists', //Near Button in Register
-        'serverError': 'Server Error' //Near Button in both
+        'otpError': 'Your OTP should be a 6-digit number', //Below OTP 
     }
 
     const [openRegister, setOpenRegister] = useState(false)
+    const [openVerify, setOpenVerify] = useState(false)
+    const [openSuccess, setOpenSuccess] = useState(false)
     const [errors, setErrors] = useState({})
     const [hasLoggedIn, setHasLoggedIn] = useState(false)
     const [authenticated, setAuthenticated] = useState(false)
@@ -33,6 +31,15 @@ const Navigation = () => {
         'password': "",
         'confirm_password': ""
     })
+    const [verifyValues, setVerifyValues] = useState({
+        'otp': ""
+    })
+    const [collectRes, setCollectRes] = useState({
+        'name': "",
+        'email': "",
+        'password': "",
+        'hash': ""
+    })
 
     let handlerObj;
     let errorHandlerObj = {
@@ -40,16 +47,17 @@ const Navigation = () => {
         'emailError': "",
         'passwordError': "",
         'matchError': "",
-        'authEmailError': "",
-        'authPasswordError': "",
-        'existingError': "",
-        'serverError': ""
+        'authError': "",
+        'otpError': "",
     };
 
     useEffect(() => {
 
-        //Write logic to Authenticate - External file auth.js
-        setAuthenticated(false)
+        if (window.localStorage.getItem('email')) {
+            setAuthenticated(true)
+        } else {
+            setAuthenticated(false)
+        }
 
         if (authenticated) {
             setHasLoggedIn(true)
@@ -57,7 +65,23 @@ const Navigation = () => {
             setHasLoggedIn(false)
         }
 
-    }, [])
+    }, [authenticated])
+
+    const clearInputs = () => {
+        setLoginValues({
+            'email': "",
+            'password': ""
+        })
+        setRegisterValues({
+            'name': "",
+            'email': "",
+            'password': "",
+            'confirm_password': ""
+        })
+        setVerifyValues({
+            'otp': ""
+        })
+    }
 
     //Handling Modal. Always open on Login Form
     const handleLoginModalOpen = () => {
@@ -67,6 +91,8 @@ const Navigation = () => {
     const handleLoginModalClose = () => {
         setLoginModalOpen(false)
         setOpenRegister(false)
+        setOpenVerify(false)
+        clearInputs()
     }
 
     const handleOpenRegister = () => {
@@ -76,22 +102,28 @@ const Navigation = () => {
     const handleBackToLogin = (e) => {
         e.preventDefault()
         setOpenRegister(false);
+        setOpenVerify(false);
+        setOpenSuccess(false);
     }
 
+    const handleOpenSuccess = () => {
+        setOpenSuccess(true);
+    }
+
+
     //Handling Form Submission 
+
+    //Handle Registration
     const handleRegistration = (e) => {
         e.preventDefault()
         setErrors({})
-        const validEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/
+        const validEmail = /^(([^<>()[\].,;:\s@"]+(.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+.)+[^<>()[\].,;:\s@"]{2,})$/
         errorHandlerObj = {
             'nameError': "",
             'emailError': "",
             'passwordError': "",
             'matchError': "",
-            'authEmailError': "",
-            'authPasswordError': "",
-            'existingError': "",
-            'serverError': ""
+            'existingError': ""
         }
 
         if (registerValues['name'].length < 5) {
@@ -112,35 +144,35 @@ const Navigation = () => {
             errorHandlerObj['passwordError'] === "" &&
             errorHandlerObj['matchError'] === ""
         ) {
-            //Hits '/register' endpoint of Backend API
-            //Check for existing email and server error --> Registration Failed
 
-            // const encryptedPassword = CryptoJS.AES.encrypt(registerValues['password'], 'raupCFlyLHPN7lHEwvcG3YWd4w4WNzg8').toString();
-            // axios.post(`${process.env.REACT_APP_BACKEND_API}/register`, {
-            //     name: `${registerValues['name']}`,
-            //     email: `${registerValues['email']}`,
-            //     password: `${encryptedPassword}`
-            // }).then((res) => {
-            //     console.log("Registration Successful") // in then
-            //     //Go back to login
-            //     setErrors({})
-            //     handleBackToLogin(e)
+            const hashedPassword = sha256(registerValues['password'])
 
-            // }).catch((err) => {
-            //     if(err === "existing user"){
-            //         errorHandlerObj['existingError'] = errorObj['existingError']
-            //     }else{
-            //         errorHandlerObj['serverError'] = errorObj['serverError']
-            //     }
-            //     setErrors({ ...errorHandlerObj })
-            //     console.log(errorHandlerObj)
-            //     console.log("Registration Failed")
-            // })
+            axios.post(`${process.env.REACT_APP_BACKEND_API}/register`, {
+                email: `${registerValues['email']}`,
+                name: `${registerValues['name']}`,
+                password: `${hashedPassword}`
+            }).then((res) => {
+                if (res.data.msg === "Registered") {
+                    console.log("Registration Successful", res.data.otp)
+                    setErrors({})
+                    clearInputs()
+                    setCollectRes({
+                        'name': res.data.name,
+                        'email': res.data.email,
+                        'password': res.data.password,
+                        'hash': res.data.hash
+                    })
+                    setOpenVerify(true)
+                } else {
+                    errorHandlerObj['existingError'] = `${res.data.msg}`
+                    setErrors({ ...errorHandlerObj })
+                    console.log("Registration Failed")
+                }
 
-            //Dummy code for always successful registration on server end
-            console.log("Registration Successful")
-            setErrors({})
-            handleBackToLogin(e)
+            }).catch((error) => {
+                console.log(error.response.data);
+                console.log("Registration Failed")
+            })
 
         } else {
             setErrors({ ...errorHandlerObj })
@@ -149,19 +181,61 @@ const Navigation = () => {
         }
     }
 
+    //Handle Email Verification
+    const handleVerify = (e) => {
+        e.preventDefault()
+        errorHandlerObj = {
+            'otpError': "",
+            'verifyError': ""
+        }
+        const validOTP = /^\d{6}$/
+        if (!validOTP.test(verifyValues['otp'])) {
+            errorHandlerObj['otpError'] = errorObj['otpError']
+        }
+        if (errorHandlerObj['otpError'] === "") {
+            console.log(collectRes)
+            console.log(verifyValues['otp'])
+            axios.post(`${process.env.REACT_APP_BACKEND_API}/register-verified`, {
+                email: `${collectRes['email']}`,
+                name: `${collectRes['name']}`,
+                password: `${collectRes['password']}`,
+                hash: `${collectRes['hash']}`,
+                otp: `${verifyValues['otp']}`
+            }).then((res) => {
+                if (res.data.msg === "Verified Success") {
+                    console.log("Verification Successful")
+                    handleOpenSuccess()
+                    clearInputs()
+                    setErrors({})
+                } else {
+                    errorHandlerObj['verifyError'] = `${res.data.msg}`
+                    setErrors({ ...errorHandlerObj })
+                    console.log("Verification Failed")
+                }
+
+            }).catch((error) => {
+                console.log(error.response.data)
+                console.log("Verification Failed")
+            })
+
+        } else {
+            setErrors({ ...errorHandlerObj })
+            console.log("Verification Failed")
+            console.log(errorHandlerObj)
+        }
+    }
+
+    //Handle Login
     const handleLogin = (e) => {
         e.preventDefault()
-        setErrors()
-        const validEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/
+        const validEmail = /^(([^<>()[\].,;:\s@"]+(.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+.)+[^<>()[\].,;:\s@"]{2,})$/
         errorHandlerObj = {
             'nameError': "",
             'emailError': "",
             'passwordError': "",
             'matchError': "",
-            'authEmailError': "",
-            'authPasswordError': "",
-            'existingError': "",
-            'serverError': ""
+            'authError': "",
+            'otpError': "",
         }
 
         if (!validEmail.test(loginValues['email'])) {
@@ -175,62 +249,45 @@ const Navigation = () => {
             errorHandlerObj['emailError'] === "" &&
             errorHandlerObj['passwordError'] === ""
         ) {
-            //Hits '/login' endpoint of Backend API
-            //Check for non-existing email, wrong password and server error --> Registration Failed
 
-            // const encryptedPassword = CryptoJS.AES.encrypt(loginValues['password'], 'raupCFlyLHPN7lHEwvcG3YWd4w4WNzg8').toString();
-            // axios.post(`${process.env.REACT_APP_BACKEND_API}/login`, {
-            //     email: `${registerValues['email']}`,
-            //     password: `${encryptedPassword}`
-            // }).then((res) => {
-            //     console.log("Login Successful") // in then
-            //     setHasLoggedIn(true)     
-            //     setErrors({})
-            //     handleLoginModalClose()
-            // }).catch((err) => {
-            //     if(err === "Nonexisting email"){
-            //         errorHandlerObj['authEmailError'] = errorObj['authEmailError']
-            //     }
-            //     else if(err === "Invalid Password"){
-            //         errorHandlerObj['authPasswordError'] = errorObj['authPasswordError']
-            //     }else{
-            //         errorHandlerObj['serverError'] = errorObj['serverError']
-            //     }
-            //     setErrors({ ...errorHandlerObj })
-            //     console.log(errorHandlerObj)
-            //     console.log("Login Failed")
-            // })
-
-            //Dummy code for always successful login on server end
-            console.log("Login Successful") // in then
-            //CloseModal
-            setHasLoggedIn(true)
-            handleLoginModalClose()
-            setErrors({})
-
+            const hashedPassword = sha256(loginValues['password'])
+            axios.post(`${process.env.REACT_APP_BACKEND_API}/login`, {
+                email: `${loginValues['email']}`,
+                password: `${hashedPassword}`
+            }).then((res) => {
+                if (res.data.msg === "Logged In") {
+                    console.log("Login Successful")
+                    setHasLoggedIn(true)
+                    setErrors({})
+                    window.localStorage.setItem('email', res.data.email)
+                    handleLoginModalClose()
+                    window.location.href = '/profile'
+                } else {
+                    errorHandlerObj['authError'] = `${res.data.msg}`
+                    setErrors({ ...errorHandlerObj })
+                    console.log("Login Failed")
+                }
+            }).catch((error) => {
+                console.log(error.response.data)
+                console.log("Login Failed")
+            })
 
         } else {
             setErrors({ ...errorHandlerObj })
             console.log("Login Failed")
-            console.log(errorHandlerObj)
+            // console.log(errorHandlerObj)
         }
 
     }
 
+    //Handle Logout
     const handleLogout = () => {
-        //Hits '/logout' endpoint of Backend API
-
-        // axios.get(`${process.env.REACT_APP_BACKEND_API}/logout`).then((res) => {
-        //     setHasLoggedIn(false)
-
-        // }).catch((error) => {
-        //     console.error(error.response)
-        // })
-
-        //Dummy code for always successful logout on server end
+        window.localStorage.removeItem('email')
         setHasLoggedIn(false)
-
+        window.location.href = '/'
     }
+
+
 
     //Change Handlers
     const handleLoginChange = (selectedInput) => (e) => {
@@ -245,40 +302,45 @@ const Navigation = () => {
         setRegisterValues({ ...handlerObj })
     }
 
+    const handleVerifyChange = (selectedInput) => (e) => {
+        handlerObj = { ...verifyValues }
+        handlerObj[selectedInput] = e.target.value
+        setVerifyValues({ ...handlerObj })
+    }
+
     //Change Login/Register to My Account
     const renderNavContent = () => {
         if (hasLoggedIn) {
             return (
-                <Nav.Item as="li">
-                    <NavDropdown title="My Account" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
-                        <NavDropdown.Item onClick={handleLogout} >Logout</NavDropdown.Item>
-                    </NavDropdown>
-                </Nav.Item>
+
+                <NavDropdown title="My Account" id="basic-nav-dropdown">
+                    <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                    <NavDropdown.Item onClick={handleLogout} >Logout</NavDropdown.Item>
+                </NavDropdown>
+
             )
         } else {
             return (
-                <Nav.Item as="li">
-                    <Nav.Link onClick={handleLoginModalOpen} >Login/Register</Nav.Link>
-                </Nav.Item>
+
+                <Nav.Link onClick={handleLoginModalOpen} >Login/Register</Nav.Link>
+
             )
         }
     }
 
     return (
         <>
-            <Navbar bg="light" variant="light">
+            <Navbar bg="light" variant="light" expand="lg">
                 <Container>
                     <Navbar.Brand href="/">Grey Cell Interface</Navbar.Brand>
-                    <Nav className="justify-content-end" as="ul">
-                        <Nav.Item as="li">
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                        <Nav className="justify-content-end">
                             <Nav.Link href="/">Home</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item as="li">
                             <Nav.Link href="/shop">Shop</Nav.Link>
-                        </Nav.Item>
-                        {renderNavContent()}
-                    </Nav>
+                            {renderNavContent()}
+                        </Nav>
+                    </Navbar.Collapse>
                 </Container>
             </Navbar>
             <Login
@@ -287,13 +349,18 @@ const Navigation = () => {
                 handleOpenRegister={handleOpenRegister}
                 handleBackToLogin={handleBackToLogin}
                 handleLoginChange={handleLoginChange}
-                openRegister={openRegister}
-                errors={errors}
-                loginValues={loginValues}
+                handleVerifyChange={handleVerifyChange}
                 handleRegisterChange={handleRegisterChange}
-                registerValues={registerValues}
                 handleRegistration={handleRegistration}
+                handleVerify={handleVerify}
                 handleLogin={handleLogin}
+                openSuccess={openSuccess}
+                loginValues={loginValues}
+                registerValues={registerValues}
+                verifyValues={verifyValues}
+                openRegister={openRegister}
+                openVerify={openVerify}
+                errors={errors}
                 loginModalOpen={loginModalOpen}
             />
         </>

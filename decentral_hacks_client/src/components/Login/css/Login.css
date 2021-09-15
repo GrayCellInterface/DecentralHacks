@@ -9,5 +9,7 @@
 }
 .error-msg{
     color: red;
-    margin-left: 5px;
+}
+.add-error-style{
+    padding-top: 7px;
 }
