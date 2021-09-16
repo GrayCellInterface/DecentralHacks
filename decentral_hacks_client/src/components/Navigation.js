@@ -260,6 +260,8 @@ const Navigation = () => {
 						setHasLoggedIn(true);
 						setErrors({});
 						window.localStorage.setItem("email", res.data.email);
+						window.localStorage.setItem("address", res.data.address);
+						window.localStorage.setItem("walletId", res.data.walletId);
 						handleLoginModalClose();
 						window.location.href = "/profile";
 					} else {

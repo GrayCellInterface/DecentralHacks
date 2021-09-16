@@ -1,9 +1,8 @@
 const User = require("../models/user");
-const { v4: uuidv4 } = require("uuid");
 const sgMail = require("@sendgrid/mail");
 const crypto = require("crypto");
 
-const { createWallet } = require("./accounts");
+const { createWallet, getBlockchainAddress } = require("./accounts");
 
 // *************************Register*************************
 const sendOtp = async (req, res, next) => {
@@ -27,7 +26,15 @@ const sendOtp = async (req, res, next) => {
 			const fullHash = `${hash}.${expires}`;
 			console.log(fullHash);
 			// await sendMail(email, name, otp);
-			res.status(200).send({ msg: "Registered", expires, hash: fullHash, name, email, password, otp });
+			res.status(200).send({
+				msg: "Registered",
+				expires,
+				hash: fullHash,
+				name,
+				email,
+				password,
+				otp,
+			});
 		} else {
 			res.send({ msg: "User already exists. Try a different email." });
 		}
@@ -88,13 +95,13 @@ const registerUser = async (req, res, next) => {
 		.digest("hex");
 
 	if (newCalculatedHash === hashValue) {
-		const walletId = await createWallet();
+		const { walletId, idempotencyKey } = await createWallet();
 		console.log(walletId);
 		var newPerson = new User({
-			uid: uuidv4(),
 			email: email,
 			name: name,
 			password: password,
+			idempotencyKey: idempotencyKey,
 			walletId: walletId,
 		});
 
@@ -111,14 +118,22 @@ const registerUser = async (req, res, next) => {
 
 // **********************Login**********************
 const loginUser = async (req, res, next) => {
-	User.findOne({ email: req.body.email }, function (err, data) {
+	User.findOne({ email: req.body.email }, async function (err, data) {
 		console.log("data" + data);
 		if (data) {
 			if (data.password === req.body.password) {
 				// req.session.userId = data.uid;
 				// console.log(req.session.userId);
-
-				res.status(200).send({ msg: "Logged In", email: req.body.email, walletId: data.walletId });
+				const { address } = await getBlockchainAddress(
+					data.walletId,
+					data.idempotencyKey
+				);
+				res.status(200).send({
+					msg: "Logged In",
+					email: req.body.email,
+					walletId: data.walletId,
+					address: address,
+				});
 			} else {
 				res.send({ msg: "Incorrect Password" });
 			}
