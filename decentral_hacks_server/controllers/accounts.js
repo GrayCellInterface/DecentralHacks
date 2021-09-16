@@ -60,7 +60,7 @@ const getBlockchainAddress = async (id, key) => {
 	};
 
 	const body = {
-		chain: "ETH",
+		chain: "TRX",
 		idempotencyKey: key,
 		currency: "CUSDC",
 	};
