@@ -266,7 +266,7 @@ const Navigation = (props) => {
                         window.localStorage.setItem("address", res.data.address);
                         window.localStorage.setItem("walletId", res.data.walletId);
                         handleLoginModalClose();
-                        window.location.href = "/profile";
+                        window.location.href = `${props.url}/profile`;
                     } else {
                         errorHandlerObj["authError"] = `${res.data.msg}`;
                         setErrors({ ...errorHandlerObj });
@@ -287,8 +287,10 @@ const Navigation = (props) => {
     //Handle Logout
     const handleLogout = () => {
         window.localStorage.removeItem("email");
+        window.localStorage.removeItem("walletId");
+        window.localStorage.removeItem("address");
         setHasLoggedIn(false);
-        window.location.href = "/";
+        window.location.href = `${props.url}`;
     };
 
     //Change Handlers
