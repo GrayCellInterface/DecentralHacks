@@ -119,7 +119,7 @@ const registerUser = async (req, res, next) => {
 // **********************Login**********************
 const loginUser = async (req, res, next) => {
 	User.findOne({ email: req.body.email }, async function (err, data) {
-		console.log("data" + data);
+		// console.log("data" + data);
 		if (data) {
 			if (data.password === req.body.password) {
 				// req.session.userId = data.uid;
@@ -141,6 +141,12 @@ const loginUser = async (req, res, next) => {
 			res.send({ msg: "Invalid Email" });
 		}
 	});
+};
+
+module.exports = {
+	sendOtp,
+	registerUser,
+	loginUser,
 };
 
 // ***********Profile Page **************
@@ -168,11 +174,3 @@ const loginUser = async (req, res, next) => {
 // 		});
 // 	}
 // };
-
-module.exports = {
-	sendOtp,
-	registerUser,
-	loginUser,
-	// userProfile,
-	// userLogout,
-};
