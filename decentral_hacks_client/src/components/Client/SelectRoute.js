@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Profile from './components/Profile/Profile';
 import Shop from './components/Shop/Shop';
 
-const SelectRoute = () => {
+const SelectRoute = (props) => {
 
     let { selectedRoute } = useParams()
     console.log(selectedRoute)
@@ -14,7 +14,9 @@ const SelectRoute = () => {
                 return <Profile />
             }
             case 'shop': {
-                return <Shop />
+                return <Shop
+                    handleLoginModalOpen={props.handleLoginModalOpen}
+                />
             }
             default: {
                 return (

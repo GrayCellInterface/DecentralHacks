@@ -1,0 +1,10 @@
+.form-position{
+    margin: 20% 10%;
+}
+.wrapper-card{
+    border: solid ;
+    border-color: rgba( 0, 0, 0, 0.05);
+    border-width: 0.5px;
+    border-radius: 5px;
+    box-shadow: 1px 3px 15px 0px rgba( 0, 0, 0, 0.05);
+}

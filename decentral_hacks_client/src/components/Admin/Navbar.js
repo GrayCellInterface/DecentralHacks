@@ -32,7 +32,7 @@ function Navbar(props) {
                         {SidebarData.map((item, index) => {
                             if (item.hasChildren) {
                                 return (
-                                    <Accordion>
+                                    <Accordion key={item.title}>
                                         <Accordion.Item eventKey="0" className="accordion-style">
                                             <Accordion.Header className={item.cName} >
                                                 <IoIcons.IoIosPaper />
@@ -57,7 +57,7 @@ function Navbar(props) {
                                 );
                             } else {
                                 return (
-                                    <li key={index} className={item.cName} onClick={handleOpenSidebar}>
+                                    <li className={item.cName} onClick={handleOpenSidebar} key={item.title}>
                                         <Link to={`${props.url}${item.path}`}>
                                             {item.icon}
                                             <span>{item.title}</span>

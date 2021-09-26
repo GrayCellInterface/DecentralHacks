@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { sha256 } from "js-sha256";
+import brandLogo from "../../assets/images/Logo.png"
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import Login from "./components/Login/Login";
+
+const postalCodes = require('postal-codes-js');
 
 const Navigation = (props) => {
     const errorObj = {
@@ -11,15 +14,19 @@ const Navigation = (props) => {
         passwordError: "Password should be atleast 8 characters long", //Below Password in Register
         matchError: "Passwords do not match", //Below Confirm Password in Register
         otpError: "Your OTP should be a 6-digit number", //Below OTP
+        postalError: "Invalid postalcode for selected country.",
+        cityError: "This field should not be empty",
+        addressError: "Your address is too short. It should be atleast 10 characters long.",
+        districtError: "The district should be a 2-character long code"
     };
 
     const [openRegister, setOpenRegister] = useState(false);
     const [openVerify, setOpenVerify] = useState(false);
     const [openSuccess, setOpenSuccess] = useState(false);
+    const [openStep2, setOpenStep2] = useState(false)
     const [errors, setErrors] = useState({});
     const [hasLoggedIn, setHasLoggedIn] = useState(false);
     const [authenticated, setAuthenticated] = useState(false);
-    const [loginModalOpen, setLoginModalOpen] = useState(false);
     const [loginValues, setLoginValues] = useState({
         email: "",
         password: "",
@@ -39,6 +46,13 @@ const Navigation = (props) => {
         password: "",
         hash: "",
     });
+    const [billingValues, setBillingValues] = useState({
+        country: "",
+        city: "",
+        district: "",
+        address: "",
+        postalcode: "",
+    })
 
     let handlerObj;
     let errorHandlerObj = {
@@ -75,6 +89,12 @@ const Navigation = (props) => {
             password: "",
             confirm_password: "",
         });
+        setBillingValues({
+            country: "",
+            city: "",
+            address: "",
+            postalcode: "",
+        })
         setVerifyValues({
             otp: "",
         });
@@ -82,13 +102,10 @@ const Navigation = (props) => {
     };
 
     //Handling Modal. Always open on Login Form
-    const handleLoginModalOpen = () => {
-        setLoginModalOpen(true);
-    };
-
     const handleLoginModalClose = () => {
-        setLoginModalOpen(false);
+        props.handleCloseLoginModal()
         setOpenRegister(false);
+        setOpenStep2(false);
         setOpenVerify(false);
         clearInputs();
     };
@@ -101,10 +118,16 @@ const Navigation = (props) => {
     const handleBackToLogin = (e) => {
         e.preventDefault();
         setErrors({});
+        clearInputs();
         setOpenRegister(false);
+        setOpenStep2(false);
         setOpenVerify(false);
         setOpenSuccess(false);
     };
+
+    const handleBackToStep1 = () => {
+        setOpenStep2(false);
+    }
 
     const handleOpenSuccess = () => {
         setOpenSuccess(true);
@@ -113,19 +136,17 @@ const Navigation = (props) => {
     //Handling Form Submission
 
     //Handle Registration
-    const handleRegistration = (e) => {
+    const handleGoToStep2 = (e) => {
         e.preventDefault();
-        setErrors({});
         const validEmail =
             /^(([^<>()[\].,;:\s@"]+(.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+.)+[^<>()[\].,;:\s@"]{2,})$/;
+        setErrors({});
         errorHandlerObj = {
             nameError: "",
             emailError: "",
             passwordError: "",
             matchError: "",
-            existingError: "",
         };
-
         if (registerValues["name"].length < 5) {
             errorHandlerObj["nameError"] = errorObj["nameError"];
         }
@@ -144,6 +165,49 @@ const Navigation = (props) => {
             errorHandlerObj["passwordError"] === "" &&
             errorHandlerObj["matchError"] === ""
         ) {
+            setOpenStep2(true);
+        } else {
+            setErrors({ ...errorHandlerObj });
+            console.log("Registration Failed on Step 1");
+            console.log(errorHandlerObj);
+        }
+    }
+
+
+    const handleRegistration = (e) => {
+        e.preventDefault();
+        setErrors({});
+        const validDistrict = /[A-Z]{2}/
+        const validName = /^[a-zA-Z][a-zA-Z ]*$/
+        errorHandlerObj = {
+            postalError: "",
+            cityError: "",
+            addressError: "",
+            districtError: "",
+        };
+
+        if (billingValues["city"].length === 0 || !validName.test(billingValues['city'])) {
+            errorHandlerObj["cityError"] = errorObj["cityError"];
+        }
+        if (billingValues["address"].length < 10) {
+            errorHandlerObj["addressError"] = errorObj["addressError"];
+        }
+        if (postalCodes.validate(billingValues["country"], billingValues["postalcode"]) !== true) {
+            errorHandlerObj["postalError"] = errorObj["postalError"];
+        }
+        if (billingValues["country"] === "US" || billingValues["country"] === "CA") {
+            if (!validDistrict.test(billingValues['district'])) {
+                errorHandlerObj['districtError'] = errorObj['districtError']
+            }
+        }
+        if (
+            errorHandlerObj["cityError"] === "" &&
+            errorHandlerObj["addressError"] === "" &&
+            errorHandlerObj["postalError"] === "" &&
+            errorHandlerObj["districtError"] === ""
+        ) {
+            console.log(registerValues);
+            console.log(billingValues);
             const hashedPassword = sha256(registerValues["password"]);
 
             axios
@@ -252,6 +316,7 @@ const Navigation = (props) => {
             errorHandlerObj["passwordError"] === ""
         ) {
             const hashedPassword = sha256(loginValues["password"]);
+            console.log(hashedPassword)
             axios
                 .post(`${process.env.REACT_APP_BACKEND_API}/auth/login`, {
                     email: `${loginValues["email"]}`,
@@ -289,6 +354,8 @@ const Navigation = (props) => {
         window.localStorage.removeItem("email");
         window.localStorage.removeItem("walletId");
         window.localStorage.removeItem("address");
+        window.localStorage.removeItem("publicKey");
+        window.localStorage.removeItem("publicKeyExpiry");
         setHasLoggedIn(false);
         window.location.href = `${props.url}`;
     };
@@ -312,6 +379,23 @@ const Navigation = (props) => {
         setVerifyValues({ ...handlerObj });
     };
 
+    const handleBillingChange = (selectedInput) => (e) => {
+        handlerObj = { ...billingValues };
+
+        if (selectedInput === "district") {
+            handlerObj[selectedInput] = (e.target.value).toUpperCase();
+        } else {
+            handlerObj[selectedInput] = e.target.value;
+        }
+        setBillingValues({ ...handlerObj });
+    }
+
+    const handleCountrySelection = (e) => {
+        handlerObj = { ...billingValues };
+        handlerObj["country"] = e.target.value;
+        setBillingValues({ ...handlerObj })
+    };
+
     //Change Login/Register to My Account
     const renderNavContent = () => {
         if (hasLoggedIn) {
@@ -322,7 +406,7 @@ const Navigation = (props) => {
                 </NavDropdown>
             );
         } else {
-            return <Nav.Link onClick={handleLoginModalOpen}>Login/Register</Nav.Link>;
+            return <Nav.Link onClick={props.handleLoginModalOpen}>Login/Register</Nav.Link>;
         }
     };
 
@@ -330,7 +414,9 @@ const Navigation = (props) => {
         <>
             <Navbar bg="light" variant="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href={`${props.url}`}>Grey Cell Interface</Navbar.Brand>
+                    <Navbar.Brand href={`${props.url}`}>
+                        <img src={brandLogo} alt="logo" />
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse
                         id="basic-navbar-nav"
@@ -345,7 +431,7 @@ const Navigation = (props) => {
                 </Container>
             </Navbar>
             <Login
-                handleLoginModalOpen={handleLoginModalOpen}
+                handleLoginModalOpen={props.handleLoginModalOpen}
                 handleLoginModalClose={handleLoginModalClose}
                 handleOpenRegister={handleOpenRegister}
                 handleBackToLogin={handleBackToLogin}
@@ -353,16 +439,22 @@ const Navigation = (props) => {
                 handleVerifyChange={handleVerifyChange}
                 handleRegisterChange={handleRegisterChange}
                 handleRegistration={handleRegistration}
+                handleGoToStep2={handleGoToStep2}
+                handleBackToStep1={handleBackToStep1}
+                handleBillingChange={handleBillingChange}
+                handleCountrySelection={handleCountrySelection}
                 handleVerify={handleVerify}
                 handleLogin={handleLogin}
                 openSuccess={openSuccess}
+                openStep2={openStep2}
                 loginValues={loginValues}
                 registerValues={registerValues}
+                billingValues={billingValues}
                 verifyValues={verifyValues}
                 openRegister={openRegister}
                 openVerify={openVerify}
                 errors={errors}
-                loginModalOpen={loginModalOpen}
+                loginModalOpen={props.loginModalOpen}
             />
         </>
     );

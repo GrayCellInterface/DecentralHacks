@@ -25,7 +25,7 @@ const sendOtp = async (req, res, next) => {
 				.digest("hex");
 			const fullHash = `${hash}.${expires}`;
 			console.log(fullHash);
-			// await sendMail(email, name, otp);
+			await sendMail(email, name, otp);
 			res.status(200).send({
 				msg: "Registered",
 				expires,

@@ -1,104 +1,157 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import encrypt from '../../../../assets/js/encryptPGP';
-import { iso31661 } from 'iso-3166'
+import CheckoutPage from './CheckoutPage';
+import OutOfStockPrompt from './OutOfStockPrompt';
+import { sampleProducts } from './sampleProducts';
+import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
 
-//Gray Cell Interface API : QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==
+const Shop = (props) => {
 
-const Shop = () => {
-
-    const headers = {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization:
-            "Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-    };
-
-
-    const [cardDetails, setCardDetails] = useState({
-        number: '4007400000000007',
-        cvv: '123'
-    })
-
-    const [publicKey, setPublicKey] = useState("")
-    const [keyId, setKeyId] = useState("")
-    const [encryptedData, setEncryptedData] = useState("")
+    const [products, setProducts] = useState([])
+    const [hasLoggedIn, setHasLoggedIn] = useState(false);
+    const [authenticated, setAuthenticated] = useState(false);
+    const [openCheckOut, setOpenCheckout] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState({})
+    const [openOutOfStock, setOpenOutOfStock] = useState(false)
 
     useEffect(() => {
 
-        const getPublicKey = async () => {
-
-            const url = 'https://api-sandbox.circle.com/v1/encryption/public'
-
-            await axios.get(url, { headers }).then((res) => {
-                setPublicKey(res.data.data)
-                console.log(res.data.data)
-            }).catch((err) => {
-                console.log(err)
-            })
+        if (window.localStorage.getItem("email")) {
+            setAuthenticated(true);
+        } else {
+            setAuthenticated(false);
         }
 
-        getPublicKey();
-        console.log(iso31661)
+        if (authenticated) {
+            setHasLoggedIn(true);
+        } else {
+            setHasLoggedIn(false);
+        }
 
-    }, [])
+        const getProducts = () => {
+            // axios.get(`${process.env.REACT_APP_BACKEND_API}/auth/get-products`).then((res) => {
+            //     setProducts(res.data.products)
+            // })
+            setProducts(sampleProducts)
+        }
 
+        getProducts()
 
+    }, [authenticated])
 
-    const encryptCardData = async () => {
-
-        const encryptedData = await encrypt(cardDetails, publicKey)
-        const { encryptedMessage, keyId } = encryptedData
-
-        setEncryptedData(encryptedMessage)
-        setKeyId(keyId)
-
-        console.log(encryptedMessage)
-        console.log(encryptedData)
-
+    const handleCloseOutOfStock = () => {
+        setOpenOutOfStock(false)
     }
 
-    const getCard = async () => {
-        console.log(typeof (encryptedData))
-
-        const body = {
-            idempotencyKey: "ba943ff1-ca17-49b2-ba55-1057e70ca5c7", //uuidv4(),
-            keyId: keyId,
-            encryptedData: encryptedData,
-            billingDetails: {
-                name: "Satoshi Nakamoto",
-                city: "Mumbai",
-                country: "IN",
-                line1: "Address 1",
-                line2: "Address 2",
-                district: "MA",
-                postalCode: "400053",
-            },
-            expMonth: 11,
-            expYear: 2022,
-            metadata: {
-                email: "satoshi@circle.com",
-                phone: "9167079283",
-                sessionId: 'xxx',
-                ipAddress: '127.0.0.1'
+    const handleGotoCheckOut = (selectedProductIndex) => {
+        if (products[selectedProductIndex].stock === "0") {
+            setOpenOutOfStock(true)
+        } else {
+            if (!hasLoggedIn) {
+                props.handleLoginModalOpen()
+            } else {
+                setSelectedProduct(products[selectedProductIndex]);
+                setOpenCheckout(true)
             }
-        };
-        await axios
-            .post("https://api-sandbox.circle.com/v1/cards", body, { headers })
-            .then((response) => console.log(response.data.data.id)).catch((error) => console.log(error.response.data));
+        }
     }
 
+    const handleGoBackToShop = () => {
+        setOpenCheckout(false)
+    }
 
+    const renderShop = () => {
+        if (openCheckOut) {
+            return (
+                <CheckoutPage
+                    productName={selectedProduct['productName']}
+                    productPrice={selectedProduct['productPrice']}
+                    deliveryTime={selectedProduct['deliveryTime']}
+                    handleGoBackToShop={handleGoBackToShop}
+                />
+            )
+        } else {
+            return (
+                <>
+                    <div className="row">
+                        {
+                            products.map((product, index) => {
+                                let stockJSX;
+                                let stock = parseInt(product.stock)
+                                if (stock < 10) {
+                                    if (stock === 0) {
+                                        stockJSX = <p style={{ float: "left", color: "red" }}><b>OUT OF STOCK</b></p>
+                                    } else {
+                                        stockJSX = <p style={{ float: "left", color: "red" }}><b>ONLY {stock} LEFT IN STOCK</b></p>
+                                    }
+                                } else {
+                                    stockJSX = <p style={{ float: "left", color: "green" }}><b>IN STOCK</b></p>
+                                }
+                                return (
+                                    <div className="col-sm-12 col-md-6 col-lg-4" key={index} style={{ margin: "30px 0px" }}>
+                                        <Card style={{ width: '23rem' }} key={index}>
+                                            <Card.Img variant="top" src={product.productImage} />
+                                            <Card.Body>
+                                                <div className="row">
+                                                    <div className="col-6">
+                                                        <Card.Title style={{ float: "left" }}>{product.productName}</Card.Title>
+                                                    </div>
+                                                    <div className="col-6">
+                                                        <Card.Title style={{ float: "right" }}><strong>{product.productPrice}</strong></Card.Title>
+                                                    </div>
+                                                </div>
+                                                <Card.Text>
+                                                    <br />
+                                                    <b>Description: </b>
+                                                    {product.productDescription}
+                                                    <br />
+                                                </Card.Text>
+                                            </Card.Body>
+                                            <ListGroup className="list-group-flush">
+                                                <ListGroupItem>
+                                                    <div className="row">
+                                                        {stockJSX}
+                                                    </div>
+                                                </ListGroupItem>
+                                                <ListGroupItem>
+                                                    <div className="row">
+                                                        <div className="col-6">
+                                                            <p style={{ float: "left" }}><b>Delivery Time :</b></p>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <p style={{ float: "right" }}>{product.deliveryTime} DAYS</p>
+                                                        </div>
+                                                    </div>
+                                                </ListGroupItem>
+                                            </ListGroup>
+                                            <Card.Body className="text-center">
+                                                <button onClick={() => handleGotoCheckOut(index)} className="me-btn" size="lg" style={{ width: "70%", height: "60%" }}>
+                                                    Buy Now
+                                                </button>
+                                            </Card.Body>
+                                        </Card>
+                                    </div>
+                                )
+                            })
+                        }
+
+                    </div>
+                </>
+            );
+        }
+    }
 
     return (
         <>
-            <div>
-                The Shop Will Be Here
+            <div className="container">
+                {renderShop()}
             </div>
-            <button onClick={encryptCardData}>Encrypt Card Data</button>
-            <button onClick={getCard}>Get Card</button>
+            <OutOfStockPrompt
+                handleCloseOutOfStock={handleCloseOutOfStock}
+                openOutOfStock={openOutOfStock}
+            />
         </>
-    );
+    )
+
 }
 
 export default Shop;
