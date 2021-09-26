@@ -10,6 +10,13 @@ const sendOtp = async (req, res, next) => {
 	const name = req.body.name;
 	const password = req.body.password;
 
+	// Address
+	const country = req.body.country;
+	const city = req.body.city;
+	const district = req.body.district;
+	const address = req.body.address;
+	const postalCode = req.body.postal_code;
+
 	User.findOne({ email: email }, async function (err, data) {
 		//send mail
 		if (!data) {
@@ -25,15 +32,21 @@ const sendOtp = async (req, res, next) => {
 				.digest("hex");
 			const fullHash = `${hash}.${expires}`;
 			console.log(fullHash);
-			// await sendMail(email, name, otp);
+			await sendMail(email, name, otp);
 			res.status(200).send({
-				msg: "Registered",
+				message: "Registered",
 				expires,
 				hash: fullHash,
 				name,
 				email,
 				password,
 				otp,
+				//Address
+				country,
+				city,
+				district,
+				address,
+				postalCode,
 			});
 		} else {
 			res.send({ msg: "User already exists. Try a different email." });
@@ -74,12 +87,19 @@ const sendMail = async (email, name, otp) => {
 };
 
 // *******************verify and register******************
-const registerUser = async (req, res, next) => {
+const registerUser = async (req, res) => {
 	const name = req.body.name;
 	const email = req.body.email;
 	const password = req.body.password;
 	const hash = req.body.hash;
 	const otp = req.body.otp;
+
+	// Address
+	const country = req.body.country;
+	const city = req.body.city;
+	const district = req.body.district;
+	const address = req.body.address;
+	const postalCode = req.body.postal_code;
 	let [hashValue, expires] = hash.split(".");
 
 	let now = Date.now();
@@ -95,14 +115,21 @@ const registerUser = async (req, res, next) => {
 		.digest("hex");
 
 	if (newCalculatedHash === hashValue) {
-		const { walletId, idempotencyKey } = await createWallet();
+		const { walletId, walletAddress } = await createWallet();
 		console.log(walletId);
 		var newPerson = new User({
 			email: email,
 			name: name,
 			password: password,
-			idempotencyKey: idempotencyKey,
 			walletId: walletId,
+			walletAddress: walletAddress,
+			country: country,
+			city: city,
+			district: district,
+			address: address,
+			postalCode: postalCode,
+			cardId: "",
+			bankId: "",
 		});
 
 		newPerson.save(function (err, Person) {
@@ -117,7 +144,7 @@ const registerUser = async (req, res, next) => {
 };
 
 // **********************Login**********************
-const loginUser = async (req, res, next) => {
+const loginUser = async (req, res) => {
 	User.findOne({ email: req.body.email }, async function (err, data) {
 		// console.log("data" + data);
 		if (data) {
@@ -143,10 +170,32 @@ const loginUser = async (req, res, next) => {
 	});
 };
 
+// Get bankId and cardId
+const getID = async (req, res) => {
+	const email = req.params.email;
+	User.findOne({ email: email }, async function (error, data) {
+		if (error) {
+			res.send({
+				status: "error",
+				msg: "There was an error",
+			});
+		} else {
+			res.send({
+				status: "success",
+				data: {
+					bankId: data.bankId,
+					cardId: data.cardId,
+				},
+			});
+		}
+	});
+};
+
 module.exports = {
 	sendOtp,
 	registerUser,
 	loginUser,
+	getID,
 };
 
 // ***********Profile Page **************
