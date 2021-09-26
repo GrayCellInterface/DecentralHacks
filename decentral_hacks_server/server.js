@@ -1,12 +1,17 @@
 const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const session = require("express-session");
+
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+
+const cors = require("cors");
 const env = require("dotenv").config();
+const session = require("express-session");
+const mongoose = require("mongoose");
+
 const router = require("./routes/index");
 const accountsRouter = require("./routes/accounts");
+const shopRouter = require("./routes/shop");
+const statusRoute = require("./routes/status");
 
 const app = express();
 
@@ -28,7 +33,7 @@ mongoose.connect(
 
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error"));
-db.once("open", function () { });
+db.once("open", function () {});
 
 app.use(cors());
 app.use(express.json());
@@ -53,6 +58,8 @@ app.get("/", (req, res) => {
 // Base Routes
 app.use("/api/auth", router.route);
 app.use("/api/accounts", accountsRouter.route);
+app.use("/api/shop", shopRouter.route);
+app.use("/api/status", statusRoute.route);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, function () {

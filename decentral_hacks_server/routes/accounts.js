@@ -3,23 +3,31 @@ const {
 	configuration,
 	createWallet,
 	getWallet,
-	createCard,
-	getPublicKey,
 } = require("../controllers/accounts");
+
+const { payment } = require("../controllers/payments");
+const { payout } = require("../controllers/payouts");
+const { transfers } = require("../controllers/transfers");
 
 const router = express.Router();
 
-//Test
+//Get master wallet address TEST
 router.get("/config", configuration);
 
-//create wallet - just to check the workability
+//create wallet - TEST
 router.post("/create-wallet", createWallet);
 
-//get wallet
+//get wallet TEST
 router.get("/get-wallet", getWallet);
 
-// Create Card
-router.post("/card", createCard);
+// Create Card & pay
+router.post("/payment", payment);
+
+// Create bank & payout
+router.post("/payout", payout);
+
+// Transfer - TEST
+router.post("/transfer", transfers);
 
 module.exports = {
 	route: router,

@@ -3,6 +3,7 @@ const {
 	sendOtp,
 	registerUser,
 	loginUser,
+	getID,
 	// userProfile,
 	// userLogout,
 } = require("../controllers/index");
@@ -26,6 +27,9 @@ router.get("/login", (req, res) => {
 	res.send("Login Page");
 });
 router.post("/login", loginUser);
+
+// Get user ID details - bank and card
+router.get("/get-id/:email", getID);
 
 //User Profile
 // router.get("/profile", userProfile);
