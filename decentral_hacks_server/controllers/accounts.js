@@ -33,17 +33,19 @@ const createWallet = async () => {
 
 	await axios
 		.post("https://api-sandbox.circle.com/v1/wallets", body, { headers })
-		.then((response) => {
+		.then(async (response) => {
 			console.log(response.data.data);
 			walletId = response.data.data.walletId;
-			walletAddress = response.data.data.entityId;
+			let { address } = await getBlockchainAddress(walletId);
+			walletAddress = address
 		});
 
 	return { walletId: walletId, walletAddress: walletAddress };
 };
 
 // Retrieve existing wallet TEST
-const getWallet = async (id = 1000175725) => {
+const getWallet = async (id) => {
+	let balance = ""
 	const headers = {
 		Accept: "application/json",
 		"Content-Type": "application/json",
@@ -52,11 +54,16 @@ const getWallet = async (id = 1000175725) => {
 	};
 
 	await axios
-		.get("https://api-sandbox.circle.com/v1/wallets/${id}", { headers })
-		.then((response) => resp.send({ status: "success", data: response }))
+		.get(`https://api-sandbox.circle.com/v1/wallets/${id}`, { headers })
+		.then((response) => {
+			balance = response.data.data.balances[0].amount;
+
+		})
 		.catch((error) => {
 			console.log({ status: "Error", msg: error.response });
 		});
+
+	return { balance: balance }
 };
 
 // Generating Blockchain Address

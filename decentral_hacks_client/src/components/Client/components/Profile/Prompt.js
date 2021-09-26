@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import encrypt from '../../../../assets/js/encryptPGP';
+import React, { useState } from "react";
 import axios from 'axios'
 import { Modal, Form } from 'react-bootstrap';
 import './css/Prompt.css'
-var valid = require("card-validator");
 
 const Prompt = (props) => {
 
@@ -57,8 +55,39 @@ const Prompt = (props) => {
 
     }
 
-    const handleSameDebit = () => {
-        //send email id to payout route for particular credit id
+    const handleSameDebit = async (e) => {
+        e.preventDefault()
+        setErrors({})
+        const validAmount = /[+-]?([0-9]*[.])?[0-9]+/
+        errorHandlerObj = {
+            invalidAmountError: "",
+            bankAmountError: "",
+        }
+        if (bankAmount.length === 0 || !validAmount.test(bankAmount)) {
+            errorHandlerObj['invalidAmountError'] = errorObj['invalidAmountError']
+        } else {
+            if (!(parseFloat(bankAmount) < parseFloat(window.localStorage.getItem('balance')))) {
+                errorHandlerObj['bankAmountError'] = errorObj['bankAmountError']
+            }
+        }
+        if (
+            errorHandlerObj['invalidAmountError'] === "" &&
+            errorHandlerObj['bankAmountError'] === ""
+        ) {
+
+            await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payout`, {
+                choice: "old",
+                email: `${window.localStorage.getItem("email")}`,
+                amount: `${bankAmount}`
+            }).then((res) => {
+                console.log(res.data.msg)
+            }).catch((error) => {
+                console.log(error.response.data)
+            })
+        } else {
+            setErrors({ ...errorHandlerObj })
+            console.log("Debit Failed")
+        }
     }
 
     const handleSameCard = () => {
@@ -73,8 +102,8 @@ const Prompt = (props) => {
         setCardAmount(e.target.value)
     }
 
-    const handleBankAmountChange = (selectedInput) => (e) => {
-
+    const handleBankAmountChange = (e) => {
+        setBankAmount(e.target.value)
     }
 
     const renderModalContent = () => {
@@ -115,17 +144,41 @@ const Prompt = (props) => {
                 </>
             )
         } else {
-            return (
-                <>
-                    <p>Do you want to use the same bank as previous debit transaction?</p>
-                    <button onClick={handleSameDebit} className="me-btn" style={{ float: 'left' }}>
-                        Use Same Bank
-                    </button>
-                    <button onClick={props.handleDifferentDebit} className="me-btn" style={{ float: 'right' }}>
-                        Use Different Bank
-                    </button>
-                </>
-            )
+            if (openSameBank) {
+                return (
+                    <Form>
+                        <Form.Group className="mb-3" controlId="formBasicNumber">
+                            <Form.Label>Amount:</Form.Label>
+                            <Form.Control value={bankAmount} onChange={handleBankAmountChange} placeholder="Enter credit amount" />
+                            {
+                                errors['invalidAmountError'] === ""
+                                    ? (
+                                        errors['bankAmountError'] === ""
+                                            ? <></>
+                                            : <div className='error-msg'>{errors['bankAmountError']}</div>
+                                    )
+                                    : <div className='error-msg'>{errors['invalidAmountError']}</div>
+                            }
+                        </Form.Group>
+                        <button onClick={handleSameDebit} className="me-btn" style={{ float: 'left' }}>
+                            Withdraw
+                        </button>
+                    </Form>
+                )
+            } else {
+                return (
+                    <>
+                        <p>Do you want to use the same bank as previous debit transaction?</p>
+                        <button onClick={handleSameBank} className="me-btn" style={{ float: 'left' }}>
+                            Use Same Bank
+                        </button>
+                        <button onClick={props.handleDifferentDebit} className="me-btn" style={{ float: 'right' }}>
+                            Use Different Bank
+                        </button>
+                    </>
+                )
+            }
+
         }
     }
 

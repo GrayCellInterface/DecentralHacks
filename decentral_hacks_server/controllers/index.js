@@ -2,7 +2,7 @@ const User = require("../models/user");
 const sgMail = require("@sendgrid/mail");
 const crypto = require("crypto");
 
-const { createWallet, getBlockchainAddress } = require("./accounts");
+const { createWallet, getBlockchainAddress, getWallet } = require("./accounts");
 
 // *************************Register*************************
 const sendOtp = async (req, res, next) => {
@@ -142,15 +142,20 @@ const loginUser = async (req, res) => {
 			if (data.password === req.body.password) {
 				// req.session.userId = data.uid;
 				// console.log(req.session.userId);
-				const { address } = await getBlockchainAddress(
-					data.walletId,
-					data.idempotencyKey
-				);
+
+				// const { address } = await getBlockchainAddress(
+				// 	data.walletId,
+				// 	data.idempotencyKey
+				// );
+				const { balance } = await getWallet(data.walletId)
+				console.log(data.walletId)
 				res.status(200).send({
 					msg: "Logged In",
+					name: data.name,
 					email: req.body.email,
-					walletId: data.walletId,
-					address: address,
+					address: data.walletAddress,
+					balance: balance,
+
 				});
 			} else {
 				res.send({ msg: "Incorrect Password" });

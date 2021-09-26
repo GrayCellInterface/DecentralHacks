@@ -20,7 +20,7 @@ const UserInfo = (props) => {
                                     <p><b>Username:</b></p>
                                 </div>
                                 <div className="me-profile-data-right">
-                                    <p>Tarang Padia</p>
+                                    <p>{window.localStorage.getItem("username")}</p>
                                 </div>
                             </li>
                             <li>

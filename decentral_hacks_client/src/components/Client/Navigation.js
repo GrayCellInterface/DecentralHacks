@@ -338,9 +338,10 @@ const Navigation = (props) => {
                         console.log("Login Successful");
                         setHasLoggedIn(true);
                         setErrors({});
+                        window.localStorage.setItem('balance', res.data.balance);
                         window.localStorage.setItem("email", res.data.email);
                         window.localStorage.setItem("address", res.data.address);
-                        window.localStorage.setItem("walletId", res.data.walletId);
+                        window.localStorage.setItem("username", res.data.name);
                         handleLoginModalClose();
                         window.location.href = `${props.url}/profile`;
                     } else {
@@ -367,6 +368,7 @@ const Navigation = (props) => {
         window.localStorage.removeItem("address");
         window.localStorage.removeItem("publicKey");
         window.localStorage.removeItem("publicKeyExpiry");
+        window.localStorage.removeItem("username")
         setHasLoggedIn(false);
         window.location.href = `${props.url}`;
     };

@@ -9,12 +9,27 @@ const createCard = async (data, record, ip) => {
 
 	let cardId = "";
 
-	headers = {
+	const headers = {
 		Accept: "application/json",
 		"Content-Type": "application/json",
 		Authorization:
 			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
 	};
+
+	let billingDetails = {
+		name: record.name,
+		city: record.city,
+		country: record.country,
+		line1: record.address,
+		postalCode: record.postalCode,
+	}
+
+	if (record.country === "US" || record.country === "CA") {      //Remaining to test
+		billingDetails = {
+			...billingDetails,
+			district: record.district
+		}
+	}
 
 	const body = {
 		idempotencyKey: uuidv4(),
@@ -22,13 +37,7 @@ const createCard = async (data, record, ip) => {
 		encryptedData: data.encryptedData,
 		// encryptedData:
 		// 	"LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tDQpWZXJzaW9uOiBPcGVuUEdQLmpzIHY0LjEwLjQNCkNvbW1lbnQ6IGh0dHBzOi8vb3BlbnBncGpzLm9yZw0KDQp3Y0JNQTBYV1NGbEZScFZoQVFmK0oycG5Jc2ZSYzYydUowODMycVNaWlRUNDV1cGQydGI4YXVVaDgwMzkNClRNSGNDUlRxQmM3TVRzdTI1VThyU3dpUWNTTWI4eGhEU1NPc0FLbjZjY09JUEowOW1UK1lnNDB1ejlRag0KSjRJZm93Vi9sOFNRU2dmYU5sR2VydXZQWStOZTlJQWQycVB4VXZTaU9wbGp6cGpTUlRIMTRFYmNWak1pDQp3cDA0UFhEN0ZGU3NTTkh3eHNzR1pmc3pHVVpIV2dzQTNINXppaTVTMUZKanFkNzV2UndGM0xJaUpEQk8NCjBNeWErcnZ3VThuTXdVNHM0ckprSnplQkY5TnIrdlhWZmthTkU4Um8rc1Q0emFCVUxMeHEwQXdYZERKWQ0KWmVSYzlXc1NTNW9ZM0JtZWI5Y0FrMFZVbjRCQkxKYW4ya3U2b1NDT1VPcWtHWUZBaTVzeDVET0hmdzhXDQpuTkpoQWNheVdBTEJTOTF1bUJvQ3R3RDYydi9uUVNyOTNmMEsxblpDZHQvdGV5MlVMWGJsdVB6T2JBc0sNClZUYjlaNDVkQld0dGtnTTFpaWZySGtnc3pKWll2R2lUc2dQOE1HWnp0NEptTitaZVp2V1E2TEY0NTg3ZQ0KaXd2VEdtTXZ2ZWZRZFE9PQ0KPWpEYlcNCi0tLS0tRU5EIFBHUCBNRVNTQUdFLS0tLS0NCg==",
-		billingDetails: {
-			name: record.name,
-			city: record.city,
-			country: record.country,
-			line1: record.address,
-			postalCode: record.postalCode,
-		},
+		billingDetails: billingDetails,
 		expMonth: parseInt(data.expiryMonth),
 		expYear: parseInt(data.expiryYear),
 		metadata: {

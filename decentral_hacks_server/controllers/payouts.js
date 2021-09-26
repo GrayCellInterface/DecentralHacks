@@ -4,7 +4,7 @@ const User = require("../models/user");
 const schedule = require("node-schedule");
 
 // Create Bank
-const bank = async (req) => {
+const bank = async (data, record) => {
 	var bankId = "";
 	const headers = {
 		Accept: "application/json",
@@ -13,77 +13,37 @@ const bank = async (req) => {
 			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
 	};
 
+	let billingDetails = {
+		name: record.name,
+		city: record.city,
+		country: record.country,
+		line1: record.address,
+		district: record.district,
+		postalCode: record.postalCode,
+	}
 
+	if (record.country === "US" || record.country === "CA") {      //Remaining to test
+		billingDetails = {
+			...billingDetails,
+			district: record.district
+		}
+	}
 
+	// US BANK
 	const body = {
-		billingDetails: {
-			name: "Satoshi Nakamoto",
-			city: "Boston",
-			country: "US",
-			line1: "100 Money Street",
-			line2: "Suite 1",
-			district: "MA",
-			postalCode: "01234",
-		},
+		billingDetails: billingDetails,
 		bankAddress: {
-			bankName: "SAN FRANCISCO",
-			city: "SAN FRANCISCO",
-			country: "US",
-			line1: "100 Money Street",
-			line2: "Suite 1",
-			district: "CA",
+			bankName: data.bankName,
+			city: data.city,
+			country: data.country,
+			line1: data.address,
+			district: data.district,
 		},
 		idempotencyKey: uuidv4(),
-		accountNumber: "12340010",
-		routingNumber: "121000248",
+		accountNumber: data.accountNumber,
+		routingNumber: data.routingNumber,
 	};
 
-
-	const body2 = {
-		billingDetails: {
-			name: "Satoshi Nakamoto",
-			city: "Boston",
-			country: "US",
-			line1: "100 Money Street",
-			line2: "Suite 1",
-			district: "MA",
-			postalCode: "01234",
-		},
-		bankAddress: {
-			bankName: "SAN FRANCISCO",
-			city: "SAN FRANCISCO",
-			country: "US",
-			line1: "100 Money Street",
-			line2: "Suite 1",
-			district: "CA",
-		},
-		idempotencyKey: uuidv4(),
-		accountNumber: "12340010",
-		routingNumber: "121000248",
-	};
-
-	const body3 = {
-		billingDetails: {
-			name: "Satoshi Nakamoto",
-			city: "Boston",
-			country: "US",
-			line1: "100 Money Street",
-			line2: "Suite 1",
-			district: "MA",
-			postalCode: "01234",
-		},
-		bankAddress: {
-			bankName: "SAN FRANCISCO",
-			city: "SAN FRANCISCO",
-			country: "US",
-			line1: "100 Money Street",
-			line2: "Suite 1",
-			district: "CA",
-		},
-		idempotencyKey: uuidv4(),
-		accountNumber: "12340010",
-		routingNumber: "121000248",
-	};
 
 	await axios
 		.post("https://api-sandbox.circle.com/v1/banks/wires", body, { headers })
@@ -97,7 +57,7 @@ const bank = async (req) => {
 };
 
 // Create Payout
-const createPayout = async (bankId) => {
+const createPayout = async (email, bankId, amount) => {
 	console.log("BANKID FROM CreatePayout", bankId);
 	const headers = {
 		Accept: "application/json",
@@ -109,8 +69,8 @@ const createPayout = async (bankId) => {
 	const body = {
 		source: { type: "wallet", id: "1000177235" },
 		destination: { type: "wire", id: bankId },
-		amount: { amount: "3.14", currency: "USD" },
-		metadata: { beneficiaryEmail: "sanchi.shirur4@gmail.com" },
+		amount: { amount: amount, currency: "USD" },
+		metadata: { beneficiaryEmail: email },
 		idempotencyKey: uuidv4(),
 	};
 
@@ -133,7 +93,7 @@ const updateBankId = async (email, bankId) => {
 				bankId: bankId,
 			},
 		},
-		async function (err, updatedRecord) {
+		async function (error, updatedRecord) {
 			if (error) {
 				console.log({
 					status: "Error",
@@ -141,13 +101,13 @@ const updateBankId = async (email, bankId) => {
 				});
 			} else {
 				console.log({
-					status: "Error",
+					status: "Success",
 					msg: "Record Updated Successfully",
 				});
 				// Function to delete from the record
 				const date = new Date(Date.now() + 86400000);
 
-				await schedule.scheduleJob(date, async function () {
+				schedule.scheduleJob(date, async function () {
 					User.findOneAndUpdate(
 						{
 							email: email,
@@ -179,18 +139,19 @@ const payout = async (req, res) => {
 	const data = req.body;
 	const choice = data.choice;
 
-	User.findOne({ email: data.email }, async function (err, data) {
+	User.findOne({ email: data.email }, async function (err, record) {
 		if (choice === "new") {
-			const { bankId } = await bank(req);
+			const { bankId } = await bank(data, record);
 			// Update Database
+			console.log("BANK ID", bankId)
 			await updateBankId(data.email, bankId);
-			await createPayout(bankId);
+			await createPayout(data.email, bankId, data.amount);
 			res.send({ status: "success", msg: "Debit successful!" });
 		} else {
 			if (record.bankId === "") {
 				res.send({ status: "error", msg: "This bank Id has expired" }); //Boundary case
 			} else {
-				await createPayout(data.bankId);
+				await createPayout(data.email, record.bankId, data.amount);
 				res.send({ status: "success", msg: "Debit successful!" });
 			}
 		}
