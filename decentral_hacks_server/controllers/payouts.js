@@ -13,7 +13,56 @@ const bank = async (req) => {
 			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
 	};
 
+
+
 	const body = {
+		billingDetails: {
+			name: "Satoshi Nakamoto",
+			city: "Boston",
+			country: "US",
+			line1: "100 Money Street",
+			line2: "Suite 1",
+			district: "MA",
+			postalCode: "01234",
+		},
+		bankAddress: {
+			bankName: "SAN FRANCISCO",
+			city: "SAN FRANCISCO",
+			country: "US",
+			line1: "100 Money Street",
+			line2: "Suite 1",
+			district: "CA",
+		},
+		idempotencyKey: uuidv4(),
+		accountNumber: "12340010",
+		routingNumber: "121000248",
+	};
+
+
+	const body2 = {
+		billingDetails: {
+			name: "Satoshi Nakamoto",
+			city: "Boston",
+			country: "US",
+			line1: "100 Money Street",
+			line2: "Suite 1",
+			district: "MA",
+			postalCode: "01234",
+		},
+		bankAddress: {
+			bankName: "SAN FRANCISCO",
+			city: "SAN FRANCISCO",
+			country: "US",
+			line1: "100 Money Street",
+			line2: "Suite 1",
+			district: "CA",
+		},
+		idempotencyKey: uuidv4(),
+		accountNumber: "12340010",
+		routingNumber: "121000248",
+	};
+
+	const body3 = {
 		billingDetails: {
 			name: "Satoshi Nakamoto",
 			city: "Boston",
@@ -123,36 +172,29 @@ const updateBankId = async (email, bankId) => {
 	);
 	return;
 };
+
+
 // Payout Main Function
 const payout = async (req, res) => {
 	const data = req.body;
 	const choice = data.choice;
 
 	User.findOne({ email: data.email }, async function (err, data) {
-		if (data.bankId === "" && choice === "new") {
+		if (choice === "new") {
 			const { bankId } = await bank(req);
 			// Update Database
 			await updateBankId(data.email, bankId);
 			await createPayout(bankId);
 			res.send({ status: "success", msg: "Debit successful!" });
-		} else if (data.bankId !== "" && (choice === "new" || choice === "old")) {
-			if (choice === "new") {
-				const { bankId } = await bank(req);
-				await updateBankId(data.email, bankId);
-				await createPayout(data.bankId);
-				res.send({ status: "success", msg: "Debit successful!" });
+		} else {
+			if (record.bankId === "") {
+				res.send({ status: "error", msg: "This bank Id has expired" }); //Boundary case
 			} else {
 				await createPayout(data.bankId);
 				res.send({ status: "success", msg: "Debit successful!" });
 			}
-		} else {
-			res.send({
-				status: "error",
-				message: "There was an error",
-			});
 		}
 	});
-	// res.send("Payout Successful");
 };
 
 module.exports = {

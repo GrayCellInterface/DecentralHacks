@@ -31,7 +31,7 @@ const Profile = () => {
     })
 
     const handleOpenCredit = () => {
-        if (creditId === "") {
+        if (creditId === "false") {
             setOpenCredit(true);
         } else {
             handleOpenPrompt("credit")
@@ -40,7 +40,7 @@ const Profile = () => {
     }
 
     const handleOpenDebit = () => {
-        if (debitId === "") {
+        if (debitId === "false") {
             setOpenDebit(true);
         } else {
             handleOpenPrompt("debit")

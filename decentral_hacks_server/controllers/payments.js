@@ -66,7 +66,6 @@ const createPayment = async (data, ip, cardId) => {
 			ipAddress: ip,
 		},
 		amount: { amount: data.amount, currency: "USD" },
-		// autoCapture: true,
 		source: { id: cardId, type: "card" },
 		idempotencyKey: uuidv4(),
 		keyId: data.keyId,
@@ -85,7 +84,7 @@ const createPayment = async (data, ip, cardId) => {
 	return { payload: payload };
 };
 
-const updateCardId = async (email, cardId) => {
+const updateCardId = async (email, cardId, encryptedCvv, keyId) => {
 	User.findOneAndUpdate(
 		{
 			email: email,
@@ -93,6 +92,8 @@ const updateCardId = async (email, cardId) => {
 		{
 			$set: {
 				cardId: cardId,
+				encryptedCvv: encryptedCvv,
+				keyId: keyId
 			},
 		},
 		async function (err, updatedRecord) {
@@ -111,6 +112,8 @@ const updateCardId = async (email, cardId) => {
 						{
 							$set: {
 								cardId: "",
+								encryptedCvv: "",
+								keyId: ""
 							},
 						},
 						function (error) {
@@ -126,9 +129,10 @@ const updateCardId = async (email, cardId) => {
 	return;
 };
 
+
 // Payment main function
 const payment = async (req, res) => {
-	const data = req.body;  // email ,encrypted ccv and ccv+card, expi month & exp year, keyID
+	let data = req.body;  // email ,encrypted ccv and ccv+card, expi month & exp year, keyID
 	const choice = data.choice;
 
 	// IP Address
@@ -140,7 +144,7 @@ const payment = async (req, res) => {
 			const { cardId } = await createCard(data, record, ip);
 			console.log(cardId);
 			// Update Database
-			await updateCardId(data.email, cardId);
+			await updateCardId(data.email, cardId, data.encryptedCvv, data.keyId);
 			await createPayment(data, ip, cardId);
 			res.send({ status: "success", msg: "Credit Successful!" });
 
@@ -148,6 +152,8 @@ const payment = async (req, res) => {
 			if (record.cardId === "") {
 				res.send({ status: "error", msg: "This card has expired" }); //Boundary case
 			} else {
+				data = { ...data, encryptedCvv: record.encryptedCvv, keyId: record.keyId }
+				console.log("DATA", data);
 				await createPayment(data, ip, record.cardId);
 				res.send({ status: "success", msg: "Credit Successful!" });
 			}

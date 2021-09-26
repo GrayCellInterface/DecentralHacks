@@ -118,6 +118,8 @@ const registerUser = async (req, res) => {
 			address: address,
 			postalCode: postalCode,
 			cardId: "",
+			encryptedCvv: "",
+			keyId: "",
 			bankId: "",
 		});
 
@@ -169,11 +171,13 @@ const getID = async (req, res) => {
 				msg: "There was an error",
 			});
 		} else {
+			const bankId = data.bankId === "" ? "false" : "true";
+			const cardId = data.cardId === "" ? "false" : "true"
 			res.send({
 				status: "success",
 				data: {
-					bankId: data.bankId,
-					cardId: data.cardId,
+					bankId: bankId,
+					cardId: cardId,
 				},
 			});
 		}

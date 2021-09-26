@@ -13,6 +13,8 @@ var Schema = mongoose.Schema;
 	address: String,
 	postalCode: String,
 	cardId: String,
+	encryptedCvv: String,
+	keyId: String,
 	bankId: String,
 })),
 	(User = mongoose.model("User", userSchema));
