@@ -15,7 +15,7 @@ async function encrypt(dataToEncrypt, publicKeyObj) {
     return openpgp.encrypt(options).then((ciphertext) => {
         return {
             encryptedMessage: btoa(ciphertext.data),
-            keyId,
+            keyId: keyId,
         }
     })
 }

@@ -43,6 +43,11 @@ const CreditPage = (props) => {
 
     let handlerObj;
     let errorHandlerObj;
+    const encryptedCard = {
+        encryptedData: "",
+        encryptedCvv: "",
+        keyId: ""
+    }
 
     useEffect(() => {
         const headers = {
@@ -78,32 +83,6 @@ const CreditPage = (props) => {
 
     }, [])
 
-    const encryptCardData = async () => {
-
-        const cardDetails = {
-            number: cardValues['number'],
-            cvv: cardValues['cvv']
-        }
-
-        const encryptedData = await encrypt(cardDetails, publicKey)
-        const { encryptedMessage, keyId } = encryptedData
-
-        setEncryptedData(encryptedMessage)
-        setKeyId(keyId)
-
-    }
-
-    const encryptCvv = async () => {
-        const cvv = {
-            cvv: cardValues['cvv']
-        }
-
-        const encryptedData = await encrypt(cvv, publicKey)
-        const { encryptedMessage, keyId } = encryptedData
-
-        setEncryptedCvv(encryptedMessage)
-
-    }
 
     const handleCardChange = (selectedInput) => (e) => {
         handlerObj = { ...cardValues };
@@ -120,7 +99,7 @@ const CreditPage = (props) => {
         setCardValues({ ...handlerObj })
     }
 
-    const handleCredit = (e) => {
+    const handleCredit = async (e) => {
         e.preventDefault();
         setErrors({})
         const validAmount = /[+-]?([0-9]*[.])?[0-9]+/
@@ -159,9 +138,47 @@ const CreditPage = (props) => {
             errorHandlerObj['invalidAmountError'] === "" &&
             errorHandlerObj['thresholdAmountError'] === ""
         ) {
-            encryptCardData()
-            encryptCvv()
+            const cardDetails = {
+                number: cardValues['number'],
+                cvv: cardValues['cvv']
+            }
+            const cvv = {
+                cvv: cardValues['cvv']
+            }
 
+            const encryptedDataCvv = await encrypt(cvv, publicKey)
+
+            const encryptedData = await encrypt(cardDetails, publicKey)
+            const { encryptedMessage, keyId } = encryptedData
+
+            console.log(encryptedData)
+
+            console.log({
+                choice: "new",
+                email: `${window.localStorage.getItem("email")}`,
+                expiryMonth: `${cardValues['expiryMonth']}`,
+                expiryYear: `${cardValues['expiryYear']}`,
+                amount: `${cardValues['amount']}`,
+                keyId: `${keyId}`,
+                encryptedData: `${encryptedMessage}`,
+                encryptedCvv: `${encryptedDataCvv.encryptedMessage}`
+            })
+
+            console.log(encryptedCvv, encryptedData)
+            await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payment`, {
+                choice: "new",
+                email: `${window.localStorage.getItem("email")}`,
+                expiryMonth: `${cardValues['expiryMonth']}`,
+                expiryYear: `${cardValues['expiryYear']}`,
+                amount: `${cardValues['amount']}`,
+                keyId: `${keyId}`,
+                encryptedData: `${encryptedMessage}`,
+                encryptedCvv: `${encryptedDataCvv.encryptedMessage}`
+            }).then((res) => {
+                console.log(res.data.msg)
+            }).catch((error) => {
+                console.log(error.response.message)
+            })
         } else {
             setErrors({ ...errorHandlerObj })
             console.log("Credit Failed")

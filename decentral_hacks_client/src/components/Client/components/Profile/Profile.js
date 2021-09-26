@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import CreditPage from './CreditPage';
 import DebitPage from './DebitPage';
 import UserInfo from './UserInfo';
@@ -18,10 +19,15 @@ const Profile = () => {
 
     useEffect(() => {
 
-        console.log("Component has mounted!");
-        //Get id from backend
-        //if no id then id = ""
-        //else id = id
+        axios.get(`${process.env.REACT_APP_BACKEND_API}/auth/get-id/${window.localStorage.getItem('email')}`)
+            .then((res) => {
+                console.log(res.data.data)
+                setCreditId(res.data.data.cardId)
+                setDebitId(res.data.data.bankId)
+            }).catch((error) => {
+                console.log(error.response.message)
+            })
+
     })
 
     const handleOpenCredit = () => {

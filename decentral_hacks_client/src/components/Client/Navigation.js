@@ -215,6 +215,7 @@ const Navigation = (props) => {
                     email: `${registerValues["email"]}`,
                     name: `${registerValues["name"]}`,
                     password: `${hashedPassword}`,
+
                 })
                 .then((res) => {
                     if (res.data.msg === "Registered") {
@@ -226,6 +227,11 @@ const Navigation = (props) => {
                             email: res.data.email,
                             password: res.data.password,
                             hash: res.data.hash,
+                            city: `${billingValues['city']}`,
+                            country: `${billingValues['country']}`,
+                            address: `${billingValues['address']}`,
+                            district: `${billingValues['district']}`,
+                            postalCode: `${billingValues['postalcode']}`
                         });
                         setOpenVerify(true);
                     } else {
@@ -266,6 +272,11 @@ const Navigation = (props) => {
                     password: `${collectRes["password"]}`,
                     hash: `${collectRes["hash"]}`,
                     otp: `${verifyValues["otp"]}`,
+                    city: `${collectRes['city']}`,
+                    country: `${collectRes['country']}`,
+                    address: `${collectRes['address']}`,
+                    district: `${collectRes['district']}`,
+                    postalCode: `${collectRes['postalCode']}`
                 })
                 .then((res) => {
                     if (res.data.msg === "Verified Success") {

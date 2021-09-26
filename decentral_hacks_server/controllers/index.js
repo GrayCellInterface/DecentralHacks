@@ -10,13 +10,6 @@ const sendOtp = async (req, res, next) => {
 	const name = req.body.name;
 	const password = req.body.password;
 
-	// Address
-	const country = req.body.country;
-	const city = req.body.city;
-	const district = req.body.district;
-	const address = req.body.address;
-	const postalCode = req.body.postal_code;
-
 	User.findOne({ email: email }, async function (err, data) {
 		//send mail
 		if (!data) {
@@ -34,19 +27,13 @@ const sendOtp = async (req, res, next) => {
 			console.log(fullHash);
 			await sendMail(email, name, otp);
 			res.status(200).send({
-				message: "Registered",
+				msg: "Registered",
 				expires,
 				hash: fullHash,
 				name,
 				email,
 				password,
 				otp,
-				//Address
-				country,
-				city,
-				district,
-				address,
-				postalCode,
 			});
 		} else {
 			res.send({ msg: "User already exists. Try a different email." });
@@ -99,8 +86,10 @@ const registerUser = async (req, res) => {
 	const city = req.body.city;
 	const district = req.body.district;
 	const address = req.body.address;
-	const postalCode = req.body.postal_code;
+	const postalCode = req.body.postalCode;
 	let [hashValue, expires] = hash.split(".");
+
+	console.log("postalCode", postalCode);
 
 	let now = Date.now();
 
