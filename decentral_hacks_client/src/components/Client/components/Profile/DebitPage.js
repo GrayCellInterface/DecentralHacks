@@ -18,7 +18,6 @@ const DebitPage = (props) => {
 
     const [errors, setErrors] = useState({});
     const [bankValues, setBankValues] = useState({
-        country: '',
         district: '',
         amount: '',
         accountNumber: '',
@@ -77,8 +76,7 @@ const DebitPage = (props) => {
             errorHandlerObj['routingNumberError'] === "" &&
             errorHandlerObj['districtError'] === ""
         ) {
-            console.log(bankValues)
-            axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payout`, {
+            props.handleCreateDebitBody({
                 country: "US",
                 district: `${bankValues['district']}`,
                 amount: `${bankValues['amount']}`,
@@ -86,11 +84,20 @@ const DebitPage = (props) => {
                 routingNumber: `${bankValues['routingNumber']}`,
                 email: `${window.localStorage.getItem('email')}`,
                 choice: "new"
-            }).then((res) => {
-                console.log(res.data)
-            }).catch((error) => {
-                console.log(error.response.data)
             })
+            // axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payout`, {
+            //     country: "US",
+            //     district: `${bankValues['district']}`,
+            //     amount: `${bankValues['amount']}`,
+            //     accountNumber: `${bankValues['accountNumber']}`,
+            //     routingNumber: `${bankValues['routingNumber']}`,
+            //     email: `${window.localStorage.getItem('email')}`,
+            //     choice: "new"
+            // }).then((res) => {
+            //     console.log(res.data)
+            // }).catch((error) => {
+            //     console.log(error.response.data)
+            // })
         } else {
             setErrors({ ...errorHandlerObj })
             console.log("Debit failed")

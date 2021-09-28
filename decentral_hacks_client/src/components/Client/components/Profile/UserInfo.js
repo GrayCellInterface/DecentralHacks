@@ -40,12 +40,17 @@ const UserInfo = (props) => {
                                 </div>
                             </li>
                         </ul>
+                        <div className="me-btns me-padder-top-low">
+                            <div className="me-verify-btn">
+                                <button className="me-btn" onClick={props.handleOpenCredit}>Credit</button>
+                            </div>
+                            <div className="me-back-btn">
+                                <button className="me-btn" onClick={props.handleOpenDebit}>Debit</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <MyWallet
-                    handleOpenCredit={props.handleOpenCredit}
-                    handleOpenDebit={props.handleOpenDebit}
-                />
+                <MyWallet />
             </div>
 
         </>

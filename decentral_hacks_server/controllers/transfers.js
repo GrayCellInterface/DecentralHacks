@@ -5,11 +5,57 @@ const sgMail = require("@sendgrid/mail");
 const OStatus = require("../models/status");
 const { updateProductCount } = require("./shop");
 
+
+const transferDebit = async (req, res) => {
+	const amount = req.body.amount;
+	const email = req.body.email;
+	let walletId = "";
+	let transferId = "";
+	const headers = {
+		Accept: "application/json",
+		"Content-Type": "application/json",
+		Authorization:
+			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
+	};
+
+	User.findOne({ email: email }, async function (err, data) {
+		if (data) {
+			walletId = data.walletId;
+			const body1 = {
+				source: { type: "wallet", id: walletId }, // customer Wallet
+				destination: {
+					type: "blockchain",
+					address: "TEGmWL8QsLqe7ivG3Rir9wPoPVJGLCvtMC",
+					chain: "TRX",
+				},
+				amount: { amount: amount, currency: "USD" },
+				idempotencyKey: uuidv4(),
+			};
+
+			await axios
+				.post("https://api-sandbox.circle.com/v1/transfers", body1, { headers })
+				.then(async (response) => {
+					console.log(transferId = response.data.data.id);
+					res.send({ transferId: transferId })
+
+				})
+				.catch((error) =>
+					console.log({ status: "error", msg: error.response.data })
+				);
+		} else {
+			res.send({ msg: "Invalid Email" });
+		}
+	});
+
+
+};
+
 // send email and card id in req body
 const transfers = async (tot_amount, c_walletId) => {
 	const profit = parseFloat(tot_amount) * 0.02;
 	const amount = parseFloat(tot_amount) - profit;
-	console.log(profit, amount);
+	let transferId =
+		console.log(profit, amount);
 	const headers = {
 		Accept: "application/json",
 		"Content-Type": "application/json",
@@ -43,9 +89,9 @@ const transfers = async (tot_amount, c_walletId) => {
 			await axios
 				.post("https://api-sandbox.circle.com/v1/transfers", body2, { headers })
 				.then(async (response) => {
-					console.log(
-						console.log({ status: "success", msg: response.data.data })
-					);
+					transferId = response.data.data.id
+					console.log({ status: "success", msg: response.data.data })
+
 				})
 				.catch((error) =>
 					console.log({ status: "error", msg: error.response.data })
@@ -54,6 +100,8 @@ const transfers = async (tot_amount, c_walletId) => {
 		.catch((error) =>
 			console.log({ status: "error", msg: error.response.data })
 		);
+
+	return { transferId: transferId }
 };
 
 // Success or failure
@@ -175,7 +223,7 @@ const checkout = async (req, res) => {
 	const delay = 30000;
 
 	// Make payments
-	await transfers(tot_amount, c_walletId);
+	const { transferId } = await transfers(tot_amount, c_walletId);
 
 	// Status - On the way
 	await addStatus(orderId, orderName, "on the way", email, p_id);
@@ -219,4 +267,5 @@ const checkout = async (req, res) => {
 module.exports = {
 	checkout,
 	transfers,
+	transferDebit
 };

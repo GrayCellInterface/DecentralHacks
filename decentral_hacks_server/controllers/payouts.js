@@ -51,13 +51,14 @@ const bank = async (data, record) => {
 			bankId = response.data.data.id;
 			// console.log("BANK", response.data.data);
 		})
-		.catch((error) => console.log({ status: "error", msg: error.response }));
+		.catch((error) => console.log({ status: "error", msg: error.response.data }));
 
 	return { bankId: bankId };
 };
 
 // Create Payout
 const createPayout = async (email, bankId, amount) => {
+	let payoutId = ""
 	console.log("BANKID FROM CreatePayout", bankId);
 	const headers = {
 		Accept: "application/json",
@@ -77,12 +78,14 @@ const createPayout = async (email, bankId, amount) => {
 	await axios
 		.post("https://api-sandbox.circle.com/v1/payouts", body, { headers })
 		.then(async (response) => {
-			// console.log(response);
+			payoutId = response.data.data.id;
 		})
-		.catch((error) => console.log({ status: "error", msg: error.response }));
+		.catch((error) => console.log({ status: "error", msg: error.response.data }));
+
+	return { payoutId: payoutId }
 };
 
-//
+
 const updateBankId = async (email, bankId) => {
 	User.findOneAndUpdate(
 		{
@@ -143,16 +146,16 @@ const payout = async (req, res) => {
 		if (choice === "new") {
 			const { bankId } = await bank(data, record);
 			// Update Database
-			console.log("BANK ID", bankId)
+			// console.log("BANK ID", bankId)
 			await updateBankId(data.email, bankId);
-			await createPayout(data.email, bankId, data.amount);
-			res.send({ status: "success", msg: "Debit successful!" });
+			const { payoutId } = await createPayout(data.email, bankId, data.amount);
+			res.send({ payoutId: payoutId });
 		} else {
 			if (record.bankId === "") {
 				res.send({ status: "error", msg: "This bank Id has expired" }); //Boundary case
 			} else {
-				await createPayout(data.email, record.bankId, data.amount);
-				res.send({ status: "success", msg: "Debit successful!" });
+				const { payoutId } = await createPayout(data.email, record.bankId, data.amount);
+				res.send({ payoutId: payoutId });
 			}
 		}
 	});

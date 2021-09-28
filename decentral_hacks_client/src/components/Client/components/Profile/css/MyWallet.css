@@ -36,15 +36,3 @@
 .me-my-wallet-head div {
     flex: 1;
 }
-.me-verify-btn{
-    float:left;
-}
-.me-verify-btn .me-btn{
-    line-height: 39px;
-}
-.me-back-btn{
-    float: right;
-}
-.me-back-btn .me-btn{
-    line-height: 39px;
-}

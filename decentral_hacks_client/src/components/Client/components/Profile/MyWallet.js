@@ -8,19 +8,12 @@ const MyWallet = (props) => {
             <div className="me-my-wallet-profile">
                 <div className="me-my-wallet-head">
                     <div className="me-wallet-name">
-                        <h4>Wallet</h4>
+                        <h4>Guidelines</h4>
                     </div>
                 </div>
                 <div className="me-my-wallet-body">
                     <p className="me-wallet-instructions">Formal instructions</p>
-                    <div className="me-btns me-padder-top-low">
-                        <div className="me-verify-btn">
-                            <button className="me-btn" onClick={props.handleOpenCredit}>Credit</button>
-                        </div>
-                        <div className="me-back-btn">
-                            <button className="me-btn" onClick={props.handleOpenDebit}>Debit</button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </>

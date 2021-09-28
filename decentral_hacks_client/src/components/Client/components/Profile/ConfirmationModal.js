@@ -8,7 +8,7 @@ const eventServer = 'https://api.shasta.trongrid.io';
 const privateKey = process.env.REACT_APP_PRIVATE_KEY;
 const tronWeb = new TronWeb(fullNode, solidityNode, eventServer, privateKey);
 
-const INVOICE_DISCOUNT_CONTRACT = "TRNfL5Hxou2rtxozm2zC5Lm9YYsibrVcAv"
+const USDC_SMART_CONTRACT = "TFGBSrddCjLJAwuryZ9DUxtEmKv13BPjnh"
 
 const ConfirmationModal = (props) => {
 
@@ -22,10 +22,8 @@ const ConfirmationModal = (props) => {
         if (status === "success") {
             setModalStage("blockchainTansfer")
             const transactionId = await executeBlockchaintoWallet()
-            console.log(transactionId)
             setTimeout(async () => {
                 const result = await confirmBlockchainTansaction(transactionId)
-                console.log(result)
                 if (result === "SUCCESS") {
                     const previousBalance = parseFloat(window.localStorage.getItem('balance'))
                     const newBalance = previousBalance + parseFloat(props.creditBody.amount)
@@ -86,9 +84,12 @@ const ConfirmationModal = (props) => {
 
     const executeBlockchaintoWallet = async () => {
         const fundAmount = tronWeb.toSun(props.creditBody.amount)
-        const invoiceContract = await tronWeb.contract().at(INVOICE_DISCOUNT_CONTRACT)
-        //get walletID
-        const transactionId = await invoiceContract.fundWallet("test1234", window.localStorage.getItem('address'), fundAmount).send()
+        const usdcContract = await tronWeb.contract().at(USDC_SMART_CONTRACT)
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/accounts/get-wallet-id/${window.localStorage.getItem('email')}`)
+            .catch((error) => {
+                console.log(error.response.message)
+            })
+        const transactionId = await usdcContract.transfer(response.data.walletAddress, fundAmount).send()
         return transactionId
     }
 
@@ -124,7 +125,7 @@ const ConfirmationModal = (props) => {
         } else {
             let message;
             if (modalStage === "transfer") {
-                message = "Executing transfer..."
+                message = "Executing deposit..."
             }
             else if (modalStage === "checkingStatus") {
                 message = "Confirming payment..."

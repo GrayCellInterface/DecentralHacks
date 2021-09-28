@@ -44,15 +44,6 @@ const Prompt = (props) => {
                 email: `${window.localStorage.getItem("email")}`,
                 amount: `${cardAmount}`
             })
-            //     await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payment`, {
-            //         choice: "old",
-            //         email: `${window.localStorage.getItem("email")}`,
-            //         amount: `${cardAmount}`
-            //     }).then((res) => {
-            //         console.log(res.data.msg)
-            //     }).catch((error) => {
-            //         console.log(error.response.data)
-            //     })
         } else {
             setErrors({ ...errorHandlerObj })
             console.log("Credit Failed")
@@ -79,16 +70,18 @@ const Prompt = (props) => {
             errorHandlerObj['invalidAmountError'] === "" &&
             errorHandlerObj['bankAmountError'] === ""
         ) {
-
-            await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payout`, {
+            props.handleCreateDebitBody({
                 choice: "old",
                 email: `${window.localStorage.getItem("email")}`,
                 amount: `${bankAmount}`
-            }).then((res) => {
-                console.log(res.data.msg)
-            }).catch((error) => {
-                console.log(error.response.data)
             })
+            // await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payout`, {
+
+            // }).then((res) => {
+            //     console.log(res.data.msg)
+            // }).catch((error) => {
+            //     console.log(error.response.data)
+            // })
         } else {
             setErrors({ ...errorHandlerObj })
             console.log("Debit Failed")

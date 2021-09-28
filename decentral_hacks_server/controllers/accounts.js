@@ -62,60 +62,63 @@ const getWallet = async (id) => {
 	return { balance: balance };
 };
 
-// Get wallet Id from email
-const getWalletId = async (req, res) => {
+
+// Generating Blockchain Address using wallet ID
+const getBlockchainAddress = async (req, res) => {
 	var walletId = "";
+	var walletAddress = ""
+	headers = {
+		Accept: "application/json",
+		"Content-Type": "application/json",
+		Authorization:
+			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
+	};
+
+	const body = {
+		chain: "TRX",
+		idempotencyKey: uuidv4(),
+		currency: "USD",
+	};
 
 	User.findOne({ email: req.params.email }, async function (err, data) {
 		if (data) {
 			walletId = data.walletId;
-			res.send({ status: "success", walletId: walletId });
+			await axios
+				.post(
+					`https://api-sandbox.circle.com/v1/wallets/${walletId}/addresses`,
+					body,
+					{
+						headers,
+					}
+				)
+				.then((response) => {
+					console.log((walletAddress = response.data.data.address));
+					res.send({ walletId: walletId, walletAddress: walletAddress });
+				});
 		} else {
-			res.send({ status: "error", msg: "User Doesnot exist" });
+			res.send({ msg: "Invalid Email" });
 		}
 	});
 };
+
+// Get wallet Id from email
+// const getWalletId = async (req, res) => {
+// 	var walletId = "";
+
+// 	User.findOne({ email: req.params.email }, async function (err, data) {
+// 		if (data) {
+// 			walletId = data.walletId;
+// 			res.send({ status: "success", walletId: walletId });
+// 		} else {
+// 			res.send({ status: "error", msg: "User Doesnot exist" });
+// 		}
+// 	});
+// };
 
 module.exports = {
 	configuration,
 	createWallet,
 	getWallet,
-	getWalletId,
+	getBlockchainAddress,
 };
 
-// Generating Blockchain Address
-// const getBlockchainAddress = async (req, res) => {
-// 	var walletId = "";
-// 	headers = {
-// 		Accept: "application/json",
-// 		"Content-Type": "application/json",
-// 		Authorization:
-// 			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-// 	};
-
-// 	const body = {
-// 		chain: "TRX",
-// 		idempotencyKey: uuidv4(),
-// 		currency: "USD",
-// 	};
-
-// 	User.findOne({ email: req.body.email }, async function (err, data) {
-// 		if (data) {
-// 			walletId = data.walletId;
-// 			await axios
-// 				.post(
-// 					`https://api-sandbox.circle.com/v1/wallets/${walletId}/addresses`,
-// 					body,
-// 					{
-// 						headers,
-// 					}
-// 				)
-// 				.then((response) => {
-// 					console.log((address = response.data.data.address));
-// 					res.send({ status: "success", data: address });
-// 				});
-// 		} else {
-// 			res.send({ msg: "Invalid Email" });
-// 		}
-// 	});
-// };

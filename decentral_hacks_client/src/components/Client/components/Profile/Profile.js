@@ -4,10 +4,11 @@ import CreditPage from './CreditPage';
 import DebitPage from './DebitPage';
 import UserInfo from './UserInfo';
 import ConfirmationModal from './ConfirmationModal';
+import ConfirmationDebit from './ConfirmationDebit';
 import Prompt from './Prompt';
 import MyTransactions from './MyTransactions';
 import './css/Profile.css'
-
+const { v4: uuidv4 } = require("uuid");
 
 const Profile = () => {
 
@@ -15,16 +16,46 @@ const Profile = () => {
     const [openPrompt, setOpenPrompt] = useState(false)
     const [openDebit, setOpenDebit] = useState(false);
     const [creditBody, setCreditBody] = useState({})
+    const [debitBody, setDebitBody] = useState({})
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false)
+    const [openDebitConfirmation, setOpenDebitConfirmation] = useState(false)
     const [choice, setChoice] = useState("")
     const [creditId, setCreditId] = useState("")
     const [debitId, setDebitId] = useState("")
 
     useEffect(() => {
 
+        // const headers = {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json",
+        //     Authorization:
+        //         "Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
+        // };
+
+        // const url = "https://api-sandbox.circle.com/v1/transfers"
+        // axios.post(url, {
+        //     idempotencyKey: uuidv4(),
+        //     source: {
+        //         type: "wallet",
+        //         id: "1000177235"
+        //     },
+        //     destination: {
+        //         type: "blockchain",
+        //         address: "TEGmWL8QsLqe7ivG3Rir9wPoPVJGLCvtMC",
+        //         chain: "TRX"
+        //     },
+        //     amount: {
+        //         amount: "1000",
+        //         currency: "USD"
+        //     }
+        // }, { headers }).then((res) => {
+        //     console.log(res)
+        // }).catch((error) => {
+        //     console.log(error.response.data)
+        // })
+
         axios.get(`${process.env.REACT_APP_BACKEND_API}/auth/get-id/${window.localStorage.getItem('email')}`)
             .then((res) => {
-                console.log(res.data.data)
                 setCreditId(res.data.data.cardId)
                 setDebitId(res.data.data.bankId)
             }).catch((error) => {
@@ -80,14 +111,25 @@ const Profile = () => {
         setOpenConfirmationModal(true)
     }
 
+    const handleCreateDebitBody = (body) => {
+        setDebitBody(body)
+        setOpenPrompt(false)
+        setOpenDebitConfirmation(true)
+    }
+
     const handleCloseConfirmationModal = () => {
         setOpenConfirmationModal(false)
+    }
+
+    const handleCloseDebitConfirmation = () => {
+        setOpenDebitConfirmation(false)
     }
 
     const handleBackToProfile = (e) => {
         e.preventDefault();
         setOpenPrompt(false);
         setOpenConfirmationModal(false);
+        setOpenDebitConfirmation(false);
         setOpenCredit(false);
         setOpenDebit(false);
     }
@@ -105,6 +147,7 @@ const Profile = () => {
                 return (
                     <DebitPage
                         handleBackToProfile={handleBackToProfile}
+                        handleCreateDebitBody={handleCreateDebitBody}
                     />
                 )
             } else {
@@ -137,12 +180,19 @@ const Profile = () => {
                 handleDifferentDebit={handleDifferentDebit}
                 handleBackToProfile={handleBackToProfile}
                 handleCreateCreditBody={handleCreateCreditBody}
+                handleCreateDebitBody={handleCreateDebitBody}
                 choice={choice}
             />
             <ConfirmationModal
                 creditBody={creditBody}
                 handleCloseConfirmationModal={handleCloseConfirmationModal}
                 openConfirmationModal={openConfirmationModal}
+                handleBackToProfile={handleBackToProfile}
+            />
+            <ConfirmationDebit
+                debitBody={debitBody}
+                handleCloseDebitConfirmation={handleCloseDebitConfirmation}
+                openDebitConfirmation={openDebitConfirmation}
                 handleBackToProfile={handleBackToProfile}
             />
         </>

@@ -3,12 +3,12 @@ const {
 	configuration,
 	createWallet,
 	getWallet,
-	getWalletId,
+	getBlockchainAddress,
 } = require("../controllers/accounts");
 
 const { payment } = require("../controllers/payments");
 const { payout } = require("../controllers/payouts");
-const { transfers } = require("../controllers/transfers");
+const { transfers, transferDebit } = require("../controllers/transfers");
 
 const router = express.Router();
 
@@ -28,10 +28,10 @@ router.post("/payment", payment);
 router.post("/payout", payout);
 
 // Transfer - TEST
-router.post("/transfer", transfers);
+router.post("/transfer-debit", transferDebit);
 
 // Get wallet Id from email
-router.get("/get-wallet-id/:email", getWalletId);
+router.get("/get-wallet-id/:email", getBlockchainAddress);
 
 module.exports = {
 	route: router,
