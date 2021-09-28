@@ -3,7 +3,7 @@ import './css/Dashboard.css';
 import SelectRoute from './SelectRoute';
 import Auth from './Auth';
 import { BrowserRouter as Router, Switch, Route, useRouteMatch } from 'react-router-dom';
-import Navbar from './Navbar';
+
 
 
 const Admin = () => {
@@ -18,8 +18,7 @@ const Admin = () => {
                         <Auth url={url} />
                     </Route>
                     <Route path={`${path}/:selectedRoute`}>
-                        <Navbar url={url} />
-                        <SelectRoute />
+                        <SelectRoute url={url} />
                     </Route>
                 </Switch>
             </Router>

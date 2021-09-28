@@ -38,16 +38,21 @@ const Prompt = (props) => {
             errorHandlerObj['invalidAmountError'] === "" &&
             errorHandlerObj['cardAmountError'] === ""
         ) {
-
-            await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payment`, {
+            setOpenSameCard(false)
+            props.handleCreateCreditBody({
                 choice: "old",
                 email: `${window.localStorage.getItem("email")}`,
                 amount: `${cardAmount}`
-            }).then((res) => {
-                console.log(res.data.msg)
-            }).catch((error) => {
-                console.log(error.response.data)
             })
+            //     await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payment`, {
+            //         choice: "old",
+            //         email: `${window.localStorage.getItem("email")}`,
+            //         amount: `${cardAmount}`
+            //     }).then((res) => {
+            //         console.log(res.data.msg)
+            //     }).catch((error) => {
+            //         console.log(error.response.data)
+            //     })
         } else {
             setErrors({ ...errorHandlerObj })
             console.log("Credit Failed")
@@ -90,6 +95,12 @@ const Prompt = (props) => {
         }
     }
 
+    const handleBackToProfile = (e) => {
+        setOpenSameCard(false)
+        setOpenSameBank(false)
+        props.handleBackToProfile(e)
+    }
+
     const handleSameCard = () => {
         setOpenSameCard(true)
     }
@@ -128,6 +139,9 @@ const Prompt = (props) => {
                             <button onClick={handleSameCredit} className="me-btn" style={{ float: 'left' }}>
                                 Add Credit
                             </button>
+                            <button onClick={handleBackToProfile} className="me-btn" style={{ float: 'right' }}>
+                                Cancel
+                            </button>
                         </Form>
                     </>
                 )
@@ -162,6 +176,9 @@ const Prompt = (props) => {
                         </Form.Group>
                         <button onClick={handleSameDebit} className="me-btn" style={{ float: 'left' }}>
                             Withdraw
+                        </button>
+                        <button onClick={handleBackToProfile} className="me-btn" style={{ float: 'right' }}>
+                            Cancel
                         </button>
                     </Form>
                 )

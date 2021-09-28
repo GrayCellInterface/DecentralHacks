@@ -33,10 +33,10 @@ const UserInfo = (props) => {
                             </li>
                             <li>
                                 <div className="me-profile-data">
-                                    <p><b>Wallet Address:</b></p>
+                                    <p><b>Balance:</b></p>
                                 </div>
                                 <div className="me-profile-data-right">
-                                    <p>{window.localStorage.getItem("address")}</p>
+                                    <p>{window.localStorage.getItem("balance")} USDC</p>
                                 </div>
                             </li>
                         </ul>

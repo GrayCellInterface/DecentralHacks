@@ -25,8 +25,8 @@
 .me-my-wallet-body{
     padding: 0px 25px 30px 25px;
 }
-.me-wallet-balance{
-    font-size: 20px;
+.me-wallet-instructions{
+    font-size: 15px;
     color: #000;
 }
 .me-my-wallet-body p {
