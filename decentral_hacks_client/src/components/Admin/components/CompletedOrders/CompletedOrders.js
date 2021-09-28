@@ -19,7 +19,7 @@ const CompletedOrders = () => {
 	return (
 		<div className="m-4">
 			<h6>COMPLETED ORDERS LIST</h6>
-			<Table striped bordered hover responsive>
+			<Table responsive>
 				<thead>
 					<tr>
 						<th>Order ID</th>
