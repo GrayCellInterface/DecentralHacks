@@ -25,7 +25,7 @@ const Orders = (props) => {
                         <th>Product ID</th>
                         <th>Order Name</th>
                         <th>Created On</th>
-                        <th>User Email</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>

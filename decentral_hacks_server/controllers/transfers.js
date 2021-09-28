@@ -60,7 +60,8 @@ const transfers = async (req, res) => {
 	const profit = parseFloat(req.body.tot_amount) * 0.02;
 	const amount = parseFloat(req.body.tot_amount) - profit;
 
-	const masterAmount = parseFloat(fee + profit);
+	const masterAmount = parseFloat(fee + profit).toFixed(2);
+	console.log(masterAmount);
 
 	let transferIdSeller = "";
 	let walletId = "";

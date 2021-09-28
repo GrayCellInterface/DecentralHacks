@@ -31,7 +31,7 @@ const CheckoutPage = (props) => {
         } else {
             setTransferBody({
                 tot_amount: props.selectedProduct.p_price,
-                fee: (parseFloat(props.selectedProduct.p_price) * 0.035).toString(),
+                fee: parseFloat((parseFloat(props.selectedProduct.p_price) * 0.035).toFixed(2)),
                 email: window.localStorage.getItem('email')
             })
             setCheckoutBody({
@@ -85,7 +85,7 @@ const CheckoutPage = (props) => {
                                 <div className="d-flex justify-content-center">
                                     <div className="col-6">
                                         <span style={{ float: "left" }}><b>Transaction Fee: </b></span>
-                                        <span style={{ float: "right" }}>{parseFloat(props.selectedProduct.p_price) * 0.035} USDC</span>
+                                        <span style={{ float: "right" }}>{(parseFloat(props.selectedProduct.p_price) * 0.035).toFixed(2)} USDC</span>
                                     </div>
                                 </div>
                                 <hr />

@@ -8,6 +8,7 @@ const ConfirmationCheckout = (props) => {
 
     const executeCheckout = async () => {
         setModalStage("transfer")
+        //executeTransferToSeller()
         const transferId = await executeTransferToSeller()
         console.log(transferId)
         setModalStage("checkingStatus")
@@ -34,6 +35,7 @@ const ConfirmationCheckout = (props) => {
     const executeTransferToSeller = async () => {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_API}/shop/transfer`, props.transferBody)
         return response.data.transferIdSeller
+        //console.log(props.transferBody)
     }
 
     const waitForConfirmation = async (transferId) => {
