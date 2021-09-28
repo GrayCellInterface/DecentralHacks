@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import AddProduct from "./components/AddProduct/AddProduct";
-import CompletedOrders from "./components/CompletedOrders/CompletedOrders";
-import PendingOrders from "./components/PendingOrders/PendingOrders";
 import SellerProfile from "./components/SellerProfile/SellerProfile";
+import OrderStatus from "./components/OrderStatus/OrderStatus";
 
 const SelectRoute = (props) => {
 	let { selectedRoute } = useParams();
@@ -24,11 +23,16 @@ const SelectRoute = (props) => {
 		if (authenticated) {
 			switch (selectedRoute) {
 				case "completed": {
-					page = <CompletedOrders />;
+					page = <OrderStatus type="completed" />;
 					break;
 				}
 				case "pending": {
-					page = <PendingOrders />;
+					page = <OrderStatus type="pending" />;
+					break;
+				}
+
+				case "cancel": {
+					page = <OrderStatus type="cancel" />;
 					break;
 				}
 				case "add-product": {

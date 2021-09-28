@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Container, Row, Col } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
-const CompletedOrders = () => {
+const OrderStatus = (props) => {
 	const [orders, setOrders] = useState([]);
-	const type = "completed";
+	const type = props.type;
+	const name = type.toUpperCase();
 
 	useEffect(() => {
 		axios
@@ -18,8 +19,8 @@ const CompletedOrders = () => {
 	}, [orders]);
 	return (
 		<div className="m-4">
-			<h6>COMPLETED ORDERS LIST</h6>
-			<Table responsive>
+			<h6>{name} ORDERS LIST</h6>
+			<Table striped bordered hover responsive>
 				<thead>
 					<tr>
 						<th>Order ID</th>
@@ -45,4 +46,4 @@ const CompletedOrders = () => {
 	);
 };
 
-export default CompletedOrders;
+export default OrderStatus;

@@ -47,23 +47,25 @@ function Navbar(props) {
 												<ul>
 													<li className={item.cName}>
 														<Link
-															to={`${props.url}/pending`}
-															onClick={handleOpenSidebar}
-														>
-															<span>Pending</span>
-														</Link>
-													</li>
-													<li className={item.cName}>
-														<Link
 															to={`${props.url}/completed`}
 															onClick={handleOpenSidebar}
 														>
 															<span>Completed</span>
 														</Link>
 													</li>
+
 													<li className={item.cName}>
 														<Link
-															to={`${props.url}/cancelled`}
+															to={`${props.url}/pending`}
+															onClick={handleOpenSidebar}
+														>
+															<span>Pending</span>
+														</Link>
+													</li>
+
+													<li className={item.cName}>
+														<Link
+															to={`${props.url}/cancel`}
 															onClick={handleOpenSidebar}
 														>
 															<span>Cancelled</span>
