@@ -70,7 +70,7 @@ const Shop = (props) => {
 			return (
 				<>
 					<div className="row">
-						{products.map((product, index) => {
+						{products.slice(0).reverse().map((product, index) => {
 							let image;
 							if (product.p_link === "") {
 								image = defaultImage

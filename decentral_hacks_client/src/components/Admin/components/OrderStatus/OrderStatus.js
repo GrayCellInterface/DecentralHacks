@@ -31,7 +31,7 @@ const OrderStatus = (props) => {
 					</tr>
 				</thead>
 				<tbody>
-					{orders.map((item) => (
+					{orders.slice(0).reverse().map((item) => (
 						<tr key={item._id}>
 							<td>{item.orderId}</td>
 							<td>{item.productId}</td>
