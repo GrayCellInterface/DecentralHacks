@@ -146,14 +146,12 @@ const loginUser = async (req, res) => {
 				// 	data.walletId,
 				// 	data.idempotencyKey
 				// );
-				const { balance } = await getWallet(data.walletId);
 				console.log(data.walletId);
 				res.status(200).send({
 					msg: "Logged In",
 					name: data.name,
 					email: req.body.email,
 					address: data.walletAddress,
-					balance: balance,
 				});
 			} else {
 				res.send({ msg: "Incorrect Password" });

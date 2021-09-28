@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 	orderName: String,
 	email: String,
 	status: String,
+	amount: Number,
 	order_date: String,
 })),
 	(OStatus = mongoose.model("OrderStatus", oStatusSchema));

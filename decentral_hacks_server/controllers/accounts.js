@@ -102,23 +102,26 @@ const getBlockchainAddress = async (req, res) => {
 };
 
 // Get wallet Id from email
-// const getWalletId = async (req, res) => {
-// 	var walletId = "";
+const getWalletId = async (req, res) => {
+	let walletId = "";
+	User.findOne({ email: req.params.email }, async function (err, data) {
+		if (data) {
+			walletId = data.walletId;
+			const { balance } = await getWallet(walletId);
+			res.send({ status: "success", balance: balance });
+		} else {
+			res.send({ status: "error", msg: "User Doesnot exist" });
+		}
+	});
+};
 
-// 	User.findOne({ email: req.params.email }, async function (err, data) {
-// 		if (data) {
-// 			walletId = data.walletId;
-// 			res.send({ status: "success", walletId: walletId });
-// 		} else {
-// 			res.send({ status: "error", msg: "User Doesnot exist" });
-// 		}
-// 	});
-// };
 
 module.exports = {
 	configuration,
 	createWallet,
 	getWallet,
 	getBlockchainAddress,
+	getWalletId
 };
+
 

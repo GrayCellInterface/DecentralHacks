@@ -12,7 +12,7 @@ const getAllProducts = async (req, res) => {
 	});
 };
 
-// Add
+// Add product to db
 const addProduct = async (req, res) => {
 	const data = req.body;
 	const p_name = data.p_name;
@@ -152,7 +152,7 @@ const updateProductCount = async (action, id) => {
 			} else {
 				console.log({
 					status: "Error",
-					msg: "CProduct doesnot exist",
+					msg: "Product doesnot exist",
 				});
 			}
 		}

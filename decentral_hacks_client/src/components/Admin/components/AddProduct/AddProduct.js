@@ -177,7 +177,7 @@ const AddProduct = () => {
 										value={productDetails["link"]}
 										name="link"
 										onChange={handleChange}
-										placeholder="Enter Product Image Link"
+										placeholder="Enter a valid image link or keep empty"
 									/>
 								</Form.Group>
 							</Col>
@@ -233,15 +233,15 @@ const AddProduct = () => {
 							<div className="error-msg">{errors["deliveryError"]}</div>
 						)}
 					</Form.Group>
-
-					<button
-						className="me-btn inner-text"
-						type="submit"
-						style={{ float: "left", marginRight: "20px" }}
-						onClick={handleAddProduct}
-					>
-						Add Product
-					</button>
+					<div className="text-center">
+						<button
+							className="me-btn inner-text"
+							type="submit"
+							onClick={handleAddProduct}
+						>
+							Add Product
+						</button>
+					</div>
 				</Form>
 			</div>
 		</>

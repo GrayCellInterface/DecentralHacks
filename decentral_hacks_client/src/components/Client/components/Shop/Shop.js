@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import CheckoutPage from "./CheckoutPage";
 import OutOfStockPrompt from "./OutOfStockPrompt";
-import { sampleProducts } from "./sampleProducts";
+import defaultImage from '../../../../assets/images/defaultProduct.png'
 import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
 
 const Shop = (props) => {
@@ -26,10 +27,10 @@ const Shop = (props) => {
 		}
 
 		const getProducts = () => {
-			// axios.get(`${process.env.REACT_APP_BACKEND_API}/auth/get-products`).then((res) => {
-			//     setProducts(res.data.products)
-			// })
-			setProducts(sampleProducts);
+			axios.get(`${process.env.REACT_APP_BACKEND_API}/shop/all-products`).then((res) => {
+				console.log(res.data.data)
+				setProducts(res.data.data)
+			})
 		};
 
 		getProducts();
@@ -40,7 +41,7 @@ const Shop = (props) => {
 	};
 
 	const handleGotoCheckOut = (selectedProductIndex) => {
-		if (products[selectedProductIndex].stock === "0") {
+		if (products[selectedProductIndex].p_count === "0") {
 			setOpenOutOfStock(true);
 		} else {
 			if (!hasLoggedIn) {
@@ -52,6 +53,7 @@ const Shop = (props) => {
 		}
 	};
 
+
 	const handleGoBackToShop = () => {
 		setOpenCheckout(false);
 	};
@@ -60,9 +62,7 @@ const Shop = (props) => {
 		if (openCheckOut) {
 			return (
 				<CheckoutPage
-					productName={selectedProduct["productName"]}
-					productPrice={selectedProduct["productPrice"]}
-					deliveryTime={selectedProduct["deliveryTime"]}
+					selectedProduct={selectedProduct}
 					handleGoBackToShop={handleGoBackToShop}
 				/>
 			);
@@ -71,8 +71,14 @@ const Shop = (props) => {
 				<>
 					<div className="row">
 						{products.map((product, index) => {
+							let image;
+							if (product.p_link === "") {
+								image = defaultImage
+							} else {
+								image = product.p_link
+							}
 							let stockJSX;
-							let stock = parseInt(product.stock);
+							let stock = parseInt(product.p_count);
 							if (stock < 10) {
 								if (stock === 0) {
 									stockJSX = (
@@ -101,24 +107,24 @@ const Shop = (props) => {
 									style={{ margin: "30px 0px" }}
 								>
 									<Card style={{ width: "23rem" }} key={index}>
-										<Card.Img variant="top" src={product.productImage} />
+										<Card.Img style={{ height: "300px" }} variant="top" src={image} />
 										<Card.Body>
 											<div className="row">
 												<div className="col-6">
 													<Card.Title style={{ float: "left" }}>
-														{product.productName}
+														{product.p_name}
 													</Card.Title>
 												</div>
 												<div className="col-6">
 													<Card.Title style={{ float: "right" }}>
-														<strong>{product.productPrice}</strong>
+														<strong>{product.p_price} USDC</strong>
 													</Card.Title>
 												</div>
 											</div>
 											<Card.Text>
 												<br />
 												<b>Description: </b>
-												{product.productDescription}
+												{product.p_description}
 												<br />
 											</Card.Text>
 										</Card.Body>
@@ -135,7 +141,7 @@ const Shop = (props) => {
 													</div>
 													<div className="col-6">
 														<p style={{ float: "right" }}>
-															{product.deliveryTime} DAYS
+															{product.p_delivery} DAYS
 														</p>
 													</div>
 												</div>

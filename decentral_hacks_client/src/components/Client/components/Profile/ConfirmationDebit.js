@@ -45,11 +45,11 @@ const ConfirmationDebit = (props) => {
             const getStatus = setInterval(async () => {
                 count++
                 status = (await circleCheck(method, checkId)).data.data.status
-                if (status !== "pending" && count === 5) {
+                if ((status !== "pending" && status === "complete") && count === 5) {
                     resolve("failed")
                     clearInterval(getStatus)
                 }
-                if (status === "pending") {
+                if (status === "pending" || status === "complete") {
                     resolve("success")
                     clearInterval(getStatus)
                 }
@@ -99,7 +99,7 @@ const ConfirmationDebit = (props) => {
                     <button onClick={executeDebit} className="me-btn" style={{ float: 'left' }}>
                         Confirm Debit
                     </button>
-                    <button onClick={props.handleCloseDebitConfirmation} className="me-btn" style={{ float: 'right' }}>
+                    <button onClick={handleCloseDebitConfirmation} className="me-btn" style={{ float: 'right' }}>
                         Cancel
                     </button>
                 </>
@@ -134,9 +134,6 @@ const ConfirmationDebit = (props) => {
                     </>
                 )
             } else {
-                if (modalStage === "debitFailed") {
-
-                }
                 return (
                     <>
                         <div className="container text-center">

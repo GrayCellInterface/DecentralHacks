@@ -25,9 +25,6 @@ const ConfirmationModal = (props) => {
             setTimeout(async () => {
                 const result = await confirmBlockchainTansaction(transactionId)
                 if (result === "SUCCESS") {
-                    const previousBalance = parseFloat(window.localStorage.getItem('balance'))
-                    const newBalance = previousBalance + parseFloat(props.creditBody.amount)
-                    window.localStorage.setItem('balance', newBalance)
                     setModalStage("paymentSuccess")
                     console.log("Payment Successful")
                 } else {
@@ -116,7 +113,7 @@ const ConfirmationModal = (props) => {
                     <button onClick={executeCredit} className="me-btn" style={{ float: 'left' }}>
                         Confirm Credit
                     </button>
-                    <button onClick={props.handleCloseConfirmationModal} className="me-btn" style={{ float: 'right' }}>
+                    <button onClick={handleCloseConfirmationModal} className="me-btn" style={{ float: 'right' }}>
                         Cancel
                     </button>
                 </>

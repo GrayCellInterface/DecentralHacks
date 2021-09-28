@@ -1,47 +1,53 @@
 import React, { useState, useEffect } from 'react';
+import ConfirmationCheckout from './ConfirmCheckout';
 import { Card } from "react-bootstrap";
 import './css/CheckoutPage.css'
-const TronWeb = require('tronweb')
-const fullNode = 'https://api.shasta.trongrid.io';
-const solidityNode = 'https://api.shasta.trongrid.io';
-const eventServer = 'https://api.shasta.trongrid.io';
-const privateKey = process.env.REACT_APP_PRIVATE_KEY;
-const tronWeb = new TronWeb(fullNode, solidityNode, eventServer, privateKey);
-
-
-const USDC_CONTRACT_ADDRESS = process.env.REACT_APP_USDC_TOKEN
 
 const CheckoutPage = (props) => {
 
-    const [userBalance, setUserBalance] = useState(0)
+    const [checkoutBody, setCheckoutBody] = useState({})
+    const [transferBody, setTransferBody] = useState({})
+    const [openCheckoutConfirmation, setOpenCheckoutConfirmation] = useState(false)
 
     useEffect(() => {
 
-        const getBalance = async () => {
-            const contract = await tronWeb.contract().at(USDC_CONTRACT_ADDRESS);
-            const balance = await contract.balanceOf(window.localStorage.getItem("address")).call();
-            //const balance = await contract.balanceOf("TEGmWL8QsLqe7ivG3Rir9wPoPVJGLCvtMC").call();
-            setUserBalance(parseInt(tronWeb.fromSun(balance.toString())))
-
-        }
-
-        if (window.localStorage.getItem("email")) {
-            getBalance()
-        }
+        //Get the current balance of customer
+        console.log(props.selectedProduct)
 
     }, [])
 
+    const handleCloseCheckoutConfirmation = () => {
+        setOpenCheckoutConfirmation(false)
+    }
+
+    const handleBackToShop = () => {
+        setOpenCheckoutConfirmation(false)
+        props.handleGoBackToShop()
+    }
+
     const handlePayment = () => {
-        if (userBalance < parseInt(props.productPrice)) {
-            console.log("Balance Not sufficient")
+        if (parseFloat(props.selectedProduct.p_price) > parseFloat(window.localStorage.getItem('balance'))) {
+            console.log("You do not have enough balance to make this payment.")
         } else {
-            console.log("Transfer completed!")
+            setTransferBody({
+                tot_amount: props.selectedProduct.p_price,
+                fee: (parseFloat(props.selectedProduct.p_price) * 0.035).toString(),
+                email: window.localStorage.getItem('email')
+            })
+            setCheckoutBody({
+                p_id: props.selectedProduct._id,
+                email: window.localStorage.getItem('email'),
+                name: window.localStorage.getItem('username'),
+                amount: props.selectedProduct.p_price,
+                orderName: props.selectedProduct.p_name
+            })
+            setOpenCheckoutConfirmation(true)
         }
     }
 
     return (
         <>
-            <Card className="checkout-page">
+            <Card className="checkout-page" style={{ marginBottom: "30px" }}>
                 <Card.Header className="checkout-header text-center"><div className="checkout-heading">CHECKOUT</div></Card.Header>
                 <Card.Body className="text-center">
                     <div className="row">
@@ -51,7 +57,7 @@ const CheckoutPage = (props) => {
                                 <div className="d-flex justify-content-center">
                                     <div className="col-6">
                                         <span style={{ float: "left" }}><b>Product Name: </b></span>
-                                        <span style={{ float: "right" }}>{props.productName}</span>
+                                        <span style={{ float: "right" }}>{props.selectedProduct.p_name}</span>
                                     </div>
                                 </div>
                                 <br />
@@ -64,19 +70,36 @@ const CheckoutPage = (props) => {
                                 <br />
                                 <div className="d-flex justify-content-center">
                                     <div className="col-6">
-                                        <span style={{ float: "left" }}><b>Product Price: </b></span>
-                                        <span style={{ float: "right" }}>{props.productPrice}</span>
+                                        <span style={{ float: "left" }}><b>Delivery time: </b></span>
+                                        <span style={{ float: "right" }}>{props.selectedProduct.p_delivery} DAYS</span>
                                     </div>
                                 </div>
                                 <br />
                                 <div className="d-flex justify-content-center">
                                     <div className="col-6">
-                                        <span style={{ float: "left" }}><b>Delivery time: </b></span>
-                                        <span style={{ float: "right" }}>{props.deliveryTime} DAYS</span>
+                                        <span style={{ float: "left" }}><b>Product Price : </b></span>
+                                        <span style={{ float: "right" }}>{props.selectedProduct.p_price} USDC</span>
                                     </div>
                                 </div>
+                                <br />
+                                <div className="d-flex justify-content-center">
+                                    <div className="col-6">
+                                        <span style={{ float: "left" }}><b>Transaction Fee: </b></span>
+                                        <span style={{ float: "right" }}>{parseFloat(props.selectedProduct.p_price) * 0.035} USDC</span>
+                                    </div>
+                                </div>
+                                <hr />
+                                <br />
+                                <div className="d-flex justify-content-center">
+                                    <div className="col-6" style={{ fontSize: "22px" }}>
+                                        <span style={{ float: "left" }}><b>Total Product Price : </b></span>
+                                        <span style={{ float: "right" }}>{parseFloat(props.selectedProduct.p_price) + (parseFloat(props.selectedProduct.p_price) * 0.035)} USDC</span>
+                                    </div>
+                                </div>
+                                <br />
+                                <hr />
                             </Card.Text>
-                            <strong>YOUR BALANCE: {userBalance} USDC</strong>
+                            <strong>YOUR BALANCE: {window.localStorage.getItem('balance')} USDC</strong>
                         </div>
                     </div>
                     <br />
@@ -86,6 +109,13 @@ const CheckoutPage = (props) => {
                     </div>
                 </Card.Body>
             </Card>
+            <ConfirmationCheckout
+                openCheckoutConfirmation={openCheckoutConfirmation}
+                handleBackToShop={handleBackToShop}
+                handleCloseCheckoutConfirmation={handleCloseCheckoutConfirmation}
+                transferBody={transferBody}
+                checkoutBody={checkoutBody}
+            />
         </>
     );
 }

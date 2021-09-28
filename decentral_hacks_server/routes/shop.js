@@ -4,9 +4,10 @@ const {
 	addProduct,
 	editProductInfo,
 	deleteProduct,
+
 } = require("../controllers/shop");
 
-const { checkout } = require("../controllers/transfers");
+const { transfers, checkout } = require("../controllers/transfers");
 
 const router = express.Router();
 
@@ -18,6 +19,9 @@ router.post("/add-product", addProduct);
 
 //Delete product
 router.post("/delete-product", deleteProduct);
+
+// Transfer Checkout
+router.post("/transfer", transfers);
 
 //Update Product
 router.post("/edit-product", editProductInfo);

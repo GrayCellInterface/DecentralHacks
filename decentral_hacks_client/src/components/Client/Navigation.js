@@ -348,9 +348,7 @@ const Navigation = (props) => {
 						console.log("Login Successful");
 						setHasLoggedIn(true);
 						setErrors({});
-						window.localStorage.setItem("balance", res.data.balance);
 						window.localStorage.setItem("email", res.data.email);
-						window.localStorage.setItem("address", res.data.address);
 						window.localStorage.setItem("username", res.data.name);
 						handleLoginModalClose();
 						window.location.href = `${props.url}/profile`;
@@ -375,7 +373,7 @@ const Navigation = (props) => {
 	const handleLogout = () => {
 		window.localStorage.removeItem("email");
 		window.localStorage.removeItem("walletId");
-		window.localStorage.removeItem("address");
+		window.localStorage.removeItem('balance')
 		window.localStorage.removeItem("publicKey");
 		window.localStorage.removeItem("publicKeyExpiry");
 		window.localStorage.removeItem("username");

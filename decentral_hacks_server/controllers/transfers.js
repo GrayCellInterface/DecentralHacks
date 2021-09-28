@@ -1,11 +1,14 @@
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 const sgMail = require("@sendgrid/mail");
+const schedule = require("node-schedule");
 
 const OStatus = require("../models/status");
 const { updateProductCount } = require("./shop");
 
 
+
+// Transfer Function for Payout
 const transferDebit = async (req, res) => {
 	const amount = req.body.amount;
 	const email = req.body.email;
@@ -50,12 +53,18 @@ const transferDebit = async (req, res) => {
 
 };
 
-// send email and card id in req body
-const transfers = async (tot_amount, c_walletId) => {
-	const profit = parseFloat(tot_amount) * 0.02;
-	const amount = parseFloat(tot_amount) - profit;
-	let transferId =
-		console.log(profit, amount);
+// transfers for shop 1.
+const transfers = async (req, res) => {
+	const email = req.body.email;
+	const fee = parseFloat(req.body.fee);
+	const profit = parseFloat(req.body.tot_amount) * 0.02;
+	const amount = parseFloat(req.body.tot_amount) - profit;
+
+	const masterAmount = parseFloat(fee + profit);
+
+	let transferIdSeller = "";
+	let walletId = "";
+
 	const headers = {
 		Accept: "application/json",
 		"Content-Type": "application/json",
@@ -63,51 +72,63 @@ const transfers = async (tot_amount, c_walletId) => {
 			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
 	};
 
-	const body1 = {
-		source: { type: "wallet", id: c_walletId }, // customer Wallet
-		destination: {
-			type: "blockchain",
-			address: "TVyXtKiMoG2PZpSsAnMaLZW747PSvRAQmT",
-			chain: "TRX",
-		},
-		amount: { amount: amount, currency: "USD" },
-		idempotencyKey: uuidv4(),
-	};
+	User.findOne({ email: email }, async function (err, data) {
+		if (data) {
+			walletId = data.walletId;
+			console.log("Wallet ID", walletId)
 
-	const body2 = {
-		source: { type: "wallet", id: c_walletId },
-		destination: { type: "wallet", id: "1000177235" },
-		amount: { amount: profit, currency: "USD" },
-		idempotencyKey: uuidv4(),
-	};
-	await axios
-		.post("https://api-sandbox.circle.com/v1/transfers", body1, { headers })
-		.then(async (response) => {
-			console.log(response.data.data);
+			const body1 = {
+				source: { type: "wallet", id: walletId }, // customer Wallet
+				destination: {
+					type: "blockchain",
+					address: "TVyXtKiMoG2PZpSsAnMaLZW747PSvRAQmT",
+					chain: "TRX",
+				},
+				amount: { amount: amount, currency: "USD" },
+				idempotencyKey: uuidv4(),
+			};
 
-			// to the sellers wallet
+			const body2 = {
+				source: { type: "wallet", id: walletId },
+				destination: { type: "wallet", id: "1000177235" },
+				amount: { amount: masterAmount, currency: "USD" },
+				idempotencyKey: uuidv4(),
+			};
+
+
 			await axios
-				.post("https://api-sandbox.circle.com/v1/transfers", body2, { headers })
+				.post("https://api-sandbox.circle.com/v1/transfers", body1, { headers })
 				.then(async (response) => {
-					transferId = response.data.data.id
-					console.log({ status: "success", msg: response.data.data })
+					console.log(response.data.data);
 
+					// to the sellers wallet
+					await axios
+						.post("https://api-sandbox.circle.com/v1/transfers", body2, { headers })
+						.then(async (response) => {
+							transferIdSeller = response.data.data.id
+							console.log(transferIdSeller);
+							res.send({ transferIdSeller: transferIdSeller })
+
+						})
+						.catch((error) =>
+							res.send({ status: "error", msg: error.response.data })
+						);
 				})
 				.catch((error) =>
-					console.log({ status: "error", msg: error.response.data })
+					res.send({ status: "error", msg: error.response.data })
 				);
-		})
-		.catch((error) =>
-			console.log({ status: "error", msg: error.response.data })
-		);
 
-	return { transferId: transferId }
+		} else {
+			res.send({ msg: "Invalid Email" });
+		}
+	});
+
 };
 
 // Success or failure
 const successOrFailure = () => {
 	var y = Math.random();
-	if (y < 0.5) y = 0;
+	if (y < 0.1) y = 0;
 	else y = 1;
 	return y;
 };
@@ -158,7 +179,7 @@ const sendOTP = async (email, name, otp, orderId) => {
 };
 
 // Add order status to db
-const addStatus = async (orderId, orderName, status, email, p_id) => {
+const addStatus = async (orderId, orderName, status, email, p_id, amount) => {
 	const date = new Intl.DateTimeFormat("en-IN", {
 		dateStyle: "long",
 		timeStyle: "long",
@@ -169,6 +190,7 @@ const addStatus = async (orderId, orderName, status, email, p_id) => {
 		orderId: orderId,
 		productId: p_id,
 		orderName: orderName,
+		amount: amount,
 		status: status,
 		order_date: date,
 	});
@@ -187,6 +209,8 @@ const addStatus = async (orderId, orderName, status, email, p_id) => {
 	});
 };
 
+
+// Update Order Status 
 const updateOrderStatus = async (orderId, status) => {
 	OStatus.findOneAndUpdate(
 		{ orderId: orderId },
@@ -212,21 +236,19 @@ const updateOrderStatus = async (orderId, status) => {
 
 // Main funtion for CHECKOUT
 const checkout = async (req, res) => {
+
+	const orderId = uuidv4();
 	const p_id = req.body.p_id;
 	const email = req.body.email;
 	const name = req.body.name;
-	const tot_amount = req.body.tot_amount;
-	const c_walletId = req.body.c_walletId;
-	const orderId = uuidv4();
+	const amount = req.body.amount;
 	const orderName = req.body.orderName;
-	// const delay = 120000;
-	const delay = 30000;
 
 	// Make payments
-	const { transferId } = await transfers(tot_amount, c_walletId);
+	// const { transferId } = await transfers(tot_amount, c_walletId);
 
 	// Status - On the way
-	await addStatus(orderId, orderName, "on the way", email, p_id);
+	// await addStatus(orderId, orderName, "on the way", email, p_id, amount);
 
 	// Update product count
 	await updateProductCount("buy", p_id);
@@ -235,35 +257,29 @@ const checkout = async (req, res) => {
 	const verdict = await successOrFailure();
 	console.log("Verdict", verdict);
 
-	setTimeout(async function () {
-		if (verdict === 0) {
-			console.log("No OTP");
-			await updateOrderStatus(orderId, "pending");
+	if (verdict === 0) {
+		console.log("No OTP");
 
-			res.send({
-				status: "pending",
-				orderId: orderId,
-			});
-		} else {
-			console.log("OTP");
-			// Generate OTP
-			const otp = Math.floor(100000 + Math.random() * 900000);
+		// Add status in db
+		await addStatus(orderId, orderName, "pending", email, p_id, amount);
 
-			// update status in db
-			await updateOrderStatus(orderId, "completed");
+	} else {
+		console.log("OTP");
+		// Generate OTP
+		const otp = Math.floor(100000 + Math.random() * 900000);
 
-			// send otp via mail
-			await sendOTP(email, name, otp, orderId);
-			// send otp to frontend
-			res.send({
-				status: "delivered",
-				orderId: orderId,
-				otp: otp,
-			});
-		}
-	}, delay);
+		// Add status in db
+		await addStatus(orderId, orderName, "completed", email, p_id, amount);
+
+		// send otp via mail
+		await sendOTP(email, name, otp, orderId);
+		// send otp to frontend
+
+		res.send({ status: "Delivery Started" })
+
+
+	};
 };
-
 module.exports = {
 	checkout,
 	transfers,
