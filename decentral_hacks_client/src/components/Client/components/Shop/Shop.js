@@ -41,7 +41,7 @@ const Shop = (props) => {
 	};
 
 	const handleGotoCheckOut = (selectedProductIndex) => {
-		if (products[selectedProductIndex].p_count === "0") {
+		if (products[selectedProductIndex].p_count === 0) {
 			setOpenOutOfStock(true);
 		} else {
 			if (!hasLoggedIn) {
@@ -106,26 +106,25 @@ const Shop = (props) => {
 									key={index}
 									style={{ margin: "30px 0px" }}
 								>
-									<Card style={{ width: "23rem" }} key={index}>
-										<Card.Img style={{ height: "300px" }} variant="top" src={image} />
+									<Card style={{ width: "23rem", height: "773px" }} key={index}>
+										<Card.Img style={{ height: "340px", objectFit: "contain" }} variant="top" src={image} />
 										<Card.Body>
 											<div className="row">
-												<div className="col-6">
-													<Card.Title style={{ float: "left" }}>
+												<div className="col-7">
+													<Card.Title style={{ float: "left", height: "30px" }}>
 														{product.p_name}
 													</Card.Title>
 												</div>
-												<div className="col-6">
+												<div className="col-5">
 													<Card.Title style={{ float: "right" }}>
 														<strong>{product.p_price} USDC</strong>
 													</Card.Title>
 												</div>
 											</div>
-											<Card.Text>
+											<Card.Text style={{ height: "90px" }}>
 												<br />
 												<b>Description: </b>
 												{product.p_description}
-												<br />
 											</Card.Text>
 										</Card.Body>
 										<ListGroup className="list-group-flush">
@@ -146,13 +145,27 @@ const Shop = (props) => {
 													</div>
 												</div>
 											</ListGroupItem>
+											<ListGroupItem>
+												<div className="row">
+													<div className="col-12">
+														<p style={{ float: "left" }}>
+															<b>Seller Address :</b>
+														</p>
+													</div>
+													<div className="col-12">
+														<p style={{ float: "left" }}>
+															TVyXtKiMoG2PZpSsAnMaLZW747PSvRAQmT
+														</p>
+													</div>
+												</div>
+											</ListGroupItem>
 										</ListGroup>
 										<Card.Body className="text-center">
 											<button
 												onClick={() => handleGotoCheckOut(index)}
 												className="me-btn"
 												size="lg"
-												style={{ width: "70%", height: "60%" }}
+												style={{ width: "70%", height: "40px" }}
 											>
 												Buy Now
 											</button>

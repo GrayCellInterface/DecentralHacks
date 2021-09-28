@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import AddProduct from "./components/AddProduct/AddProduct";
 import SellerProfile from "./components/SellerProfile/SellerProfile";
 import OrderStatus from "./components/OrderStatus/OrderStatus";
+import Products from "./components/Products/Products";
 
 const SelectRoute = (props) => {
 	let { selectedRoute } = useParams();
@@ -30,7 +31,10 @@ const SelectRoute = (props) => {
 					page = <OrderStatus type="pending" />;
 					break;
 				}
-
+				case "products": {
+					page = <Products />;
+					break;
+				}
 				case "cancel": {
 					page = <OrderStatus type="cancel" />;
 					break;

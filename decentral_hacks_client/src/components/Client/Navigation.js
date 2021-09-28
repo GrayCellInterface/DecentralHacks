@@ -425,6 +425,9 @@ const Navigation = (props) => {
 					<NavDropdown.Item href={`${props.url}/profile`}>
 						Profile
 					</NavDropdown.Item>
+					<NavDropdown.Item href={`${props.url}/orders`}>
+						Your Orders
+					</NavDropdown.Item>
 					<NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
 				</NavDropdown>
 			);

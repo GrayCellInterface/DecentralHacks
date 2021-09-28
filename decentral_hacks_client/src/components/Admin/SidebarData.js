@@ -12,6 +12,13 @@ export const SidebarData = [
         hasChildren: false
     },
     {
+        title: 'Products',
+        path: '/products',
+        icon: <FaIcons.FaBoxOpen />,
+        cName: 'nav-text',
+        hasChildren: false
+    },
+    {
         title: 'Add Product',
         path: '/add-product',
         icon: <FaIcons.FaCartPlus />,

@@ -15,14 +15,14 @@ function Navbar(props) {
 	return (
 		<>
 			<IconContext.Provider value={{ color: "#000" }}>
-				<div className="navbar">
-					<Link to="#" className="menu-bars">
+				<div className="navbar" >
+					<Link to="#" className="menu-bars" style={{ float: "left" }}>
 						<FaIcons.FaBars
 							onClick={handleOpenSidebar}
 							className="hamburger-menu"
 						/>
 					</Link>
-					<h4 className="nav-title">WELCOME TO DASHBOARD</h4>
+					<h4 className="nav-title text-center">ADMIN DASHBOARD</h4>
 				</div>
 				<nav className={openSidebar ? "nav-menu active" : "nav-menu"}>
 					<ul className="nav-menu-items">

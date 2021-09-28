@@ -1,9 +1,20 @@
 import React from 'react'
+import SellerInfo from './SellerInfo'
+import adminImage from '../../../../assets/images/Admin/admin_profile.gif'
 
 const SellerProfile = () => {
     return (
         <div>
-            <h6>SELLER PROFILE</h6>
+            <div className="me-my-account">
+                <div className="container">
+                    <div className="row">
+                        <SellerInfo />
+                        <div className="col-lg-6">
+                            <img src={adminImage} alt="admin image" style={{ float: "right" }} />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
