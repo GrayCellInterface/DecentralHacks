@@ -3,6 +3,7 @@ const {
 	configuration,
 	createWallet,
 	getWallet,
+	getWalletId,
 } = require("../controllers/accounts");
 
 const { payment } = require("../controllers/payments");
@@ -28,6 +29,9 @@ router.post("/payout", payout);
 
 // Transfer - TEST
 router.post("/transfer", transfers);
+
+// Get wallet Id from email
+router.get("/get-wallet-id/:email", getWalletId);
 
 module.exports = {
 	route: router,

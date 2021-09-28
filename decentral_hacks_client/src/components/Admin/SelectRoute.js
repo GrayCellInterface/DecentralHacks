@@ -64,11 +64,4 @@ const SelectRoute = (props) => {
         )
     }
 
-    return (
-        <>
-            {renderPage()}
-        </>
-    );
-}
-
 export default SelectRoute;

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Container, Row, Col } from "react-bootstrap";
 
-const PendingOrders = () => {
+const CancelledOrders = () => {
 	const [orders, setOrders] = useState([]);
-	const type = "pending";
+	const type = "cancel";
 
 	useEffect(() => {
 		axios
@@ -45,4 +45,4 @@ const PendingOrders = () => {
 	);
 };
 
-export default PendingOrders;
+export default CancelledOrders;
