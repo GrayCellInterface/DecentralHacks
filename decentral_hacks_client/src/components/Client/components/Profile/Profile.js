@@ -3,6 +3,7 @@ import axios from 'axios'
 import CreditPage from './CreditPage';
 import DebitPage from './DebitPage';
 import UserInfo from './UserInfo';
+import ConfirmationModal from './ConfirmationModal';
 import Prompt from './Prompt';
 import MyTransactions from './MyTransactions';
 import './css/Profile.css'
@@ -13,6 +14,8 @@ const Profile = () => {
     const [openCredit, setOpenCredit] = useState(false);
     const [openPrompt, setOpenPrompt] = useState(false)
     const [openDebit, setOpenDebit] = useState(false);
+    const [creditBody, setCreditBody] = useState({})
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false)
     const [choice, setChoice] = useState("")
     const [creditId, setCreditId] = useState("")
     const [debitId, setDebitId] = useState("")
@@ -71,8 +74,20 @@ const Profile = () => {
         setOpenDebit(true);
     }
 
+    const handleCreateCreditBody = (body) => {
+        setCreditBody(body)
+        setOpenPrompt(false)
+        setOpenConfirmationModal(true)
+    }
+
+    const handleCloseConfirmationModal = () => {
+        setOpenConfirmationModal(false)
+    }
+
     const handleBackToProfile = (e) => {
         e.preventDefault();
+        setOpenPrompt(false);
+        setOpenConfirmationModal(false);
         setOpenCredit(false);
         setOpenDebit(false);
     }
@@ -82,6 +97,7 @@ const Profile = () => {
             return (
                 < CreditPage
                     handleBackToProfile={handleBackToProfile}
+                    handleCreateCreditBody={handleCreateCreditBody}
                 />
             )
         } else {
@@ -119,7 +135,15 @@ const Profile = () => {
                 handleClosePrompt={handleClosePrompt}
                 handleDifferentCredit={handleDifferentCredit}
                 handleDifferentDebit={handleDifferentDebit}
+                handleBackToProfile={handleBackToProfile}
+                handleCreateCreditBody={handleCreateCreditBody}
                 choice={choice}
+            />
+            <ConfirmationModal
+                creditBody={creditBody}
+                handleCloseConfirmationModal={handleCloseConfirmationModal}
+                openConfirmationModal={openConfirmationModal}
+                handleBackToProfile={handleBackToProfile}
             />
         </>
     );

@@ -59,7 +59,7 @@ const createCard = async (data, record, ip) => {
 };
 
 const createPayment = async (data, ip, cardId) => {
-	var payload = "";
+	var paymentId = "";
 
 	const headers = {
 		Accept: "application/json",
@@ -87,10 +87,10 @@ const createPayment = async (data, ip, cardId) => {
 		.post("https://api-sandbox.circle.com/v1/payments", body, { headers })
 		.then(async (response) => {
 			// console.log(response.data.data);
-			console.log((payload = response.data.data));
+			console.log((paymentId = response.data.data.id));
 		})
 		.catch((error) => console.log(error.response.message));
-	return { payload: payload };
+	return { paymentId: paymentId };
 };
 
 const updateCardId = async (email, cardId, encryptedCvv, keyId) => {
@@ -154,8 +154,8 @@ const payment = async (req, res) => {
 			console.log(cardId);
 			// Update Database
 			await updateCardId(data.email, cardId, data.encryptedCvv, data.keyId);
-			await createPayment(data, ip, cardId);
-			res.send({ status: "success", msg: "Credit Successful!" });
+			const { paymentId } = await createPayment(data, ip, cardId);
+			res.send({ status: "success", msg: "Credit Successful!", paymentId: paymentId });
 
 		} else {
 			if (record.cardId === "") {
@@ -163,8 +163,8 @@ const payment = async (req, res) => {
 			} else {
 				data = { ...data, encryptedCvv: record.encryptedCvv, keyId: record.keyId }
 				console.log("DATA", data);
-				await createPayment(data, ip, record.cardId);
-				res.send({ status: "success", msg: "Credit Successful!" });
+				const { paymentId } = await createPayment(data, ip, record.cardId);
+				res.send({ status: "success", msg: "Credit Successful!", paymentId: paymentId });
 			}
 		}
 	});

@@ -37,17 +37,9 @@ const CreditPage = (props) => {
     const [expiryDate, setExpiryDate] = useState(new Date())
     const [errors, setErrors] = useState({})
     const [publicKey, setPublicKey] = useState({})
-    const [keyId, setKeyId] = useState("")
-    const [encryptedData, setEncryptedData] = useState("")
-    const [encryptedCvv, setEncryptedCvv] = useState("")
 
     let handlerObj;
     let errorHandlerObj;
-    const encryptedCard = {
-        encryptedData: "",
-        encryptedCvv: "",
-        keyId: ""
-    }
 
     useEffect(() => {
         const headers = {
@@ -82,7 +74,6 @@ const CreditPage = (props) => {
         }
 
     }, [])
-
 
     const handleCardChange = (selectedInput) => (e) => {
         handlerObj = { ...cardValues };
@@ -151,9 +142,7 @@ const CreditPage = (props) => {
             const encryptedData = await encrypt(cardDetails, publicKey)
             const { encryptedMessage, keyId } = encryptedData
 
-            console.log(encryptedData)
-
-            console.log({
+            props.handleCreateCreditBody({
                 choice: "new",
                 email: `${window.localStorage.getItem("email")}`,
                 expiryMonth: `${cardValues['expiryMonth']}`,
@@ -162,22 +151,6 @@ const CreditPage = (props) => {
                 keyId: `${keyId}`,
                 encryptedData: `${encryptedMessage}`,
                 encryptedCvv: `${encryptedDataCvv.encryptedMessage}`
-            })
-
-            console.log(encryptedCvv, encryptedData)
-            await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payment`, {
-                choice: "new",
-                email: `${window.localStorage.getItem("email")}`,
-                expiryMonth: `${cardValues['expiryMonth']}`,
-                expiryYear: `${cardValues['expiryYear']}`,
-                amount: `${cardValues['amount']}`,
-                keyId: `${keyId}`,
-                encryptedData: `${encryptedMessage}`,
-                encryptedCvv: `${encryptedDataCvv.encryptedMessage}`
-            }).then((res) => {
-                console.log(res.data.msg)
-            }).catch((error) => {
-                console.log(error.response.message)
             })
         } else {
             setErrors({ ...errorHandlerObj })

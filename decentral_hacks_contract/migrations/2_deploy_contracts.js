@@ -1,5 +1,5 @@
-var HTCL = artifacts.require("./HTLC.sol");
+var InvoiceDiscounting = artifacts.require("./InvoiceDiscounting.sol");
 
 module.exports = function (deployer) {
-  deployer.deploy(HTCL, "TFGBSrddCjLJAwuryZ9DUxtEmKv13BPjnh");
+  deployer.deploy(InvoiceDiscounting, "TFGBSrddCjLJAwuryZ9DUxtEmKv13BPjnh");
 };

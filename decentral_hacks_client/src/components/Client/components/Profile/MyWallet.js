@@ -12,7 +12,7 @@ const MyWallet = (props) => {
                     </div>
                 </div>
                 <div className="me-my-wallet-body">
-                    <p className="me-wallet-balance">BALANCE : {window.localStorage.getItem('balance')} USDC</p>
+                    <p className="me-wallet-instructions">Formal instructions</p>
                     <div className="me-btns me-padder-top-low">
                         <div className="me-verify-btn">
                             <button className="me-btn" onClick={props.handleOpenCredit}>Credit</button>
