@@ -6,7 +6,6 @@ var Schema = mongoose.Schema;
 	name: String,
 	password: String,
 	walletId: Number,
-	walletAddress: String,
 	country: String,
 	city: String,
 	district: String,

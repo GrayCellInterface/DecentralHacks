@@ -104,14 +104,13 @@ const registerUser = async (req, res) => {
 		.digest("hex");
 
 	if (newCalculatedHash === hashValue) {
-		const { walletId, walletAddress } = await createWallet();
+		const { walletId } = await createWallet();
 		console.log(walletId);
 		var newPerson = new User({
 			email: email,
 			name: name,
 			password: password,
 			walletId: walletId,
-			walletAddress: walletAddress,
 			country: country,
 			city: city,
 			district: district,
@@ -147,15 +146,14 @@ const loginUser = async (req, res) => {
 				// 	data.walletId,
 				// 	data.idempotencyKey
 				// );
-				const { balance } = await getWallet(data.walletId)
-				console.log(data.walletId)
+				const { balance } = await getWallet(data.walletId);
+				console.log(data.walletId);
 				res.status(200).send({
 					msg: "Logged In",
 					name: data.name,
 					email: req.body.email,
 					address: data.walletAddress,
 					balance: balance,
-
 				});
 			} else {
 				res.send({ msg: "Incorrect Password" });
@@ -177,7 +175,7 @@ const getID = async (req, res) => {
 			});
 		} else {
 			const bankId = data.bankId === "" ? "false" : "true";
-			const cardId = data.cardId === "" ? "false" : "true"
+			const cardId = data.cardId === "" ? "false" : "true";
 			res.send({
 				status: "success",
 				data: {
