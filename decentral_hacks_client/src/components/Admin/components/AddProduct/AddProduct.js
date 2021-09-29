@@ -62,7 +62,7 @@ const AddProduct = () => {
 		}
 		if (
 			productDetails["description"].length < 10 ||
-			productDetails["description"].length > 20
+			productDetails["description"].length > 60
 		) {
 			errorHandlerObj["descriptionError"] = errorObj["descriptionError"];
 		}
@@ -182,7 +182,7 @@ const AddProduct = () => {
 
 					{/* price */}
 					<Form.Group className="mb-3" controlId="formBasicNumber">
-						<Form.Label>Product Price Number:</Form.Label>
+						<Form.Label>Product Price:</Form.Label>
 						<Form.Control
 							value={productDetails["price"]}
 							name="price"
@@ -204,7 +204,7 @@ const AddProduct = () => {
 							value={productDetails["count"]}
 							name="count"
 							onChange={handleChange}
-							placeholder="Enter Product Model Number"
+							placeholder="Enter Product Count"
 							type="number"
 						/>
 						{errors["countError"] === "" ? (

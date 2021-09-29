@@ -4,7 +4,8 @@ const {
 	createWallet,
 	getWallet,
 	getBlockchainAddress,
-	getWalletId
+	getWalletId,
+	getCustomerTransactions,
 } = require("../controllers/accounts");
 
 const { payment } = require("../controllers/payments");
@@ -36,6 +37,9 @@ router.get("/get-wallet-id/:email", getBlockchainAddress);
 
 // Get wallet Id & address from email
 router.get("/get-walletId/:email", getWalletId);
+
+// Get wallet Id & address from email
+router.get("/get-customer-transcations/:email", getCustomerTransactions);
 
 module.exports = {
 	route: router,
