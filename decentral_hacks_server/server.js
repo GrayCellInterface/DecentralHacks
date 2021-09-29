@@ -1,11 +1,8 @@
 const express = require("express");
-
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-
 const cors = require("cors");
 const env = require("dotenv").config();
-const session = require("express-session");
 const mongoose = require("mongoose");
 
 const router = require("./routes/index");
@@ -33,23 +30,15 @@ mongoose.connect(
 
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error"));
-db.once("open", function () {});
+db.once("open", function () { });
 
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-// Session
-app.use(
-	session({
-		secret: "graycellinterface",
-		resave: false,
-		saveUninitialized: true,
-		cookie: { maxAge: 365 * 24 * 60 * 60 * 1000 },
-	})
-);
 
 app.get("/", (req, res) => {
 	res.send("Working!");

@@ -43,7 +43,7 @@
   .nav-text a {
     text-decoration: none;
     color: #000;
-    font-size: 14px;
+    font-size: 15px;
     width: 95%;
     height: 100%;
     display: flex;
@@ -82,6 +82,23 @@
   .hamburger-menu {
     font-size: 19px;
     margin-bottom: 5px;
+  }
+
+  .logout-btn{
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+    font-size: 15px;
+    width: 95%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-radius: 4px;
+  }
+
+  .logout-btn:hover{
+    background-color: #d3d3d3;
   }
 
   span {

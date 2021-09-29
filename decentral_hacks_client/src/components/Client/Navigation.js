@@ -116,6 +116,8 @@ const Navigation = (props) => {
 		setOpenRegister(true);
 	};
 
+
+	// handle back to login
 	const handleBackToLogin = (e) => {
 		e.preventDefault();
 		setErrors({});
@@ -134,7 +136,6 @@ const Navigation = (props) => {
 		setOpenSuccess(true);
 	};
 
-	//Handling Form Submission
 
 	//Handle Registration
 	const handleGoToStep2 = (e) => {

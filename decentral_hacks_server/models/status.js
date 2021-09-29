@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+// Status Model
 (oStatusSchema = new Schema({
 	orderId: String,
 	productId: String,

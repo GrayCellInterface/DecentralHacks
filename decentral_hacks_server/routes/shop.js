@@ -6,7 +6,6 @@ const {
 	getProductToEdit,
 	deleteProduct,
 } = require("../controllers/shop");
-
 const { transfers, checkout } = require("../controllers/transfers");
 
 const router = express.Router();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import "./css/Dashboard.css";
 
-import auth from "../../assets/images/Admin/auth.png";
+import auth from "../../assets/images/Admin/auth.gif";
 
 const Auth = (props) => {
 
@@ -35,9 +35,9 @@ const Auth = (props) => {
 			<Container fluid="md">
 				<Row>
 					{/* Password */}
-					<Col sm={6} className="text-center mt-4 p-4">
+					<Col sm={6} className="text-center p-4" style={{ marginTop: "250px" }}>
 						<h2>Admin Login 🔐</h2>
-						<Form>
+						<Form className="text-center">
 							<Form.Group className="mb-3" controlId="formBasicPostal">
 								<Form.Control
 									value={passCode}
@@ -46,27 +46,26 @@ const Auth = (props) => {
 									type="password"
 								/>
 							</Form.Group>
-							<button
-								className="me-btn inner-text"
-								type="submit"
-								style={{ float: "left", marginRight: "20px" }}
-								onClick={verifyPassCodeHandler}
-							>
-								Login
-							</button>
 							{err ? (
-								<div className="error-msg add-error-style">
+								<div className="error-msg add-error-style mb-3">
 									"Invalid Passcode"
 								</div>
 							) : (
 								<></>
 							)}
+							<button
+								className="me-btn inner-text"
+								type="submit"
+								onClick={verifyPassCodeHandler}
+							>
+								Login
+							</button>
 						</Form>
 					</Col>
 
 					{/* Image */}
 					<Col sm={6}>
-						<img src={auth} alt="Logo" className="authImage" />
+						<img src={auth} alt="Logo" className="authImage" style={{ width: "500px", paddingTop: "100px" }} />
 					</Col>
 				</Row>
 			</Container>

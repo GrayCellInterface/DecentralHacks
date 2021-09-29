@@ -6,18 +6,18 @@ const schedule = require("node-schedule");
 const OStatus = require("../models/status");
 const { updateProductCount } = require("./shop");
 
+const headers = {
+	Accept: "application/json",
+	"Content-Type": "application/json",
+	Authorization: `${process.env.BEARER}`
+};
+
 // Transfer Function for Payout
 const transferDebit = async (req, res) => {
 	const amount = req.body.amount;
 	const email = req.body.email;
 	let walletId = "";
 	let transferId = "";
-	const headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
 
 	User.findOne({ email: email }, async function (err, data) {
 		if (data) {
@@ -63,12 +63,6 @@ const transfers = async (req, res) => {
 	let transferIdSeller = "";
 	let walletId = "";
 
-	const headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
 
 	User.findOne({ email: email }, async function (err, data) {
 		if (data) {
@@ -242,7 +236,9 @@ const checkout = async (req, res) => {
 	await updateProductCount("buy", p_id);
 
 	// 1/0?
-	const verdict = await successOrFailure();
+	//const verdict = await successOrFailure();
+
+	const verdict = 0
 
 	console.log("Verdict", verdict);
 

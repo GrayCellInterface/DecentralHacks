@@ -29,7 +29,7 @@ router.post("/payment", payment);
 // Create bank & payout
 router.post("/payout", payout);
 
-// Transfer - TEST
+// Transfer - for debit
 router.post("/transfer-debit", transferDebit);
 
 // Get wallet Id & address from email

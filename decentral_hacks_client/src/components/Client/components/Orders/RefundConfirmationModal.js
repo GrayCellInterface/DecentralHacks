@@ -5,7 +5,7 @@ const TronWeb = require('tronweb')
 const fullNode = 'https://api.shasta.trongrid.io';
 const solidityNode = 'https://api.shasta.trongrid.io';
 const eventServer = 'https://api.shasta.trongrid.io';
-const privateKey = process.env.REACT_APP_PRIVATE_KEY;
+const privateKey = process.env.REACT_APP_REFUND_PRIVATE_KEY;
 const tronWeb = new TronWeb(fullNode, solidityNode, eventServer, privateKey);
 
 const USDC_SMART_CONTRACT = "TFGBSrddCjLJAwuryZ9DUxtEmKv13BPjnh"

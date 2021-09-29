@@ -4,7 +4,7 @@ const crypto = require("crypto");
 
 const { createWallet, getBlockchainAddress, getWallet } = require("./accounts");
 
-// *************************Register*************************
+// Register User 
 const sendOtp = async (req, res, next) => {
 	const email = req.body.email;
 	const name = req.body.name;
@@ -24,7 +24,7 @@ const sendOtp = async (req, res, next) => {
 				.update(data)
 				.digest("hex");
 			const fullHash = `${hash}.${expires}`;
-			console.log(fullHash);
+
 			await sendMail(email, name, otp);
 			res.status(200).send({
 				msg: "Registered",
@@ -41,7 +41,7 @@ const sendOtp = async (req, res, next) => {
 	});
 };
 
-// **********************Mail**********************
+// Send OTP to user via email
 const sendMail = async (email, name, otp) => {
 	sgMail.setApiKey(process.env.EMAIL_API_KEY);
 
@@ -73,7 +73,7 @@ const sendMail = async (email, name, otp) => {
 	return;
 };
 
-// *******************verify and register******************
+// verify and register
 const registerUser = async (req, res) => {
 	const name = req.body.name;
 	const email = req.body.email;
@@ -133,20 +133,11 @@ const registerUser = async (req, res) => {
 	}
 };
 
-// **********************Login**********************
+// Login
 const loginUser = async (req, res) => {
 	User.findOne({ email: req.body.email }, async function (err, data) {
-		// console.log("data" + data);
 		if (data) {
 			if (data.password === req.body.password) {
-				// req.session.userId = data.uid;
-				// console.log(req.session.userId);
-
-				// const { address } = await getBlockchainAddress(
-				// 	data.walletId,
-				// 	data.idempotencyKey
-				// );
-				console.log(data.walletId);
 				res.status(200).send({
 					msg: "Logged In",
 					name: data.name,
@@ -192,28 +183,3 @@ module.exports = {
 	getID,
 };
 
-// ***********Profile Page **************
-// const userProfile = async (req, res) => {
-// 	// console.log(req.session.userId);
-// 	User.findOne({ uid: req.session.userId }, function (err, data) {
-// 		if (!data) {
-// 			res.redirect("/");
-// 		} else {
-// 			return res.send(data);
-// 		}
-// 	});
-// };
-
-// ***********Logout**************
-// const userLogout = async (req, res) => {
-// 	console.log(req.session);
-// 	if (req.session) {
-// 		req.session.destroy(function (err) {
-// 			if (err) {
-// 				return next(err);
-// 			} else {
-// 				return res.redirect("/");
-// 			}
-// 		});
-// 	}
-// };

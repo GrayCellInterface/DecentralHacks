@@ -17,6 +17,7 @@ const ConfirmationDebit = (props) => {
             const result = await waitForConfirmation("transfers", transferId)
             if (result === "success") {
                 setModalStage("debitSuccess")
+                window.location.href = '/client/profile'
             } else {
                 setModalStage("debitFailed")
             }

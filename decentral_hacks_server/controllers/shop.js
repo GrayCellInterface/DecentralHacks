@@ -133,14 +133,12 @@ const updateProductCount = async (action, id) => {
 	Shop.findOne({ _id: p_id }, async function (err, data) {
 		if (err) console.log("From update error", err);
 		else {
-			// console.log("FROM UPDATE Status", data);
 			if (data) {
 				if (action === "refund" || action === "cancel") {
 					updated_count = parseFloat(data.p_count) + 1;
 				} else if (action === "buy") {
 					updated_count = parseFloat(data.p_count) - 1;
 				}
-				// console.log(updated_count);
 
 				if (updated_count >= 0) {
 					// update record

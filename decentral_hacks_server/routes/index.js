@@ -4,8 +4,6 @@ const {
 	registerUser,
 	loginUser,
 	getID,
-	// userProfile,
-	// userLogout,
 } = require("../controllers/index");
 
 const router = express.Router();
@@ -31,11 +29,6 @@ router.post("/login", loginUser);
 // Get user ID details - bank and card
 router.get("/get-id/:email", getID);
 
-//User Profile
-// router.get("/profile", userProfile);
-
-//Logout
-// router.get("/logout", userLogout);
 
 module.exports = {
 	route: router,

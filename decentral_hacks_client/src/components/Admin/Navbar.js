@@ -11,6 +11,10 @@ import { Accordion } from "react-bootstrap";
 function Navbar(props) {
 	const [openSidebar, setOpenSidebar] = useState(false);
 	const handleOpenSidebar = () => setOpenSidebar(!openSidebar);
+	const handleLogout = () => {
+		window.localStorage.removeItem('sellerAuth')
+		window.location.href = "/admin"
+	}
 
 	return (
 		<>
@@ -91,6 +95,16 @@ function Navbar(props) {
 								);
 							}
 						})}
+						<li
+							className="nav-text"
+							onClick={handleLogout}
+						>
+
+							<div className="logout-btn">
+								<FaIcons.FaSignOutAlt />
+								<span>Logout</span>
+							</div>
+						</li>
 					</ul>
 				</nav>
 			</IconContext.Provider>

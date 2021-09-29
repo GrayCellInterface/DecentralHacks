@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+// Shop Model
 (shopSchema = new Schema({
 	p_name: String,
 	p_description: String,

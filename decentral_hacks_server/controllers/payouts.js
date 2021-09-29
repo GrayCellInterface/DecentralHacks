@@ -3,15 +3,15 @@ const { v4: uuidv4 } = require("uuid");
 const User = require("../models/user");
 const schedule = require("node-schedule");
 
+const headers = {
+	Accept: "application/json",
+	"Content-Type": "application/json",
+	Authorization: `${process.env.BEARER}`
+};
+
 // Create Bank
 const bank = async (data, record) => {
 	var bankId = "";
-	const headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
 
 	let billingDetails = {
 		name: record.name,
@@ -49,7 +49,6 @@ const bank = async (data, record) => {
 		.post("https://api-sandbox.circle.com/v1/banks/wires", body, { headers })
 		.then(async (response) => {
 			bankId = response.data.data.id;
-			// console.log("BANK", response.data.data);
 		})
 		.catch((error) => console.log({ status: "error", msg: error.response.data }));
 
@@ -60,12 +59,6 @@ const bank = async (data, record) => {
 const createPayout = async (email, bankId, amount) => {
 	let payoutId = ""
 	console.log("BANKID FROM CreatePayout", bankId);
-	const headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
 
 	const body = {
 		source: { type: "wallet", id: "1000177235" },
@@ -86,6 +79,7 @@ const createPayout = async (email, bankId, amount) => {
 };
 
 
+// Update created bank Id in the database
 const updateBankId = async (email, bankId) => {
 	User.findOneAndUpdate(
 		{
@@ -107,7 +101,8 @@ const updateBankId = async (email, bankId) => {
 					status: "Success",
 					msg: "Record Updated Successfully",
 				});
-				// Function to delete from the record
+
+				// Delete the bank Id in 24 hours
 				const date = new Date(Date.now() + 86400000);
 
 				schedule.scheduleJob(date, async function () {

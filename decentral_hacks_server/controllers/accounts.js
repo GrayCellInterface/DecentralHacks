@@ -4,8 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 const headers = {
 	Accept: "application/json",
 	"Content-Type": "application/json",
-	Authorization:
-		"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
+	Authorization: `${process.env.BEARER}`
 };
 
 // Check master wallet configuration
@@ -61,12 +60,6 @@ const getWallet = async (id) => {
 const getBlockchainAddress = async (req, res) => {
 	var walletId = "";
 	var walletAddress = "";
-	headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
 
 	const body = {
 		chain: "TRX",

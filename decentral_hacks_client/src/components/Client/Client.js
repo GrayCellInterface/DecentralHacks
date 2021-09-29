@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SelectRoute from './SelectRoute';
+import Shop from './components/Shop/Shop';
 import Home from './components/Home/Home';
 import { BrowserRouter as Router, Switch, Route, useRouteMatch } from 'react-router-dom';
 import Navigation from './Navigation';
@@ -28,7 +29,12 @@ const Client = () => {
                 />
                 <Switch>
                     <Route path={path} exact >
-                        <Home url={url} />
+                        <Home />
+                    </Route>
+                    <Route path={`${path}/shop`} exact >
+                        <Shop
+                            handleLoginModalOpen={handleLoginModalOpen}
+                        />
                     </Route>
                     <Route path={`${path}/:selectedRoute`}>
                         <SelectRoute

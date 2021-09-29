@@ -1,4 +1,4 @@
-.me-my-transactions-head h4 {
+/* .me-my-transactions-head h4 {
 	text-align: center;
 	margin-bottom: 15px;
 	color: #000;
@@ -18,7 +18,7 @@
 	height: 610px;
 	background: #fff;
 	/* box-shadow: 1.5px 3.99px 27px 0px rgba( 0, 0, 0, 0.1); */
-	border-style: solid;
+	/* border-style: solid;
 	border-color: rgba(0, 0, 0, 0.05);
 	border-width: 0.5px;
 	border-radius: 5px;
@@ -62,7 +62,7 @@
 	direction: rtl;
 	text-overflow: ellipsis;
 	text-align: right;
-}
+} */
 /* .pagination {
     position :absolute;
     top: 270px;
@@ -71,7 +71,7 @@
     margin-top: 10px;
   } */
 
-.pagination {
+/* .pagination {
 	position: static;
 	justify-content: center;
 	margin-top: 10px;
@@ -112,4 +112,48 @@
 		margin-top: 200px;
 		margin-left: 300px;
 	}
+} */ 
+.me-transaction-box{
+    /* box-shadow: 1.5px 3.99px 27px 0px rgba( 0, 0, 0, 0.1); */
+    border-style: solid;
+    border-color: rgba( 0, 0, 0, 0.05);
+    border-width: 0.5px;
+    background: #ffffff;
+    position: relative;
+    margin-left:-10px;
+    margin-right: -10px;
+    z-index: 1;
+    transition: 0.5s;
+	height: 608px;
 }
+.me-transaction-box table {
+    width: 100%;
+}
+.me-transaction-box table th,.me-transaction-box table td {
+    padding: 19.5px;
+    border-bottom: 1px solid #eee;
+    border-top: none;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.me-transaction-box table thead {
+    background: linear-gradient(45deg,#e7e7e775,#e7e7e775);
+
+}
+.me-transaction-box table thead th {
+    color: #000;
+    font-size: 16px;
+}
+.me-transaction-box table td span {
+    width: 30px;
+    height: 30px;
+    background: #ffffff;
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 20px;
+    /* box-shadow: 0px 3.99px 27px 0px rgba( 0, 0, 0, 0.1); */
+}
+
