@@ -16,11 +16,10 @@ const OrderStatus = (props) => {
 			.catch((error) => {
 				console.log(error.response.msg);
 			});
-	}, [orders]);
-
+	}, [type]);
 	return (
 		<div className="m-4">
-			<h5>{name} ORDERS LIST</h5>
+			<h6>{name} ORDERS LIST</h6>
 			<Table striped bordered hover responsive>
 				<thead>
 					<tr>
@@ -32,7 +31,7 @@ const OrderStatus = (props) => {
 					</tr>
 				</thead>
 				<tbody>
-					{orders.map((item) => (
+					{orders.slice(0).reverse().map((item) => (
 						<tr key={item._id}>
 							<td>{item.orderId}</td>
 							<td>{item.productId}</td>

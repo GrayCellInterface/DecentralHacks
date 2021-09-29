@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios'
 import { Form } from 'react-bootstrap';
 import './css/DebitPage.css'
 
@@ -42,7 +41,7 @@ const DebitPage = (props) => {
     const handleDebit = (e) => {
         e.preventDefault()
         setErrors({})
-        const validAmount = /[+-]?([0-9]*[.])?[0-9]+/
+        const validAmount = /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/
         const validDistrict = /[A-Z]{2}/
         errorHandlerObj = {
             invalidAmountError: "",
@@ -85,24 +84,8 @@ const DebitPage = (props) => {
                 email: `${window.localStorage.getItem('email')}`,
                 choice: "new"
             })
-            // axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payout`, {
-            //     country: "US",
-            //     district: `${bankValues['district']}`,
-            //     amount: `${bankValues['amount']}`,
-            //     accountNumber: `${bankValues['accountNumber']}`,
-            //     routingNumber: `${bankValues['routingNumber']}`,
-            //     email: `${window.localStorage.getItem('email')}`,
-            //     choice: "new"
-            // }).then((res) => {
-            //     console.log(res.data)
-            // }).catch((error) => {
-            //     console.log(error.response.data)
-            // })
         } else {
             setErrors({ ...errorHandlerObj })
-            console.log("Debit failed")
-            console.log(bankValues)
-            console.log(errorHandlerObj)
         }
 
     }

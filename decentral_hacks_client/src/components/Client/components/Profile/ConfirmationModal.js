@@ -26,15 +26,12 @@ const ConfirmationModal = (props) => {
                 const result = await confirmBlockchainTansaction(transactionId)
                 if (result === "SUCCESS") {
                     setModalStage("paymentSuccess")
-                    console.log("Payment Successful")
                 } else {
                     setModalStage("paymentFailed")
-                    console.log("Payment Failed")
                 }
             }, 10000)
         } else {
             setModalStage("paymentFailed")
-            console.log("Payment Failed")
         }
 
 

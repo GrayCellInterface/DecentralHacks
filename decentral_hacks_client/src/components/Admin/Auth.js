@@ -5,9 +5,15 @@ import "./css/Dashboard.css";
 import auth from "../../assets/images/Admin/auth.png";
 
 const Auth = (props) => {
-	console.log(props);
+
 	const [passCode, setPassCode] = useState("");
 	const [err, setErr] = useState(false);
+
+	useEffect(() => {
+		if (window.localStorage.getItem("sellerAuth")) {
+			window.location.href = '/admin/profile'
+		}
+	}, [])
 
 	const handlePassCode = (e) => {
 		setPassCode(e.target.value);
@@ -15,7 +21,7 @@ const Auth = (props) => {
 
 	const verifyPassCodeHandler = (e) => {
 		e.preventDefault();
-		if (passCode == process.env.REACT_APP_ADMIN_AUTH) {
+		if (passCode === process.env.REACT_APP_ADMIN_AUTH) {
 			setErr(false);
 			window.localStorage.setItem("sellerAuth", passCode);
 			window.location.href = `/admin/profile`;

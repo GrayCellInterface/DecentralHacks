@@ -9,23 +9,18 @@ const ConfirmationCheckout = (props) => {
     const executeCheckout = async () => {
         setModalStage("transfer")
         const transferId = await executeTransferToSeller()
-        console.log(transferId)
         setModalStage("checkingStatus")
         const status = await waitForConfirmation(transferId)
         if (status === "success") {
             setModalStage("checkout")
             const deliveryStatus = await checkout()
-            console.log(deliveryStatus)
             if (deliveryStatus === "Delivery Started") {
                 setModalStage("checkoutSuccess")
-                console.log("Checkout Successful")
             } else {
                 setModalStage("checkoutFailed")
-                console.log("Checkout Failed")
             }
         } else {
             setModalStage("checkoutFailed")
-            console.log("Checkout Failed")
         }
 
 

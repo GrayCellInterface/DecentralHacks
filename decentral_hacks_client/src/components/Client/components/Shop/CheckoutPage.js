@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ConfirmationCheckout from './ConfirmCheckout';
 import { Card } from "react-bootstrap";
 import './css/CheckoutPage.css'
@@ -8,13 +8,6 @@ const CheckoutPage = (props) => {
     const [checkoutBody, setCheckoutBody] = useState({})
     const [transferBody, setTransferBody] = useState({})
     const [openCheckoutConfirmation, setOpenCheckoutConfirmation] = useState(false)
-
-    useEffect(() => {
-
-        //Get the current balance of customer
-        console.log(props.selectedProduct)
-
-    }, [])
 
     const handleCloseCheckoutConfirmation = () => {
         setOpenCheckoutConfirmation(false)
@@ -27,11 +20,11 @@ const CheckoutPage = (props) => {
 
     const handlePayment = () => {
         if (parseFloat(props.selectedProduct.p_price) > parseFloat(window.localStorage.getItem('balance'))) {
-            console.log("You do not have enough balance to make this payment.")
+            console.log("You do not have enough balance to make this payment.") //Still left
         } else {
             setTransferBody({
-                tot_amount: props.selectedProduct.p_price,
-                fee: (parseFloat(props.selectedProduct.p_price) * 0.035).toString(),
+                tot_amount: parseFloat((props.selectedProduct.p_price).toFixed(2)),
+                fee: parseFloat((parseFloat(props.selectedProduct.p_price) * 0.035).toFixed(2)),
                 email: window.localStorage.getItem('email')
             })
             setCheckoutBody({
@@ -85,7 +78,7 @@ const CheckoutPage = (props) => {
                                 <div className="d-flex justify-content-center">
                                     <div className="col-6">
                                         <span style={{ float: "left" }}><b>Transaction Fee: </b></span>
-                                        <span style={{ float: "right" }}>{parseFloat(props.selectedProduct.p_price) * 0.035} USDC</span>
+                                        <span style={{ float: "right" }}>{(parseFloat(props.selectedProduct.p_price) * 0.035).toFixed(2)} USDC</span>
                                     </div>
                                 </div>
                                 <hr />
@@ -93,7 +86,7 @@ const CheckoutPage = (props) => {
                                 <div className="d-flex justify-content-center">
                                     <div className="col-6" style={{ fontSize: "22px" }}>
                                         <span style={{ float: "left" }}><b>Total Product Price : </b></span>
-                                        <span style={{ float: "right" }}>{parseFloat(props.selectedProduct.p_price) + (parseFloat(props.selectedProduct.p_price) * 0.035)} USDC</span>
+                                        <span style={{ float: "right" }}>{(parseFloat(props.selectedProduct.p_price) + (parseFloat(props.selectedProduct.p_price) * 0.035)).toFixed(2)} USDC</span>
                                     </div>
                                 </div>
                                 <br />

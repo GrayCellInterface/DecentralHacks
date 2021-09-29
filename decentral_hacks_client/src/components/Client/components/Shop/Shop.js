@@ -28,8 +28,7 @@ const Shop = (props) => {
 
 		const getProducts = () => {
 			axios.get(`${process.env.REACT_APP_BACKEND_API}/shop/all-products`).then((res) => {
-				console.log(res.data.data)
-				setProducts(res.data.data)
+				setProducts(res.data.data.slice(0).reverse())
 			})
 		};
 

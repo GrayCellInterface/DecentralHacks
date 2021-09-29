@@ -6,13 +6,11 @@ const DeleteConfirmationModal = (props) => {
 
     const handleDeleteProduct = async (e) => {
         e.preventDefault()
-        console.log(props.selectedProductId)
         await axios
             .post(`${process.env.REACT_APP_BACKEND_API}/shop/delete-product`, {
                 _id: props.selectedProductId
             })
             .then((res) => {
-                console.log(res.data.msg);
                 window.location.href = '/admin/products'
             })
             .catch((error) => {

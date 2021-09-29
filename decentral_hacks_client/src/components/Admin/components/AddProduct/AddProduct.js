@@ -44,9 +44,9 @@ const AddProduct = () => {
 	const handleAddProduct = async (e) => {
 		e.preventDefault();
 		setErrors({});
-		console.log(Number(productDetails["price"]));
 
 		const validModelNumber = /[A-Z0-9- ]{4,20}/;
+		const validPrice = /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/
 
 		errorHandlerObj = {
 			nameError: "",
@@ -69,7 +69,7 @@ const AddProduct = () => {
 		if (!validModelNumber.test(productDetails["modelNumber"])) {
 			errorHandlerObj["modelNumberError"] = errorObj["modelNumberError"];
 		}
-		if (Number(productDetails["price"] <= 0)) {
+		if (Number(productDetails["price"] <= 0) && validPrice.test(productDetails["price"])) {
 			errorHandlerObj["priceError"] = errorObj["priceError"];
 		}
 		if (Number(productDetails["delivery"] <= 0)) {
@@ -86,7 +86,6 @@ const AddProduct = () => {
 			errorHandlerObj["deliveryError"] === "" &&
 			errorHandlerObj["priceError"] === ""
 		) {
-			console.log(productDetails);
 			await axios
 				.post(`${process.env.REACT_APP_BACKEND_API}/shop/add-product`, {
 					p_name: productDetails["name"],
@@ -99,15 +98,12 @@ const AddProduct = () => {
 				})
 				.then((res) => {
 					setProductDetails(initialState);
-					console.log(res.data.msg);
 				})
 				.catch((error) => {
 					console.log(error.response.message);
 				});
 		} else {
 			setErrors({ ...errorHandlerObj });
-			console.log("Add product Failed");
-			console.log(errorHandlerObj);
 		}
 	};
 
