@@ -6,8 +6,6 @@ const schedule = require("node-schedule");
 const OStatus = require("../models/status");
 const { updateProductCount } = require("./shop");
 
-
-
 // Transfer Function for Payout
 const transferDebit = async (req, res) => {
 	const amount = req.body.amount;
@@ -38,9 +36,8 @@ const transferDebit = async (req, res) => {
 			await axios
 				.post("https://api-sandbox.circle.com/v1/transfers", body1, { headers })
 				.then(async (response) => {
-					console.log(transferId = response.data.data.id);
-					res.send({ transferId: transferId })
-
+					console.log((transferId = response.data.data.id));
+					res.send({ transferId: transferId });
 				})
 				.catch((error) =>
 					console.log({ status: "error", msg: error.response.data })
@@ -49,8 +46,6 @@ const transferDebit = async (req, res) => {
 			res.send({ msg: "Invalid Email" });
 		}
 	});
-
-
 };
 
 // transfers for shop 1.
@@ -61,6 +56,7 @@ const transfers = async (req, res) => {
 	const amount = parseFloat(req.body.tot_amount) - profit;
 
 	const masterAmount = parseFloat(fee + profit);
+	console.log(masterAmount);
 
 	let transferIdSeller = "";
 	let walletId = "";
@@ -75,7 +71,7 @@ const transfers = async (req, res) => {
 	User.findOne({ email: email }, async function (err, data) {
 		if (data) {
 			walletId = data.walletId;
-			console.log("Wallet ID", walletId)
+			console.log("Wallet ID", walletId);
 
 			const body1 = {
 				source: { type: "wallet", id: walletId }, // customer Wallet
@@ -95,7 +91,6 @@ const transfers = async (req, res) => {
 				idempotencyKey: uuidv4(),
 			};
 
-
 			await axios
 				.post("https://api-sandbox.circle.com/v1/transfers", body1, { headers })
 				.then(async (response) => {
@@ -103,12 +98,13 @@ const transfers = async (req, res) => {
 
 					// to the sellers wallet
 					await axios
-						.post("https://api-sandbox.circle.com/v1/transfers", body2, { headers })
+						.post("https://api-sandbox.circle.com/v1/transfers", body2, {
+							headers,
+						})
 						.then(async (response) => {
-							transferIdSeller = response.data.data.id
+							transferIdSeller = response.data.data.id;
 							console.log(transferIdSeller);
-							res.send({ transferIdSeller: transferIdSeller })
-
+							res.send({ transferIdSeller: transferIdSeller });
 						})
 						.catch((error) =>
 							res.send({ status: "error", msg: error.response.data })
@@ -117,12 +113,10 @@ const transfers = async (req, res) => {
 				.catch((error) =>
 					res.send({ status: "error", msg: error.response.data })
 				);
-
 		} else {
 			res.send({ msg: "Invalid Email" });
 		}
 	});
-
 };
 
 // Success or failure
@@ -209,8 +203,7 @@ const addStatus = async (orderId, orderName, status, email, p_id, amount) => {
 	});
 };
 
-
-// Update Order Status 
+// Update Order Status
 const updateOrderStatus = async (orderId, status) => {
 	OStatus.findOneAndUpdate(
 		{ orderId: orderId },
@@ -236,19 +229,12 @@ const updateOrderStatus = async (orderId, status) => {
 
 // Main funtion for CHECKOUT
 const checkout = async (req, res) => {
-
 	const orderId = uuidv4();
 	const p_id = req.body.p_id;
 	const email = req.body.email;
 	const name = req.body.name;
 	const amount = req.body.amount;
 	const orderName = req.body.orderName;
-
-	// Make payments
-	// const { transferId } = await transfers(tot_amount, c_walletId);
-
-	// Status - On the way
-	// await addStatus(orderId, orderName, "on the way", email, p_id, amount);
 
 	// Update product count
 	await updateProductCount("buy", p_id);
@@ -262,7 +248,6 @@ const checkout = async (req, res) => {
 
 		// Add status in db
 		await addStatus(orderId, orderName, "pending", email, p_id, amount);
-
 	} else {
 		console.log("OTP");
 		// Generate OTP
@@ -275,13 +260,11 @@ const checkout = async (req, res) => {
 		await sendOTP(email, name, otp, orderId);
 		// send otp to frontend
 
-		res.send({ status: "Delivery Started" })
-
-
-	};
+		res.send({ status: "Delivery Started" });
+	}
 };
 module.exports = {
 	checkout,
 	transfers,
-	transferDebit
+	transferDebit,
 };

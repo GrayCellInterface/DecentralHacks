@@ -47,6 +47,26 @@ const addProduct = async (req, res) => {
 	});
 };
 
+// Get Product from database based on id
+const getProductToEdit = async (req, res) => {
+	const id = req.params.id;
+	Shop.findOne(
+		{
+			_id: id,
+		},
+		(err, docs) => {
+			if (err === null) {
+				res.send({
+					status: "success",
+					data: docs,
+				});
+			} else {
+				res.send({ status: "error", msg: "Product could not be found" });
+			}
+		}
+	);
+};
+
 // Edit Product Info
 const editProductInfo = async (req, res) => {
 	const data = req.body;
@@ -165,4 +185,5 @@ module.exports = {
 	deleteProduct,
 	updateProductCount,
 	editProductInfo,
+	getProductToEdit,
 };

@@ -3,8 +3,8 @@ const {
 	getAllProducts,
 	addProduct,
 	editProductInfo,
+	getProductToEdit,
 	deleteProduct,
-
 } = require("../controllers/shop");
 
 const { transfers, checkout } = require("../controllers/transfers");
@@ -25,6 +25,9 @@ router.post("/transfer", transfers);
 
 //Update Product
 router.post("/edit-product", editProductInfo);
+
+//Update Product
+router.get("/get-product-to-edit/:id", getProductToEdit);
 
 // Checkout
 router.post("/checkout", checkout);

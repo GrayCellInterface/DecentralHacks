@@ -17,9 +17,10 @@ const OrderStatus = (props) => {
 				console.log(error.response.msg);
 			});
 	}, [orders]);
+
 	return (
 		<div className="m-4">
-			<h6>{name} ORDERS LIST</h6>
+			<h5>{name} ORDERS LIST</h5>
 			<Table striped bordered hover responsive>
 				<thead>
 					<tr>

@@ -1,15 +1,15 @@
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 
+const headers = {
+	Accept: "application/json",
+	"Content-Type": "application/json",
+	Authorization:
+		"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
+};
+
 // Check master wallet configuration
 const configuration = async (req, res) => {
-	const headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
-
 	await axios
 		.get("https://api-sandbox.circle.com/v1/configuration", { headers })
 		.then((response) => res.send({ status: "success", data: response }))
@@ -23,12 +23,6 @@ const createWallet = async () => {
 	const idempotencyKey = uuidv4();
 	var walletId = "";
 	const body = { idempotencyKey: idempotencyKey };
-	const headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
 
 	await axios
 		.post("https://api-sandbox.circle.com/v1/wallets", body, { headers })
@@ -43,12 +37,6 @@ const createWallet = async () => {
 // Retrieve existing wallet TEST
 const getWallet = async (id) => {
 	let balance = "";
-	const headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization:
-			"Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-	};
 
 	await axios
 		.get(`https://api-sandbox.circle.com/v1/wallets/${id}`, { headers })
@@ -62,11 +50,10 @@ const getWallet = async (id) => {
 	return { balance: balance };
 };
 
-
 // Generating Blockchain Address using wallet ID
 const getBlockchainAddress = async (req, res) => {
 	var walletId = "";
-	var walletAddress = ""
+	var walletAddress = "";
 	headers = {
 		Accept: "application/json",
 		"Content-Type": "application/json",
@@ -115,13 +102,34 @@ const getWalletId = async (req, res) => {
 	});
 };
 
+// Get wallet Id from email
+const getCustomerTransactions = async (req, res) => {
+	let walletId = "";
+
+	User.findOne({ email: req.params.email }, async function (err, data) {
+		if (data) {
+			walletId = data.walletId;
+			await axios
+				.get(
+					`https://api-sandbox.circle.com/v1/transfers?walletId=${walletId}`,
+					{
+						headers,
+					}
+				)
+				.then((response) => {
+					res.send({ transactions: response.data.data });
+				});
+		} else {
+			res.send({ status: "error", msg: "User Doesnot exist" });
+		}
+	});
+};
 
 module.exports = {
 	configuration,
 	createWallet,
 	getWallet,
 	getBlockchainAddress,
-	getWalletId
+	getWalletId,
+	getCustomerTransactions,
 };
-
-
