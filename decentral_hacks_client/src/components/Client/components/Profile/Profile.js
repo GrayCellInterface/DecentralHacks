@@ -25,34 +25,6 @@ const Profile = () => {
 
     useEffect(() => {
 
-        // const headers = {
-        //     Accept: "application/json",
-        //     "Content-Type": "application/json",
-        //     Authorization:
-        //         "Bearer QVBJX0tFWToyYjNlZDk2ZTg3NDM4MzRkYTM0YmY1NmEzZjA5YjdiZTozM2VmNWE2ZDM1MmFjYzQ1ZjNiMGM3OWJkN2ZhOTAwNQ==",
-        // };
-
-        // const url = "https://api-sandbox.circle.com/v1/transfers"
-        // axios.post(url, {
-        //     idempotencyKey: uuidv4(),
-        //     source: {
-        //         type: "wallet",
-        //         id: "1000177235"
-        //     },
-        //     destination: {
-        //         type: "blockchain",
-        //         address: "TEGmWL8QsLqe7ivG3Rir9wPoPVJGLCvtMC",
-        //         chain: "TRX"
-        //     },
-        //     amount: {
-        //         amount: "1000",
-        //         currency: "USD"
-        //     }
-        // }, { headers }).then((res) => {
-        //     console.log(res)
-        // }).catch((error) => {
-        //     console.log(error.response.data)
-        // })
         const getAccountDetails = async () => {
             await axios.get(`${process.env.REACT_APP_BACKEND_API}/accounts/get-walletId/${window.localStorage.getItem('email')}`)
                 .then((res) => {

@@ -24,7 +24,7 @@ const AddProduct = () => {
 		descriptionError:
 			"Description length should be between 10 to 20 characters.",
 		modelNumberError: "Invalid model number.",
-		priceError: "Price should be greater than 0.",
+		priceError: "Invalid Price.",
 		deliveryError: "Number of Delivery Days should be greater than 0.",
 		countError: "Product count should be greater than 0",
 	};
@@ -69,7 +69,7 @@ const AddProduct = () => {
 		if (!validModelNumber.test(productDetails["modelNumber"])) {
 			errorHandlerObj["modelNumberError"] = errorObj["modelNumberError"];
 		}
-		if (Number(productDetails["price"] <= 0) && validPrice.test(productDetails["price"])) {
+		if (Number(productDetails["price"] <= 0) || !validPrice.test(productDetails["price"])) {
 			errorHandlerObj["priceError"] = errorObj["priceError"];
 		}
 		if (Number(productDetails["delivery"] <= 0)) {

@@ -46,52 +46,52 @@ const CheckoutPage = (props) => {
                     <div className="row">
                         <div className="col-12">
                             <Card.Title><br />PRODUCT DETAILS</Card.Title>
-                            <Card.Text style={{ marginTop: "30px" }}>
-                                <div className="d-flex justify-content-center">
-                                    <div className="col-6">
-                                        <span style={{ float: "left" }}><b>Product Name: </b></span>
-                                        <span style={{ float: "right" }}>{props.selectedProduct.p_name}</span>
-                                    </div>
+                            {/* <Card.Text style={{ marginTop: "30px" }}> */}
+                            <div className="d-flex justify-content-center" style={{ marginTop: "30px" }}>
+                                <div className="col-6">
+                                    <span style={{ float: "left" }}><b>Product Name: </b></span>
+                                    <span style={{ float: "right" }}>{props.selectedProduct.p_name}</span>
                                 </div>
-                                <br />
-                                <div className="d-flex justify-content-center">
-                                    <div className="col-6">
-                                        <span style={{ float: "left" }}><b>Quantity: </b></span>
-                                        <span style={{ float: "right" }}>1</span>
-                                    </div>
+                            </div>
+                            <br />
+                            <div className="d-flex justify-content-center">
+                                <div className="col-6">
+                                    <span style={{ float: "left" }}><b>Quantity: </b></span>
+                                    <span style={{ float: "right" }}>1</span>
                                 </div>
-                                <br />
-                                <div className="d-flex justify-content-center">
-                                    <div className="col-6">
-                                        <span style={{ float: "left" }}><b>Delivery time: </b></span>
-                                        <span style={{ float: "right" }}>{props.selectedProduct.p_delivery} DAYS</span>
-                                    </div>
+                            </div>
+                            <br />
+                            <div className="d-flex justify-content-center">
+                                <div className="col-6">
+                                    <span style={{ float: "left" }}><b>Delivery time: </b></span>
+                                    <span style={{ float: "right" }}>{props.selectedProduct.p_delivery} DAYS</span>
                                 </div>
-                                <br />
-                                <div className="d-flex justify-content-center">
-                                    <div className="col-6">
-                                        <span style={{ float: "left" }}><b>Product Price : </b></span>
-                                        <span style={{ float: "right" }}>{props.selectedProduct.p_price} USDC</span>
-                                    </div>
+                            </div>
+                            <br />
+                            <div className="d-flex justify-content-center">
+                                <div className="col-6">
+                                    <span style={{ float: "left" }}><b>Product Price : </b></span>
+                                    <span style={{ float: "right" }}>{props.selectedProduct.p_price} USDC</span>
                                 </div>
-                                <br />
-                                <div className="d-flex justify-content-center">
-                                    <div className="col-6">
-                                        <span style={{ float: "left" }}><b>Transaction Fee: </b></span>
-                                        <span style={{ float: "right" }}>{(parseFloat(props.selectedProduct.p_price) * 0.035).toFixed(2)} USDC</span>
-                                    </div>
+                            </div>
+                            <br />
+                            <div className="d-flex justify-content-center">
+                                <div className="col-6">
+                                    <span style={{ float: "left" }}><b>Transaction Fee: </b></span>
+                                    <span style={{ float: "right" }}>{(parseFloat(props.selectedProduct.p_price) * 0.035).toFixed(2)} USDC</span>
                                 </div>
-                                <hr />
-                                <br />
-                                <div className="d-flex justify-content-center">
-                                    <div className="col-6" style={{ fontSize: "22px" }}>
-                                        <span style={{ float: "left" }}><b>Total Product Price : </b></span>
-                                        <span style={{ float: "right" }}>{(parseFloat(props.selectedProduct.p_price) + (parseFloat(props.selectedProduct.p_price) * 0.035)).toFixed(2)} USDC</span>
-                                    </div>
+                            </div>
+                            <hr />
+                            <br />
+                            <div className="d-flex justify-content-center">
+                                <div className="col-6" style={{ fontSize: "22px" }}>
+                                    <span style={{ float: "left" }}><b>Total Product Price : </b></span>
+                                    <span style={{ float: "right" }}>{(parseFloat(props.selectedProduct.p_price) + (parseFloat(props.selectedProduct.p_price) * 0.035)).toFixed(2)} USDC</span>
                                 </div>
-                                <br />
-                                <hr />
-                            </Card.Text>
+                            </div>
+                            <br />
+                            <hr />
+                            {/* </Card.Text> */}
                             <strong>YOUR BALANCE: {window.localStorage.getItem('balance')} USDC</strong>
                         </div>
                     </div>

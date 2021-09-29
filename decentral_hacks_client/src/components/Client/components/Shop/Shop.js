@@ -26,13 +26,25 @@ const Shop = (props) => {
 			setHasLoggedIn(false);
 		}
 
-		const getProducts = () => {
-			axios.get(`${process.env.REACT_APP_BACKEND_API}/shop/all-products`).then((res) => {
+		const getBalance = async () => {
+			await axios.get(`${process.env.REACT_APP_BACKEND_API}/accounts/get-walletId/${window.localStorage.getItem('email')}`)
+				.then((res) => {
+					window.localStorage.setItem('balance', res.data.balance)
+					console.log(res.data)
+				}).catch((error) => {
+					console.log(error.response)
+				})
+		}
+
+		const getProducts = async () => {
+			await axios.get(`${process.env.REACT_APP_BACKEND_API}/shop/all-products`).then((res) => {
 				setProducts(res.data.data.slice(0).reverse())
 			})
 		};
 
 		getProducts();
+		getBalance()
+
 	}, [authenticated]);
 
 	const handleCloseOutOfStock = () => {
