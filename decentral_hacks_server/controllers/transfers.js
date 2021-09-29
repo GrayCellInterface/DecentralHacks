@@ -58,10 +58,11 @@ const transfers = async (req, res) => {
 	const email = req.body.email;
 	const fee = parseFloat(req.body.fee);
 	const profit = parseFloat(req.body.tot_amount) * 0.02;
-	const amount = parseFloat(req.body.tot_amount) - profit;
+	const amount = (parseFloat(req.body.tot_amount) - profit).toFixed(2);
 
 	const masterAmount = parseFloat(fee + profit).toFixed(2);
 	console.log(masterAmount);
+	console.log(amount)
 
 	let transferIdSeller = "";
 	let walletId = "";
@@ -255,7 +256,8 @@ const checkout = async (req, res) => {
 	await updateProductCount("buy", p_id);
 
 	// 1/0?
-	const verdict = await successOrFailure();
+	//const verdict = await successOrFailure();
+	const verdict = 0
 	console.log("Verdict", verdict);
 
 	if (verdict === 0) {
@@ -263,6 +265,8 @@ const checkout = async (req, res) => {
 
 		// Add status in db
 		await addStatus(orderId, orderName, "pending", email, p_id, amount);
+
+		res.send({ status: "Delivery Started" })
 
 	} else {
 		console.log("OTP");

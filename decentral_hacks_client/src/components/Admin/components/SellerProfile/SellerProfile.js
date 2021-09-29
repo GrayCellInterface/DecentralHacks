@@ -10,7 +10,7 @@ const SellerProfile = () => {
                     <div className="row">
                         <SellerInfo />
                         <div className="col-lg-6">
-                            <img src={adminImage} alt="admin image" style={{ float: "right" }} />
+                            <img src={adminImage} alt="admin profile" style={{ float: "right" }} />
                         </div>
                     </div>
                 </div>

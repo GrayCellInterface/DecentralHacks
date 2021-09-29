@@ -8,25 +8,19 @@ const ConfirmationCheckout = (props) => {
 
     const executeCheckout = async () => {
         setModalStage("transfer")
-        //executeTransferToSeller()
         const transferId = await executeTransferToSeller()
-        console.log(transferId)
         setModalStage("checkingStatus")
         const status = await waitForConfirmation(transferId)
         if (status === "success") {
             setModalStage("checkout")
             const deliveryStatus = await checkout()
-            console.log(deliveryStatus)
             if (deliveryStatus === "Delivery Started") {
                 setModalStage("checkoutSuccess")
-                console.log("Checkout Successful")
             } else {
                 setModalStage("checkoutFailed")
-                console.log("Checkout Failed")
             }
         } else {
             setModalStage("checkoutFailed")
-            console.log("Checkout Failed")
         }
 
 
@@ -35,7 +29,6 @@ const ConfirmationCheckout = (props) => {
     const executeTransferToSeller = async () => {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_API}/shop/transfer`, props.transferBody)
         return response.data.transferIdSeller
-        //console.log(props.transferBody)
     }
 
     const waitForConfirmation = async (transferId) => {

@@ -53,10 +53,17 @@ const getWallet = async (id) => {
 	await axios
 		.get(`https://api-sandbox.circle.com/v1/wallets/${id}`, { headers })
 		.then((response) => {
-			balance = response.data.data.balances[0].amount;
+			balance = response.data.data.balances;
+			if (balance.length === 0) {
+				balance = "0"
+			} else {
+				balance = response.data.data.balances[0].amount
+			}
+			console.log("BALANCE", balance);
+
 		})
 		.catch((error) => {
-			console.log({ status: "Error", msg: error.response });
+			console.log({ status: "Error", msg: error });
 		});
 
 	return { balance: balance };

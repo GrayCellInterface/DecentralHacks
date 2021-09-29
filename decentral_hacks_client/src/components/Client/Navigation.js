@@ -169,8 +169,6 @@ const Navigation = (props) => {
 			setOpenStep2(true);
 		} else {
 			setErrors({ ...errorHandlerObj });
-			console.log("Registration Failed on Step 1");
-			console.log(errorHandlerObj);
 		}
 	};
 
@@ -217,8 +215,6 @@ const Navigation = (props) => {
 			errorHandlerObj["postalError"] === "" &&
 			errorHandlerObj["districtError"] === ""
 		) {
-			console.log(registerValues);
-			console.log(billingValues);
 			const hashedPassword = sha256(registerValues["password"]);
 
 			axios
@@ -229,7 +225,7 @@ const Navigation = (props) => {
 				})
 				.then((res) => {
 					if (res.data.msg === "Registered") {
-						console.log("Registration Successful", res.data.otp);
+						console.log(res.data.otp); //remove afterwards
 						setErrors({});
 						clearInputs();
 						setCollectRes({
@@ -247,17 +243,13 @@ const Navigation = (props) => {
 					} else {
 						errorHandlerObj["existingError"] = `${res.data.msg}`;
 						setErrors({ ...errorHandlerObj });
-						console.log("Registration Failed");
 					}
 				})
 				.catch((error) => {
 					console.log(error.response.data);
-					console.log("Registration Failed");
 				});
 		} else {
 			setErrors({ ...errorHandlerObj });
-			console.log("Registration Failed");
-			console.log(errorHandlerObj);
 		}
 	};
 
@@ -273,8 +265,6 @@ const Navigation = (props) => {
 			errorHandlerObj["otpError"] = errorObj["otpError"];
 		}
 		if (errorHandlerObj["otpError"] === "") {
-			console.log(collectRes);
-			console.log(verifyValues["otp"]);
 			axios
 				.post(`${process.env.REACT_APP_BACKEND_API}/auth/register-verified`, {
 					email: `${collectRes["email"]}`,
@@ -290,24 +280,19 @@ const Navigation = (props) => {
 				})
 				.then((res) => {
 					if (res.data.msg === "Verified Success") {
-						console.log("Verification Successful");
 						handleOpenSuccess();
 						clearInputs();
 						setErrors({});
 					} else {
 						errorHandlerObj["verifyError"] = `${res.data.msg}`;
 						setErrors({ ...errorHandlerObj });
-						console.log("Verification Failed");
 					}
 				})
 				.catch((error) => {
 					console.log(error.response.data);
-					console.log("Verification Failed");
 				});
 		} else {
 			setErrors({ ...errorHandlerObj });
-			console.log("Verification Failed");
-			console.log(errorHandlerObj);
 		}
 	};
 
@@ -337,7 +322,6 @@ const Navigation = (props) => {
 			errorHandlerObj["passwordError"] === ""
 		) {
 			const hashedPassword = sha256(loginValues["password"]);
-			console.log(hashedPassword);
 			axios
 				.post(`${process.env.REACT_APP_BACKEND_API}/auth/login`, {
 					email: `${loginValues["email"]}`,
@@ -345,7 +329,6 @@ const Navigation = (props) => {
 				})
 				.then((res) => {
 					if (res.data.msg === "Logged In") {
-						console.log("Login Successful");
 						setHasLoggedIn(true);
 						setErrors({});
 						window.localStorage.setItem("email", res.data.email);
@@ -355,17 +338,13 @@ const Navigation = (props) => {
 					} else {
 						errorHandlerObj["authError"] = `${res.data.msg}`;
 						setErrors({ ...errorHandlerObj });
-						console.log("Login Failed");
 					}
 				})
 				.catch((error) => {
 					console.log(error.response.data);
-					console.log("Login Failed");
 				});
 		} else {
 			setErrors({ ...errorHandlerObj });
-			console.log("Login Failed");
-			// console.log(errorHandlerObj)
 		}
 	};
 

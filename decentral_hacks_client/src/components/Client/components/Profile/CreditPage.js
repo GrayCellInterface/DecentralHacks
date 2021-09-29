@@ -93,7 +93,7 @@ const CreditPage = (props) => {
     const handleCredit = async (e) => {
         e.preventDefault();
         setErrors({})
-        const validAmount = /[+-]?([0-9]*[.])?[0-9]+/
+        const validAmount = /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/
         errorHandlerObj = {
             invalidAmountError: "",
             thresholdAmountError: "",
@@ -154,8 +154,6 @@ const CreditPage = (props) => {
             })
         } else {
             setErrors({ ...errorHandlerObj })
-            console.log("Credit Failed")
-            console.log(errorHandlerObj)
         }
 
     }

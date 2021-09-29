@@ -23,7 +23,6 @@ const getAllStatus = async (req, res) => {
 const updateCancelStatus = async (req, res) => {
 	const p_id = req.body.p_id;
 	const orderId = req.body.orderId;
-	const action = req.body.action;
 
 	OStatus.findOne({ orderId: orderId }, async function (err, data) {
 		if (data.status === "pending") {
@@ -32,7 +31,7 @@ const updateCancelStatus = async (req, res) => {
 				{ orderId: orderId },
 				{
 					$set: {
-						status: action,
+						status: "cancel",
 					},
 				},
 				async function (error, doc) {
@@ -50,16 +49,14 @@ const updateCancelStatus = async (req, res) => {
 				}
 			);
 			// update count
-			await updateProductCount(action, p_id);
+			await updateProductCount("cancel", p_id);
 
 			res.send({
-				status: "success",
-				msg: "Updated Successfully",
+				status: "Refund Successful",
 			});
 		} else {
 			res.send({
-				status: "error",
-				msg: "Could not cancel your order",
+				status: "Refund Failed",
 			});
 		}
 	});

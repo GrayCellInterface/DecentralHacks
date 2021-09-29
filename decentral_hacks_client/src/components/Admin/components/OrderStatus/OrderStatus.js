@@ -16,7 +16,7 @@ const OrderStatus = (props) => {
 			.catch((error) => {
 				console.log(error.response.msg);
 			});
-	}, [orders]);
+	}, [type]);
 	return (
 		<div className="m-4">
 			<h6>{name} ORDERS LIST</h6>

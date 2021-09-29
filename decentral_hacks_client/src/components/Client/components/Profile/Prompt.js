@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from 'axios'
 import { Modal, Form } from 'react-bootstrap';
 import './css/Prompt.css'
 
@@ -22,7 +21,7 @@ const Prompt = (props) => {
     const handleSameCredit = async (e) => {
         e.preventDefault()
         setErrors({})
-        const validAmount = /[+-]?([0-9]*[.])?[0-9]+/
+        const validAmount = /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/
         errorHandlerObj = {
             invalidAmountError: "",
             cardAmountError: "",
@@ -46,7 +45,6 @@ const Prompt = (props) => {
             })
         } else {
             setErrors({ ...errorHandlerObj })
-            console.log("Credit Failed")
         }
 
     }
@@ -54,7 +52,7 @@ const Prompt = (props) => {
     const handleSameDebit = async (e) => {
         e.preventDefault()
         setErrors({})
-        const validAmount = /[+-]?([0-9]*[.])?[0-9]+/
+        const validAmount = /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/
         errorHandlerObj = {
             invalidAmountError: "",
             bankAmountError: "",
@@ -75,16 +73,8 @@ const Prompt = (props) => {
                 email: `${window.localStorage.getItem("email")}`,
                 amount: `${bankAmount}`
             })
-            // await axios.post(`${process.env.REACT_APP_BACKEND_API}/accounts/payout`, {
-
-            // }).then((res) => {
-            //     console.log(res.data.msg)
-            // }).catch((error) => {
-            //     console.log(error.response.data)
-            // })
         } else {
             setErrors({ ...errorHandlerObj })
-            console.log("Debit Failed")
         }
     }
 

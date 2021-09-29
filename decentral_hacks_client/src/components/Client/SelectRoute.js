@@ -7,7 +7,6 @@ import Orders from './components/Orders/Orders';
 const SelectRoute = (props) => {
 
     let { selectedRoute } = useParams()
-    console.log(selectedRoute)
 
     const renderPage = () => {
         switch (selectedRoute) {

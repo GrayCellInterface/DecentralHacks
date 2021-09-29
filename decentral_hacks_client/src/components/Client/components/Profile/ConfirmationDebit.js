@@ -9,25 +9,19 @@ const ConfirmationDebit = (props) => {
     const executeDebit = async () => {
         setModalStage("transfer")
         const payoutId = await executeDebitFromMaster()
-        console.log(payoutId)
         setModalStage("checkingStatus")
         const status = await waitForConfirmation("payouts", payoutId)
         if (status === "success") {
             setModalStage("blockchainTansfer")
             const transferId = await executeWalletToBlockchain()
-            console.log(transferId)
             const result = await waitForConfirmation("transfers", transferId)
-            console.log(result)
             if (result === "success") {
                 setModalStage("debitSuccess")
-                console.log("Debit Successful")
             } else {
                 setModalStage("debitFailed")
-                console.log("Debit Failed")
             }
         } else {
             setModalStage("debitFailed")
-            console.log("Debit Failed")
         }
 
 

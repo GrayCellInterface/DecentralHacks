@@ -8,7 +8,7 @@ import ConfirmationDebit from './ConfirmationDebit';
 import Prompt from './Prompt';
 import MyTransactions from './MyTransactions';
 import './css/Profile.css'
-const { v4: uuidv4 } = require("uuid");
+//const { v4: uuidv4 } = require("uuid");
 
 const Profile = () => {
 
@@ -57,6 +57,7 @@ const Profile = () => {
             await axios.get(`${process.env.REACT_APP_BACKEND_API}/accounts/get-walletId/${window.localStorage.getItem('email')}`)
                 .then((res) => {
                     window.localStorage.setItem('balance', res.data.balance)
+                    console.log(res.data)
                 }).catch((error) => {
                     console.log(error.response)
                 })
