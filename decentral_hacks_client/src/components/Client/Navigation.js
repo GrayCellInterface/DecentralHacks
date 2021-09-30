@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { sha256 } from "js-sha256";
-import brandLogo from "../../assets/images/Logo.png";
+import brandLogo from "../../assets/images/final.png";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import Login from "./components/Login/Login";
+import "./css/Navbar.css";
 
 const postalCodes = require("postal-codes-js");
 
@@ -116,7 +117,6 @@ const Navigation = (props) => {
 		setOpenRegister(true);
 	};
 
-
 	// handle back to login
 	const handleBackToLogin = (e) => {
 		e.preventDefault();
@@ -135,7 +135,6 @@ const Navigation = (props) => {
 	const handleOpenSuccess = () => {
 		setOpenSuccess(true);
 	};
-
 
 	//Handle Registration
 	const handleGoToStep2 = (e) => {
@@ -353,7 +352,7 @@ const Navigation = (props) => {
 	const handleLogout = () => {
 		window.localStorage.removeItem("email");
 		window.localStorage.removeItem("walletId");
-		window.localStorage.removeItem('balance')
+		window.localStorage.removeItem("balance");
 		window.localStorage.removeItem("publicKey");
 		window.localStorage.removeItem("publicKeyExpiry");
 		window.localStorage.removeItem("username");
@@ -401,7 +400,12 @@ const Navigation = (props) => {
 	const renderNavContent = () => {
 		if (hasLoggedIn) {
 			return (
-				<NavDropdown title="My Account" id="basic-nav-dropdown">
+				<NavDropdown
+					title={<span className="nav-item-color">My Account</span>}
+					id="basic-nav-dropdown"
+					className="nav-item-color"
+					style={{ color: "white" }}
+				>
 					<NavDropdown.Item href={`${props.url}/profile`}>
 						Profile
 					</NavDropdown.Item>
@@ -413,17 +417,32 @@ const Navigation = (props) => {
 			);
 		} else {
 			return (
-				<Nav.Link onClick={props.handleLoginModalOpen}>Login/Register</Nav.Link>
+				<Nav.Link
+					onClick={props.handleLoginModalOpen}
+					className="nav-item-color"
+				>
+					Login/Register
+				</Nav.Link>
 			);
 		}
 	};
 
 	return (
 		<>
-			<Navbar bg="light" variant="light" expand="lg">
+			<Navbar style={{ backgroundColor: "#000000" }} className="navbar-sticky">
 				<Container>
 					<Navbar.Brand href={`${props.url}`}>
-						<img src={brandLogo} alt="logo" />
+						<img src={brandLogo} alt="logo" width="60px" height="60px" />
+						<span
+							style={{
+								color: "white",
+								fontWeight: "900",
+								fontSize: "25px",
+								fontFamily: "monospace",
+							}}
+						>
+							CryptoKart
+						</span>
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					<Navbar.Collapse
@@ -431,8 +450,12 @@ const Navigation = (props) => {
 						className="justify-content-end"
 					>
 						<Nav className="justify-content-end">
-							<Nav.Link href={`${props.url}`}>Home</Nav.Link>
-							<Nav.Link href={`${props.url}/shop`}>Shop</Nav.Link>
+							<Nav.Link href={`${props.url}`} className="nav-item-color">
+								Home
+							</Nav.Link>
+							<Nav.Link href={`${props.url}/shop`} className="nav-item-color">
+								Shop
+							</Nav.Link>
 							{renderNavContent()}
 						</Nav>
 					</Navbar.Collapse>

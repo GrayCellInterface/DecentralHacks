@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import search from '../../../../assets/images/Admin/Search.gif'
+import search from "../../../../assets/images/Admin/Search.gif";
 import axios from "axios";
 import { Table } from "react-bootstrap";
 
@@ -19,20 +19,19 @@ const OrderStatus = (props) => {
 			});
 	}, [type]);
 
-
 	return (
-		<div className="m-4">
-
-
-			{orders.length === 0
-				?
+		<div style={{ margin: 100 }}>
+			{orders.length === 0 ? (
 				<>
 					<div className="text-center">
 						<img src={search} alt="notfound" />
-						<h5 > <em>You do not have {type} orders</em></h5>
+						<h5>
+							{" "}
+							<em>You do not have {type} orders</em>
+						</h5>
 					</div>
 				</>
-				:
+			) : (
 				<>
 					<h6>{name} ORDERS LIST</h6>
 					<Table striped bordered hover responsive>
@@ -46,20 +45,23 @@ const OrderStatus = (props) => {
 							</tr>
 						</thead>
 						<tbody>
-							{orders.slice(0).reverse().map((item) => (
-								<tr key={item._id}>
-									<td>{item.orderId}</td>
-									<td>{item.productId}</td>
-									<td>{item.orderName}</td>
-									<td>{item.order_date}</td>
-									<td>{item.email}</td>
-								</tr>
-							))}
+							{orders
+								.slice(0)
+								.reverse()
+								.map((item) => (
+									<tr key={item._id}>
+										<td>{item.orderId}</td>
+										<td>{item.productId}</td>
+										<td>{item.orderName}</td>
+										<td>{item.order_date}</td>
+										<td>{item.email}</td>
+									</tr>
+								))}
 						</tbody>
 					</Table>
 				</>
-			}
-		</div >
+			)}
+		</div>
 	);
 };
 

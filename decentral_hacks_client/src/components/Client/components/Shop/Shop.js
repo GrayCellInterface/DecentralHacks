@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import CheckoutPage from "./CheckoutPage";
 import OutOfStockPrompt from "./OutOfStockPrompt";
-import defaultImage from '../../../../assets/images/defaultProduct.png'
+import defaultImage from "../../../../assets/images/defaultProduct.png";
 import { Card, ListGroup, ListGroupItem } from "react-bootstrap";
 
 const Shop = (props) => {
@@ -27,24 +27,31 @@ const Shop = (props) => {
 		}
 
 		const getBalance = async () => {
-			await axios.get(`${process.env.REACT_APP_BACKEND_API}/accounts/get-walletId/${window.localStorage.getItem('email')}`)
+			await axios
+				.get(
+					`${
+						process.env.REACT_APP_BACKEND_API
+					}/accounts/get-walletId/${window.localStorage.getItem("email")}`
+				)
 				.then((res) => {
-					window.localStorage.setItem('balance', res.data.balance)
-					console.log(res.data)
-				}).catch((error) => {
-					console.log(error.response)
+					window.localStorage.setItem("balance", res.data.balance);
+					console.log(res.data);
 				})
-		}
+				.catch((error) => {
+					console.log(error.response);
+				});
+		};
 
 		const getProducts = async () => {
-			await axios.get(`${process.env.REACT_APP_BACKEND_API}/shop/all-products`).then((res) => {
-				setProducts(res.data.data.slice(0).reverse())
-			})
+			await axios
+				.get(`${process.env.REACT_APP_BACKEND_API}/shop/all-products`)
+				.then((res) => {
+					setProducts(res.data.data.slice(0).reverse());
+				});
 		};
 
 		getProducts();
-		getBalance()
-
+		getBalance();
 	}, [authenticated]);
 
 	const handleCloseOutOfStock = () => {
@@ -64,7 +71,6 @@ const Shop = (props) => {
 		}
 	};
 
-
 	const handleGoBackToShop = () => {
 		setOpenCheckout(false);
 	};
@@ -80,13 +86,13 @@ const Shop = (props) => {
 		} else {
 			return (
 				<>
-					<div className="row">
+					<div className="row" style={{ marginTop: "120px" }}>
 						{products.map((product, index) => {
 							let image;
 							if (product.p_link === "") {
-								image = defaultImage
+								image = defaultImage;
 							} else {
-								image = product.p_link
+								image = product.p_link;
 							}
 							let stockJSX;
 							let stock = parseInt(product.p_count);
@@ -118,7 +124,11 @@ const Shop = (props) => {
 									style={{ margin: "30px 0px" }}
 								>
 									<Card style={{ width: "23rem", height: "773px" }} key={index}>
-										<Card.Img style={{ height: "340px", objectFit: "contain" }} variant="top" src={image} />
+										<Card.Img
+											style={{ height: "340px", objectFit: "contain" }}
+											variant="top"
+											src={image}
+										/>
 										<Card.Body>
 											<div className="row">
 												<div className="col-7">
@@ -176,7 +186,11 @@ const Shop = (props) => {
 												onClick={() => handleGotoCheckOut(index)}
 												className="me-btn"
 												size="lg"
-												style={{ width: "70%", height: "40px" }}
+												style={{
+													width: "70%",
+													height: "40px",
+													backgroundColor: "#000",
+												}}
 											>
 												Buy Now
 											</button>

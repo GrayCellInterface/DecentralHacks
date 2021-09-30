@@ -46,7 +46,7 @@ const AddProduct = () => {
 		setErrors({});
 
 		const validModelNumber = /[A-Z0-9- ]{4,20}/;
-		const validPrice = /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/
+		const validPrice = /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/;
 
 		errorHandlerObj = {
 			nameError: "",
@@ -69,7 +69,10 @@ const AddProduct = () => {
 		if (!validModelNumber.test(productDetails["modelNumber"])) {
 			errorHandlerObj["modelNumberError"] = errorObj["modelNumberError"];
 		}
-		if (Number(productDetails["price"] <= 0) || !validPrice.test(productDetails["price"])) {
+		if (
+			Number(productDetails["price"] <= 0) ||
+			!validPrice.test(productDetails["price"])
+		) {
 			errorHandlerObj["priceError"] = errorObj["priceError"];
 		}
 		if (Number(productDetails["delivery"] <= 0)) {
@@ -109,7 +112,7 @@ const AddProduct = () => {
 
 	return (
 		<>
-			<div style={{ margin: "40px" }}>
+			<div style={{ margin: "0 100px 50px 100px" }}>
 				<h3 style={{ marginBottom: "20px" }}>Add Product</h3>
 				<Form>
 					{/* Name */}
@@ -146,7 +149,7 @@ const AddProduct = () => {
 
 					<Container>
 						<Row>
-							<Col sm={6} lg={6}>
+							<Col lg={6}>
 								{/* modelNumber */}
 								<Form.Group className="mb-3" controlId="formBasicNumber">
 									<Form.Label>Product Model Number:</Form.Label>
@@ -165,7 +168,7 @@ const AddProduct = () => {
 									)}
 								</Form.Group>
 							</Col>
-							<Col sm={6} lg={6}>
+							<Col lg={6}>
 								{/* link */}
 								<Form.Group className="mb-3" controlId="formBasicNumber">
 									<Form.Label>Product Image Link:</Form.Label>
