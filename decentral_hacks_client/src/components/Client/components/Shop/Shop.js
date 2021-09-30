@@ -189,7 +189,6 @@ const Shop = (props) => {
 												style={{
 													width: "70%",
 													height: "40px",
-													backgroundColor: "#000",
 												}}
 											>
 												Buy Now

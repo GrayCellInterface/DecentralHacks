@@ -113,7 +113,9 @@ const AddProduct = () => {
 	return (
 		<>
 			<div style={{ margin: "0 100px 50px 100px" }}>
-				<h3 style={{ marginBottom: "20px" }}>Add Product</h3>
+				<h4 className="text-center" style={{ margin: "20px" }}>
+					<strong>• ADD PRODUCT •</strong>
+				</h4>
 				<Form>
 					{/* Name */}
 					<Form.Group className="mb-3" controlId="formBasicNumber">
@@ -147,41 +149,31 @@ const AddProduct = () => {
 						)}
 					</Form.Group>
 
-					<Container>
-						<Row>
-							<Col lg={6}>
-								{/* modelNumber */}
-								<Form.Group className="mb-3" controlId="formBasicNumber">
-									<Form.Label>Product Model Number:</Form.Label>
-									<Form.Control
-										value={productDetails["modelNumber"]}
-										name="modelNumber"
-										onChange={handleChange}
-										placeholder="Enter Product Model Number"
-									/>
-									{errors["modelNumberError"] === "" ? (
-										<></>
-									) : (
-										<div className="error-msg">
-											{errors["modelNumberError"]}
-										</div>
-									)}
-								</Form.Group>
-							</Col>
-							<Col lg={6}>
-								{/* link */}
-								<Form.Group className="mb-3" controlId="formBasicNumber">
-									<Form.Label>Product Image Link:</Form.Label>
-									<Form.Control
-										value={productDetails["link"]}
-										name="link"
-										onChange={handleChange}
-										placeholder="Enter a valid image link or keep empty"
-									/>
-								</Form.Group>
-							</Col>
-						</Row>
-					</Container>
+					<Form.Group className="mb-3" controlId="formBasicNumber">
+						<Form.Label>Product Model Number:</Form.Label>
+						<Form.Control
+							value={productDetails["modelNumber"]}
+							name="modelNumber"
+							onChange={handleChange}
+							placeholder="Enter Product Model Number"
+							style={{ margin: 0 }}
+						/>
+						{errors["modelNumberError"] === "" ? (
+							<></>
+						) : (
+							<div className="error-msg">{errors["modelNumberError"]}</div>
+						)}
+					</Form.Group>
+
+					<Form.Group className="mb-3" controlId="formBasicNumber">
+						<Form.Label>Product Image Link:</Form.Label>
+						<Form.Control
+							value={productDetails["link"]}
+							name="link"
+							onChange={handleChange}
+							placeholder="Enter a valid image link or keep empty"
+						/>
+					</Form.Group>
 
 					{/* price */}
 					<Form.Group className="mb-3" controlId="formBasicNumber">

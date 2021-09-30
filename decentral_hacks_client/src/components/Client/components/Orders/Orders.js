@@ -36,7 +36,9 @@ const Orders = (props) => {
 	return (
 		<>
 			<div style={{ margin: "120px" }}>
-				<h6>YOUR ORDERS LIST</h6>
+				<h3 className="text-center" style={{ margin: "20px" }}>
+					<strong>• Your Orders •</strong>
+				</h3>
 				<Table striped bordered hover responsive>
 					<thead>
 						<tr>
@@ -63,9 +65,17 @@ const Orders = (props) => {
 									</>
 								);
 							} else if (item.status === "completed") {
-								status = <p style={{ color: "green" }}>DELIVERED</p>;
+								status = (
+									<p style={{ color: "green" }}>
+										<strong>DELIVERED</strong>
+									</p>
+								);
 							} else {
-								status = <p style={{ color: "red" }}>CANCELLED</p>;
+								status = (
+									<p style={{ color: "red" }}>
+										<strong>CANCELLED</strong>
+									</p>
+								);
 							}
 							return (
 								<tr key={item._id}>

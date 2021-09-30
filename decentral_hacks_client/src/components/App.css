@@ -27,7 +27,6 @@ a {
 	transition: 0.3s;
 }
 a:hover {
-	color: #4273ff;
 	text-decoration: none;
 }
 input,
@@ -51,7 +50,7 @@ textarea {
 	height: 40px;
 	line-height: 40px;
 	border: none;
-	background: #000;
+	background: orange;
 	color: #ffffff;
 	outline: none;
 	text-align: center;

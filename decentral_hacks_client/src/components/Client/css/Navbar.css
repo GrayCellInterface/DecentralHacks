@@ -5,9 +5,23 @@
 	font-size: 18px;
 }
 
+.nav-item-color:hover {
+	color: orange !important;
+}
+
 .navbar-sticky {
 	position: fixed;
 	top: 0;
 	width: 100%;
 	z-index: 99;
+}
+/* div.dropdown-menu.show {
+    background-color: orange; 
+  } */
+a.dropdown-item:active {
+	background-color: orange;
+}
+a.dropdown-item:hover {
+	background-color: orange;
+	color: white;
 }

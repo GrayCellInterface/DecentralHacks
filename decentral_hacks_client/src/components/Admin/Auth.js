@@ -5,15 +5,14 @@ import "./css/Dashboard.css";
 import auth from "../../assets/images/Admin/auth.gif";
 
 const Auth = (props) => {
-
 	const [passCode, setPassCode] = useState("");
 	const [err, setErr] = useState(false);
 
 	useEffect(() => {
 		if (window.localStorage.getItem("sellerAuth")) {
-			window.location.href = '/admin/profile'
+			window.location.href = "/admin/profile";
 		}
-	}, [])
+	}, []);
 
 	const handlePassCode = (e) => {
 		setPassCode(e.target.value);
@@ -35,7 +34,11 @@ const Auth = (props) => {
 			<Container fluid="md">
 				<Row>
 					{/* Password */}
-					<Col sm={6} className="text-center p-4" style={{ marginTop: "250px" }}>
+					<Col
+						sm={6}
+						className="text-center p-4"
+						style={{ marginTop: "250px" }}
+					>
 						<h2>Admin Login 🔐</h2>
 						<Form className="text-center">
 							<Form.Group className="mb-3" controlId="formBasicPostal">
@@ -65,7 +68,12 @@ const Auth = (props) => {
 
 					{/* Image */}
 					<Col sm={6}>
-						<img src={auth} alt="Logo" className="authImage" style={{ width: "500px", paddingTop: "100px" }} />
+						<img
+							src={auth}
+							alt="Logo"
+							className="authImage"
+							style={{ width: "500px", paddingTop: "100px", float: "right" }}
+						/>
 					</Col>
 				</Row>
 			</Container>

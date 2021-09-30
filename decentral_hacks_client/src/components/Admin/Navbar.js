@@ -12,21 +12,21 @@ function Navbar(props) {
 	const [openSidebar, setOpenSidebar] = useState(false);
 	const handleOpenSidebar = () => setOpenSidebar(!openSidebar);
 	const handleLogout = () => {
-		window.localStorage.removeItem('sellerAuth')
-		window.location.href = "/admin"
-	}
+		window.localStorage.removeItem("sellerAuth");
+		window.location.href = "/admin";
+	};
 
 	return (
 		<>
 			<IconContext.Provider value={{ color: "#000" }}>
-				<div className="navbar" >
+				<div className="navbar" style={{ marginBottom: -20 }}>
 					<Link to="#" className="menu-bars" style={{ float: "left" }}>
 						<FaIcons.FaBars
 							onClick={handleOpenSidebar}
 							className="hamburger-menu"
 						/>
 					</Link>
-					<h4 className="nav-title text-center">ADMIN DASHBOARD</h4>
+					{/* <h4 className="nav-title text-center">ADMIN DASHBOARD</h4> */}
 				</div>
 				<nav className={openSidebar ? "nav-menu active" : "nav-menu"}>
 					<ul className="nav-menu-items">
@@ -95,11 +95,7 @@ function Navbar(props) {
 								);
 							}
 						})}
-						<li
-							className="nav-text"
-							onClick={handleLogout}
-						>
-
+						<li className="nav-text" onClick={handleLogout}>
 							<div className="logout-btn">
 								<FaIcons.FaSignOutAlt />
 								<span>Logout</span>

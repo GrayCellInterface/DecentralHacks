@@ -26,14 +26,15 @@ const OrderStatus = (props) => {
 					<div className="text-center">
 						<img src={search} alt="notfound" />
 						<h5>
-							{" "}
 							<em>You do not have {type} orders</em>
 						</h5>
 					</div>
 				</>
 			) : (
 				<>
-					<h6>{name} ORDERS LIST</h6>
+					<h4 className="text-center" style={{ margin: "20px" }}>
+						<strong>• {name} ORDERS LIST •</strong>
+					</h4>
 					<Table striped bordered hover responsive>
 						<thead>
 							<tr>

@@ -1,15 +1,21 @@
-.close-btn{
-    outline: none;
-    background-color: #fff;
-    border: none;
-    font-weight: 550;
+.close-btn {
+	outline: none;
+	background-color: #fff;
+	border: none;
+	font-weight: 550;
 }
 .close-btn:hover {
-    color: #0275db
+	color: orange;
 }
-.error-msg{
-    color: red;
+.error-msg {
+	color: red;
 }
-.add-error-style{
-    padding-top: 7px;
+.add-error-style {
+	padding-top: 7px;
+}
+.register-here {
+	text-decoration: none;
+}
+.register-here:hover {
+	color: orange;
 }

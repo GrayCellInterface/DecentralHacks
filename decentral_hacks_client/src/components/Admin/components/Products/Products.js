@@ -53,6 +53,9 @@ const Products = () => {
 	const renderProducts = () => {
 		return (
 			<>
+				<h4 className="text-center" style={{ margin: "20px" }}>
+					<strong>• PRODUCTS •</strong>
+				</h4>
 				<div className="row">
 					{products.map((product, index) => {
 						let image;
@@ -195,4 +198,3 @@ const Products = () => {
 };
 
 export default Products;
-

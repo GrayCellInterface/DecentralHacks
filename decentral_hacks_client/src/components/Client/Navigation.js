@@ -404,15 +404,26 @@ const Navigation = (props) => {
 					title={<span className="nav-item-color">My Account</span>}
 					id="basic-nav-dropdown"
 					className="nav-item-color"
-					style={{ color: "white" }}
+					style={{ color: "white", marginLeft: "-15px" }}
 				>
-					<NavDropdown.Item href={`${props.url}/profile`}>
+					<NavDropdown.Item
+						href={`${props.url}/profile`}
+						className="nav-dropdown-item"
+					>
 						Profile
 					</NavDropdown.Item>
-					<NavDropdown.Item href={`${props.url}/orders`}>
+					<NavDropdown.Item
+						href={`${props.url}/orders`}
+						className="nav-dropdown-item"
+					>
 						Your Orders
 					</NavDropdown.Item>
-					<NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+					<NavDropdown.Item
+						onClick={handleLogout}
+						className="nav-dropdown-item"
+					>
+						Logout
+					</NavDropdown.Item>
 				</NavDropdown>
 			);
 		} else {
@@ -421,7 +432,7 @@ const Navigation = (props) => {
 					onClick={props.handleLoginModalOpen}
 					className="nav-item-color"
 				>
-					Login/Register
+					Login
 				</Nav.Link>
 			);
 		}
