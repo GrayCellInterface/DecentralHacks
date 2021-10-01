@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Form, Container, Row, Col } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 const AddProduct = () => {
 	// State Variables

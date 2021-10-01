@@ -78,6 +78,9 @@
     border: none;
   }
 
+  .accordion-body .nav-text a{
+    margin-left: -35px;
+  }
   
   .hamburger-menu {
     font-size: 19px;
@@ -99,6 +102,22 @@
 
   .logout-btn:hover{
     background-color: #d3d3d3;
+  }
+
+  .accordion-button.collapsed:focus{
+    box-shadow: none;
+    outline: none;
+    
+  }
+  .accordion-button:not(.collapsed){
+    box-shadow: none;
+    outline: none;
+    color: #000;
+    background-color: #fff;
+  }
+
+  .accordion-button:focus{
+    border: none;
   }
 
   span {

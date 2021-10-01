@@ -44,10 +44,10 @@ const SellerInfo = (props) => {
                             </li>
                             <li>
                                 <div className="me-profile-data">
-                                    <p><b>Email:</b></p>
+                                    <p><b>Wallet Address:</b></p>
                                 </div>
                                 <div className="me-profile-data-right">
-                                    <p>support@gcecorp.com</p>
+                                    <p>TVyXtKiMoG2PZpSsAnMaLZW747PSvRAQmT</p>
                                 </div>
                             </li>
                             <li>

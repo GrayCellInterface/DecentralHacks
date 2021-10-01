@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios'
+import { GoCheck, GoX } from "react-icons/go";
 import { Modal, Spinner } from 'react-bootstrap';
 const TronWeb = require('tronweb')
 const fullNode = 'https://api.shasta.trongrid.io';
@@ -75,10 +76,10 @@ const RefundConfirmationModal = (props) => {
             return (
                 <>
                     <p>Please click on 'Confirm Refund' to start processing the refund for this product.</p>
-                    <button onClick={executeRefund} className="me-btn" style={{ float: 'left' }}>
+                    <button onClick={executeRefund} className="me-btn" style={{ float: 'right' }}>
                         Confirm Refund
                     </button>
-                    <button onClick={handleCloseRefundConfirmation} className="me-btn" style={{ float: 'right' }}>
+                    <button onClick={handleCloseRefundConfirmation} className="me-btn" style={{ float: 'left' }}>
                         Cancel
                     </button>
                 </>
@@ -105,9 +106,12 @@ const RefundConfirmationModal = (props) => {
                 return (
                     <>
                         <div className="container text-center">
-                            <Spinner style={{ margin: "20px 0" }} animation="border" variant="primary" />
+                            <Spinner style={{ margin: "20px 0", color: "orange" }} animation="border" />
                             <div>
                                 <p>{message}</p>
+                            </div>
+                            <div>
+                                <p><em>**Do <b>NOT</b> click Back or refresh the page as it may lead to loosing your funds.</em></p>
                             </div>
                         </div>
                     </>
@@ -116,12 +120,22 @@ const RefundConfirmationModal = (props) => {
                 return (
                     <>
                         <div className="container text-center">
-                            <div>
-                                <p style={modalStage === "refundFailed" ? { color: 'red' } : { color: 'green' }}>{message}</p>
-                            </div>
-                            <button onClick={handleCloseRefundConfirmation} className="me-btn">
-                                Back
-                            </button>
+                            {modalStage === "refundFailed"
+                                ? (
+                                    <>
+                                        <div style={{ color: "red" }}>
+                                            <GoX style={{ fontSize: "40px", margin: "25px" }} />
+                                            <p>{message}</p>
+                                        </div>
+                                        <button onClick={handleCloseRefundConfirmation} className="me-btn">
+                                            Back
+                                        </button>
+                                    </>)
+                                : (<div style={{ color: "green" }}>
+                                    <GoCheck style={{ fontSize: "40px", margin: "25px" }} />
+                                    <p>{message}</p>
+                                    <br />
+                                </div>)}
                         </div>
                     </>
                 )

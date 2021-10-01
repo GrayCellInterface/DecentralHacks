@@ -1,6 +1,6 @@
 import React from "react";
 import * as FaIcons from "react-icons/fa";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import banner from "../../../../assets/images/banner.png";
 
 import "./css/Home.css";
