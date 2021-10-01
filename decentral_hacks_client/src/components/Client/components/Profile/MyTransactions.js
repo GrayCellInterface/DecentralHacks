@@ -65,51 +65,70 @@ const MyTransactions = () => {
 		} else {
 			return (
 				<>
-					<div className="table table-responsive">
-						<table>
-							<thead>
-								<tr>
-									<th>To/From</th>
-									<th>Amount</th>
-									<th>Type</th>
-									<th>Timestamp</th>
-								</tr>
-							</thead>
-							<tbody>
-								{currentTranscations.map((item) => {
-									let recepient
-									let type
-									var now = new Date(item.createDate);
-									now.setSeconds(0, 0);
-									var stamp = now.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-									if (item.destination.address === "TVyXtKiMoG2PZpSsAnMaLZW747PSvRAQmT") { //process.env.REACT_APP_SELLER_ADDRESS
-										recepient = "Seller"
-										type = "SHOP"
-									}
-									else if (item.destination.address === "TEGmWL8QsLqe7ivG3Rir9wPoPVJGLCvtMC") { ////process.env.REACT_APP_BENEFICIARY_ADDRESS
-										recepient = "CryptoKart"
-										type = "DEBIT"
-									}
-									else {
-										recepient = "CryptoKart"
-										type = "CREDIT/REFUND"
-									}
-									return (
-										<tr key={item.id}>
-											<td>
-												{recepient}
-											</td>
-											<td>{item.amount.amount}</td>
-											<td>{type}</td>
-											<td>{stamp}</td>
-										</tr>
-									)
-								}
-								)}
 
-							</tbody>
-						</table>
-					</div>
+					{currentTranscations.length === 0 ? (
+						<div className="text-center">
+							<h3 style={{ marginTop: "30px" }}>YOUR TRANSACTIONS</h3>
+							<hr />
+							<h3
+								style={{
+									position: "absolute",
+									left: "18%",
+									top: "50%",
+									color: "gray",
+								}}
+							>
+								You do not have any transactions
+							</h3>
+						</div>
+					) : (
+						<div className="table table-responsive">
+							<table>
+								<thead>
+									<tr>
+										<th>To/From</th>
+										<th>Amount</th>
+										<th>Type</th>
+										<th>Timestamp</th>
+									</tr>
+								</thead>
+								<tbody>
+									{currentTranscations.map((item) => {
+										let recepient
+										let type
+										var now = new Date(item.createDate);
+										now.setSeconds(0, 0);
+										var stamp = now.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+										if (item.destination.address === "TVyXtKiMoG2PZpSsAnMaLZW747PSvRAQmT") { //process.env.REACT_APP_SELLER_ADDRESS
+											recepient = "Seller"
+											type = "SHOP"
+										}
+										else if (item.destination.address === "TEGmWL8QsLqe7ivG3Rir9wPoPVJGLCvtMC") { ////process.env.REACT_APP_BENEFICIARY_ADDRESS
+											recepient = "CryptoKart"
+											type = "DEBIT"
+										}
+										else {
+											recepient = "CryptoKart"
+											type = "CREDIT/REFUND"
+										}
+										return (
+											<tr key={item.id}>
+												<td>
+													{recepient}
+												</td>
+												<td>{item.amount.amount}</td>
+												<td>{type}</td>
+												<td>{stamp}</td>
+											</tr>
+										)
+									}
+									)}
+
+								</tbody>
+							</table>
+						</div>
+					)}
+
 					<div style={{ marginLeft: "45%" }}>
 						<Pagination
 							postsPerPage={postsPerPage}
