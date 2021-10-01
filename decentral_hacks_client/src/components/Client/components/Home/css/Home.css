@@ -1,5 +1,6 @@
 .banner {
 	background-color: #ebebeb;
+	width: 100%;
 }
 
 /* Card */
@@ -7,6 +8,7 @@
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 	border-radius: 12px;
 	transition: 0.5s;
+	margin-bottom: 5px;
 	/* width: 40%; */
 }
 
@@ -18,4 +20,11 @@
 .icon {
 	font-size: 50px;
 	color: #ffa500;
+}
+
+.text {
+	position: relative;
+	top: 40%;
+	bottom: 60%;
+	font-size: 16px;
 }
