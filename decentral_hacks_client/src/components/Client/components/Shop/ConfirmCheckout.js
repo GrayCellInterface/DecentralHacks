@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios'
 import { Modal, Spinner } from 'react-bootstrap';
+import { GoCheck, GoX } from "react-icons/go";
 
 const ConfirmationCheckout = (props) => {
 
@@ -116,9 +117,12 @@ const ConfirmationCheckout = (props) => {
                 return (
                     <>
                         <div className="container text-center">
-                            <Spinner style={{ margin: "20px 0" }} animation="border" variant="primary" />
+                            <Spinner style={{ margin: "20px 0", color: "orange" }} animation="border" />
                             <div>
                                 <p>{message}</p>
+                            </div>
+                            <div>
+                                <p><em>**Do <b>NOT</b> click Back or refresh the page as it may lead to loosing your funds.</em></p>
                             </div>
                         </div>
                     </>
@@ -127,9 +131,16 @@ const ConfirmationCheckout = (props) => {
                 return (
                     <>
                         <div className="container text-center">
-                            <div>
-                                <p style={modalStage === "checkoutFailed" ? { color: 'red' } : { color: 'green' }}>{message}</p>
-                            </div>
+                            {modalStage === "checkoutFailed"
+                                ? (<div style={{ color: "red" }}>
+                                    <GoX style={{ fontSize: "40px", margin: "25px" }} />
+                                    <p>{message}</p>
+                                </div>)
+                                : (<div style={{ color: "green" }}>
+                                    <GoCheck style={{ fontSize: "40px", margin: "25px" }} />
+                                    <p>{message}</p>
+                                    <br />
+                                </div>)}
                             <button onClick={handleBackToShop} className="me-btn">
                                 Continue Shopping
                             </button>

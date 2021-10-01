@@ -27,6 +27,7 @@ a {
 	transition: 0.3s;
 }
 a:hover {
+	color: orange;
 	text-decoration: none;
 }
 input,

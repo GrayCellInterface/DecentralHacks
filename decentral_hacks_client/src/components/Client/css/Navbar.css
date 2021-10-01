@@ -18,6 +18,15 @@
 /* div.dropdown-menu.show {
     background-color: orange; 
   } */
+  .navbar-toggler{
+	  margin-left: 40px;
+  }
+.navbar-light .navbar-toggler-icon {
+	margin-left: 0px;
+}
+.navbar-collapse{
+	background-color: black;
+}
 a.dropdown-item:active {
 	background-color: orange;
 }

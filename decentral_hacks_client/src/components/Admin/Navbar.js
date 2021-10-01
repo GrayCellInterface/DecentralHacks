@@ -43,7 +43,7 @@ function Navbar(props) {
 								return (
 									<Accordion key={item.title}>
 										<Accordion.Item eventKey="0" className="accordion-style">
-											<Accordion.Header className={item.cName}>
+											<Accordion.Header className={item.cName} >
 												<IoIcons.IoIosPaper />
 												<span>{item.title}</span>
 											</Accordion.Header>

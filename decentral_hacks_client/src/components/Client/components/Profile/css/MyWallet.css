@@ -36,3 +36,7 @@
 .me-my-wallet-head div {
     flex: 1;
 }
+.guide-list-items{
+    margin-bottom: -25px;
+    margin-left: -30px;
+}

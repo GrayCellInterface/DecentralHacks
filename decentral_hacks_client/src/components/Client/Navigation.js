@@ -401,6 +401,7 @@ const Navigation = (props) => {
 		if (hasLoggedIn) {
 			return (
 				<NavDropdown
+					eventKey="3"
 					title={<span className="nav-item-color">My Account</span>}
 					id="basic-nav-dropdown"
 					className="nav-item-color"
@@ -429,6 +430,7 @@ const Navigation = (props) => {
 		} else {
 			return (
 				<Nav.Link
+					eventKey="3"
 					onClick={props.handleLoginModalOpen}
 					className="nav-item-color"
 				>
@@ -440,7 +442,7 @@ const Navigation = (props) => {
 
 	return (
 		<>
-			<Navbar style={{ backgroundColor: "#000000" }} className="navbar-sticky">
+			<Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#000000" }} className="navbar-sticky">
 				<Container>
 					<Navbar.Brand href={`${props.url}`}>
 						<img src={brandLogo} alt="logo" width="60px" height="60px" />
@@ -455,16 +457,16 @@ const Navigation = (props) => {
 							CryptoKart
 						</span>
 					</Navbar.Brand>
-					<Navbar.Toggle aria-controls="basic-navbar-nav" />
+					<Navbar.Toggle aria-controls="basic-navbar-nav" style={{ backgroundColor: "white" }} />
 					<Navbar.Collapse
 						id="basic-navbar-nav"
 						className="justify-content-end"
 					>
 						<Nav className="justify-content-end">
-							<Nav.Link href={`${props.url}`} className="nav-item-color">
+							<Nav.Link eventKey="1" href={`${props.url}`} className="nav-item-color">
 								Home
 							</Nav.Link>
-							<Nav.Link href={`${props.url}/shop`} className="nav-item-color">
+							<Nav.Link eventKey="2" href={`${props.url}/shop`} className="nav-item-color">
 								Shop
 							</Nav.Link>
 							{renderNavContent()}

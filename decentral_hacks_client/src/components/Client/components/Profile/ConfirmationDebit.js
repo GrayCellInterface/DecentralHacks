@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Modal, Spinner } from "react-bootstrap";
+import { GoCheck, GoX } from "react-icons/go";
 
 const ConfirmationDebit = (props) => {
 	const [modalStage, setModalStage] = useState("confirm");
@@ -129,12 +130,14 @@ const ConfirmationDebit = (props) => {
 					<>
 						<div className="container text-center">
 							<Spinner
-								style={{ margin: "20px 0" }}
+								style={{ margin: "20px 0", color: "orange" }}
 								animation="border"
-								variant="primary"
 							/>
 							<div>
 								<p>{message}</p>
+							</div>
+							<div>
+								<p><em>**Do <b>NOT</b> click Back or refresh the page as it may lead to loosing your funds.</em></p>
 							</div>
 						</div>
 					</>
@@ -143,20 +146,23 @@ const ConfirmationDebit = (props) => {
 				return (
 					<>
 						<div className="container text-center">
-							<div>
-								<p
-									style={
-										modalStage === "debitFailed"
-											? { color: "red" }
-											: { color: "green" }
-									}
-								>
-									{message}
-								</p>
-							</div>
-							<button onClick={handleBackToProfile} className="me-btn">
-								Back To Profile
-							</button>
+							{modalStage === "debitFailed"
+								? (
+									<>
+										<div style={{ color: "red" }}>
+											<GoX style={{ fontSize: "40px", margin: "25px" }} />
+											<p>{message}</p>
+										</div>
+										<button onClick={handleBackToProfile} className="me-btn">
+											Back To Profile
+										</button>
+									</>)
+								: (<div style={{ color: "green" }}>
+									<GoCheck style={{ fontSize: "40px", margin: "25px" }} />
+									<p>{message}</p>
+									<br />
+								</div>)}
+
 						</div>
 					</>
 				);

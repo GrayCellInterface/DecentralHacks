@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SelectRoute from "./SelectRoute";
+import Footer from "./Footer";
 import Shop from "./components/Shop/Shop";
 import Home from "./components/Home/Home";
 import {
@@ -42,6 +43,9 @@ const Client = () => {
 						<SelectRoute handleLoginModalOpen={handleLoginModalOpen} />
 					</Route>
 				</Switch>
+				<br />
+				<hr />
+				<Footer />
 			</Router>
 		</>
 	);

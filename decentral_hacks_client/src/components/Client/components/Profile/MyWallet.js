@@ -12,8 +12,22 @@ const MyWallet = (props) => {
                     </div>
                 </div>
                 <div className="me-my-wallet-body">
-                    <p className="me-wallet-instructions">Formal instructions</p>
-
+                    <ul>
+                        <li className="guide-list-items">
+                            <p>• <em>Your credit will reflect in your wallet within 1-2 mins.</em></p>
+                        </li>
+                        <li className="guide-list-items">
+                            <p>• <em>The receiving address for your wallet is always different for security purposes.</em></p>
+                        </li>
+                        <li className="guide-list-items">
+                            <p>
+                                • <em>Use the provided seller address to trace your transactions on the <a target="_blank" rel="noreferrer" style={{ textDecoration: "none" }} href="https://shasta.tronscan.org/#/contract/TFGBSrddCjLJAwuryZ9DUxtEmKv13BPjnh/transactions">blockchain explorer.</a></em>
+                            </p>
+                        </li>
+                        <li className="guide-list-items">
+                            <p>• <em>Your card and bank details expires in 24hrs for security reasons.</em></p>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </>

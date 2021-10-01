@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import RefundConfirmationModal from "./RefundConfirmationModal";
 import { Table } from "react-bootstrap";
+import './css/Orders.css'
 
 const Orders = (props) => {
 	const [orders, setOrders] = useState([]);
@@ -11,8 +12,7 @@ const Orders = (props) => {
 	useEffect(() => {
 		axios
 			.get(
-				`${
-					process.env.REACT_APP_BACKEND_API
+				`${process.env.REACT_APP_BACKEND_API
 				}/status/get-user-orders/${window.localStorage.getItem("email")}`
 			)
 			.then((res) => {
@@ -55,13 +55,12 @@ const Orders = (props) => {
 							if (item.status === "pending") {
 								status = (
 									<>
-										<button
+										<p
 											onClick={() => handleRefund(index)}
-											className="me-btn"
-											style={{ color: "#fff", backgroundColor: "#c93b33" }}
+											className="refund-btn"
 										>
-											Get Refund
-										</button>
+											<strong>CLICK HERE FOR REFUND</strong>
+										</p>
 									</>
 								);
 							} else if (item.status === "completed") {
