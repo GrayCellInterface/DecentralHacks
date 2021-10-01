@@ -43,8 +43,8 @@ const Client = () => {
 						<SelectRoute handleLoginModalOpen={handleLoginModalOpen} />
 					</Route>
 				</Switch>
-				<br />
-				<hr />
+
+				<hr style={{ marginTop: "0px" }} />
 				<Footer />
 			</Router>
 		</>

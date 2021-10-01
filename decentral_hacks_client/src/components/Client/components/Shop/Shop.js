@@ -6,8 +6,7 @@ import defaultImage from "../../../../assets/images/defaultProduct.png";
 import { Card, ListGroup, ListGroupItem, Spinner } from "react-bootstrap";
 
 const Shop = (props) => {
-
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoading, setIsLoading] = useState(true);
 	const [products, setProducts] = useState([]);
 	const [hasLoggedIn, setHasLoggedIn] = useState(false);
 	const [authenticated, setAuthenticated] = useState(false);
@@ -31,7 +30,8 @@ const Shop = (props) => {
 		const getBalance = async () => {
 			await axios
 				.get(
-					`${process.env.REACT_APP_BACKEND_API
+					`${
+						process.env.REACT_APP_BACKEND_API
 					}/accounts/get-walletId/${window.localStorage.getItem("email")}`
 				)
 				.then((res) => {
@@ -54,11 +54,10 @@ const Shop = (props) => {
 		const getInfo = async () => {
 			await getProducts();
 			await getBalance();
-			setIsLoading(false)
-		}
+			setIsLoading(false);
+		};
 
-		getInfo()
-
+		getInfo();
 	}, [authenticated]);
 
 	const handleCloseOutOfStock = () => {
@@ -87,14 +86,18 @@ const Shop = (props) => {
 			return (
 				<div className="container text-center">
 					<Spinner
-						style={{ marginTop: "340px", marginBottom: "10px", color: "orange" }}
+						style={{
+							marginTop: "340px",
+							marginBottom: "10px",
+							color: "orange",
+						}}
 						animation="border"
 					/>
 					<div style={{ marginBottom: "700px" }}>
 						<p>Getting Shop Items...</p>
 					</div>
 				</div>
-			)
+			);
 		} else {
 			if (openCheckOut) {
 				return (
@@ -143,7 +146,10 @@ const Shop = (props) => {
 										key={index}
 										style={{ margin: "30px 0px" }}
 									>
-										<Card style={{ width: "23rem", height: "773px" }} key={index}>
+										<Card
+											style={{ width: "23rem", height: "773px" }}
+											key={index}
+										>
 											<Card.Img
 												style={{ height: "340px", objectFit: "contain" }}
 												variant="top"
@@ -152,7 +158,9 @@ const Shop = (props) => {
 											<Card.Body>
 												<div className="row">
 													<div className="col-7">
-														<Card.Title style={{ float: "left", height: "30px" }}>
+														<Card.Title
+															style={{ float: "left", height: "30px" }}
+														>
 															{product.p_name}
 														</Card.Title>
 													</div>
@@ -223,12 +231,13 @@ const Shop = (props) => {
 				);
 			}
 		}
-
 	};
 
 	return (
 		<>
-			<div className="container">{renderShop()}</div>
+			<div className="container" style={{ marginBottom: "100px" }}>
+				{renderShop()}
+			</div>
 			<OutOfStockPrompt
 				handleCloseOutOfStock={handleCloseOutOfStock}
 				openOutOfStock={openOutOfStock}

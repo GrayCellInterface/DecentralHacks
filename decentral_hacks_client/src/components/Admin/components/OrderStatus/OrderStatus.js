@@ -20,7 +20,7 @@ const OrderStatus = (props) => {
 	}, [type]);
 
 	return (
-		<div style={{ margin: 100 }}>
+		<div style={{ margin: "100px" }}>
 			{orders.length === 0 ? (
 				<>
 					<div className="text-center">

@@ -157,7 +157,10 @@ const Profile = () => {
 
 	return (
 		<>
-			<div className="me-my-account" style={{ marginTop: "120px" }}>
+			<div
+				className="me-my-account"
+				style={{ marginTop: "120px", marginBottom: "100px" }}
+			>
 				<div className="container">
 					<div className="row">{renderProfile()}</div>
 				</div>
