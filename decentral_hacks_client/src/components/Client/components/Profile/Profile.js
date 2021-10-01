@@ -26,13 +26,11 @@ const Profile = () => {
 		const getAccountDetails = async () => {
 			await axios
 				.get(
-					`${
-						process.env.REACT_APP_BACKEND_API
+					`${process.env.REACT_APP_BACKEND_API
 					}/accounts/get-walletId/${window.localStorage.getItem("email")}`
 				)
 				.then((res) => {
 					window.localStorage.setItem("balance", res.data.balance);
-					console.log(res.data);
 				})
 				.catch((error) => {
 					console.log(error.response);
@@ -40,8 +38,7 @@ const Profile = () => {
 
 			await axios
 				.get(
-					`${
-						process.env.REACT_APP_BACKEND_API
+					`${process.env.REACT_APP_BACKEND_API
 					}/auth/get-id/${window.localStorage.getItem("email")}`
 				)
 				.then((res) => {

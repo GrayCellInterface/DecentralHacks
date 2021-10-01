@@ -14,13 +14,11 @@ const Orders = (props) => {
 	useEffect(() => {
 		axios
 			.get(
-				`${
-					process.env.REACT_APP_BACKEND_API
+				`${process.env.REACT_APP_BACKEND_API
 				}/status/get-user-orders/${window.localStorage.getItem("email")}`
 			)
 			.then((res) => {
 				setOrders(res.data.data.slice(0).reverse());
-				console.log(res.data.data.slice(0).reverse());
 			})
 			.catch((error) => {
 				console.log(error.response.msg);

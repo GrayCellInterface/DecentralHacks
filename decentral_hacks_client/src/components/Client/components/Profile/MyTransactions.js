@@ -19,7 +19,6 @@ const MyTransactions = () => {
 					`${process.env.REACT_APP_BACKEND_API}/accounts/get-customer-transcations/${window.localStorage.getItem("email")}`
 				)
 				.then((res) => {
-					console.log(res.data.transactions);
 					const filteredTransactions = res.data.transactions.filter((element) => {
 						if (element.destination.id === "1000177235") { //process.env.REACT_APP_MASTER_WALLETID
 							return false
@@ -27,7 +26,6 @@ const MyTransactions = () => {
 							return true
 						}
 					})
-					console.log(filteredTransactions)
 					setOrders(filteredTransactions);
 				})
 				.catch((error) => {

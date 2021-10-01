@@ -17,7 +17,7 @@ const Home = () => {
 		<>
 			{/* Section 1 */}
 			<div className="banner">
-				<Container style={{ marginTop: "80px", maxHeight: "650px" }}>
+				<Container style={{ marginTop: "80px", height: "700px" }}>
 					<Row>
 						<Col lg={6}>
 							<div
