@@ -3,7 +3,10 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import * as FaIcons from "react-icons/fa";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import banner from "../../../../assets/images/banner.png";
+import banner from "../../../../assets/images/landingpage/banner.png";
+import creditdebit from "../../../../assets/images/landingpage/credit-debit.jpeg";
+import transactions from "../../../../assets/images/landingpage/transactions.jpeg";
+import seller from "../../../../assets/images/landingpage/seller.jpeg";
 import ReactTypingEffect from "react-typing-effect";
 
 import "./css/Home.css";
@@ -169,7 +172,7 @@ const Home = () => {
 				<Container
 					style={{
 						marginTop: "80px",
-						padding: "60px 0px",
+						padding: "60px 0px 100px",
 					}}
 				>
 					<h1
@@ -195,8 +198,12 @@ const Home = () => {
 						</Col>
 						<Col lg={6} style={{ overflow: "hidden" }}>
 							<img
-								src={banner}
-								style={{ width: "100%", marginTop: "10px" }}
+								src={creditdebit}
+								style={{
+									width: "500px",
+									marginTop: "10px",
+									float: "right",
+								}}
 								alt="banner"
 								data-aos="fade-right"
 							/>
@@ -206,8 +213,8 @@ const Home = () => {
 					<Row>
 						<Col lg={6} style={{ overflow: "hidden" }}>
 							<img
-								src={banner}
-								style={{ width: "90%", marginTop: "20px" }}
+								src={transactions}
+								style={{ width: "500px", marginTop: "20px" }}
 								alt="banner"
 								data-aos="fade-left"
 							/>
@@ -241,8 +248,8 @@ const Home = () => {
 						</Col>
 						<Col lg={6} style={{ overflow: "hidden" }}>
 							<img
-								src={banner}
-								style={{ width: "90%", marginTop: "20px" }}
+								src={seller}
+								style={{ width: "700px", marginTop: "20px" }}
 								alt="banner"
 								data-aos="fade-right"
 							/>
