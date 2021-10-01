@@ -137,7 +137,12 @@ const ConfirmationDebit = (props) => {
 								<p>{message}</p>
 							</div>
 							<div>
-								<p><em>**Do <b>NOT</b> click Back or refresh the page as it may lead to loosing your funds.</em></p>
+								<p>
+									<em>
+										**Do <b>NOT</b> click Back or refresh the page as it may
+										lead to loosing your funds.
+									</em>
+								</p>
 							</div>
 						</div>
 					</>
@@ -146,23 +151,23 @@ const ConfirmationDebit = (props) => {
 				return (
 					<>
 						<div className="container text-center">
-							{modalStage === "debitFailed"
-								? (
-									<>
-										<div style={{ color: "red" }}>
-											<GoX style={{ fontSize: "40px", margin: "25px" }} />
-											<p>{message}</p>
-										</div>
-										<button onClick={handleBackToProfile} className="me-btn">
-											Back To Profile
-										</button>
-									</>)
-								: (<div style={{ color: "green" }}>
+							{modalStage === "debitFailed" ? (
+								<>
+									<div style={{ color: "red" }}>
+										<GoX style={{ fontSize: "40px", margin: "25px" }} />
+										<p>{message}</p>
+									</div>
+									<button onClick={handleBackToProfile} className="me-btn">
+										Back To Profile
+									</button>
+								</>
+							) : (
+								<div style={{ color: "green" }}>
 									<GoCheck style={{ fontSize: "40px", margin: "25px" }} />
 									<p>{message}</p>
 									<br />
-								</div>)}
-
+								</div>
+							)}
 						</div>
 					</>
 				);
