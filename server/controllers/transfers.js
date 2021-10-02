@@ -236,9 +236,7 @@ const checkout = async (req, res) => {
 	await updateProductCount("buy", p_id);
 
 	// 1/0?
-	//const verdict = await successOrFailure();
-
-	const verdict = 0
+	const verdict = await successOrFailure();
 
 	console.log("Verdict", verdict);
 

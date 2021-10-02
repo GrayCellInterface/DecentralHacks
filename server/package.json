@@ -21,7 +21,7 @@
 	},
 	"devDependencies": {},
 	"scripts": {
-		"start": "node server.js"
+		"start": "nodemon server.js"
 	},
 	"author": "graycellinterface",
 	"license": "ISC"
