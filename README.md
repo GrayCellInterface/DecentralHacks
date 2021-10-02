@@ -116,13 +116,13 @@ Clone using Link: [https://github.com/GrayCellInterface/DecentralHacks.git]
 #### After cloning the repository
 1] Run the server
 ```
-$ cd decentral_hacks_server
+$ cd server
 $ npm install --save
 $ npm start
 ```
 2] Run the client
 ```
-$ cd decentral_hacks_client
+$ cd client
 $ npm install --save
 $ npm start
 ```
