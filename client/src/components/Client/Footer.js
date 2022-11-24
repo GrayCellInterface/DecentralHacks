@@ -28,7 +28,6 @@ class Footer extends Component {
                                     <ul>
                                         <li><a target="_blank" rel="noreferrer" href="https://www.linkedin.com/in/sanchitashirur/">Sanchita Shirur</a></li>
                                         <li><a target="_blank" rel="noreferrer" href="https://www.linkedin.com/in/tarang-padia-b407591a0/">Tarang Padia</a></li>
-                                        <li><a target="_blank" rel="noreferrer" href="https://www.linkedin.com/in/45mohit/">Mohit Sharma</a></li>
                                     </ul>
                                 </div>
                             </div>
